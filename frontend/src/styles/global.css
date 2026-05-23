@@ -11,6 +11,8 @@ html,
 body,
 #root {
   height: 100%;
+  /* 移动端 Safari 工具栏会吃掉一截视口；dvh 跟着 toolbar 状态动态算 */
+  min-height: 100dvh;
 }
 
 html,
@@ -28,7 +30,6 @@ body {
     radial-gradient(900px 500px at -10% 110%, #F7EFE8 0%, transparent 65%),
     var(--bg-main);
   overflow-x: hidden;
-  min-height: 100vh;
 }
 
 button {
