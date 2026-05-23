@@ -2,9 +2,10 @@
   flex-shrink: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  height: 68px;
+  min-height: 56px;
   padding: 0 16px;
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  /* 真机自动让出 home indicator；桌面回落到 12px 视觉间距 */
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: saturate(140%) blur(14px);
   -webkit-backdrop-filter: saturate(140%) blur(14px);
@@ -42,7 +43,7 @@
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 12px;
+  bottom: 8px;
   transform: translateX(-50%);
   width: 20px;
   height: 2.5px;
