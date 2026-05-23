@@ -106,13 +106,37 @@ def analyze_makeup_video(video_url: str, prompt: str) -> dict:
     )
 
 
-def chat_text(user_message: str, system: str, history: list[dict] | None = None) -> str:
-    """让 Qwen-VL-Max 走纯文本对话。失败抛 QwenUnavailable。"""
+def chat_text(
+    user_message: str,
+    system: str,
+    history: list[dict] | None = None,
+    image_url: str | None = None,
+) -> str:
+    """让 Qwen-VL-Max 对话。
+
+    - image_url=None：纯文本
+    - image_url=...：当前这条用户消息里附带一张图（多模态）
+
+    history 是历史消息列表 [{role, content}, ...]，content 必须是字符串
+    （历史里的图片不再回灌，只用文字摘要避免 token 爆炸）。
+    """
     key = _require_key()
     messages: list[dict] = [{"role": "system", "content": system}]
     if history:
         messages.extend(history)
-    messages.append({"role": "user", "content": user_message})
+
+    if image_url:
+        messages.append(
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url}},
+                    {"type": "text", "text": user_message or "看看这张图，给我建议。"},
+                ],
+            }
+        )
+    else:
+        messages.append({"role": "user", "content": user_message})
 
     try:
         with httpx.Client(base_url=_settings.dashscope_base_url, timeout=_TIMEOUT) as client:

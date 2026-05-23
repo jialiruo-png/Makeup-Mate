@@ -162,12 +162,17 @@ def reply_in_session(
     card_title: str | None,
     user_message: str,
     history: list[dict] | None = None,
+    image_url: str | None = None,
 ) -> str:
     system = _CHAT_SYSTEM
     if card_title:
         system += f"\n当前妆容卡片标题：{card_title}。"
+    if image_url:
+        system += "\n用户刚刚发来一张图（自拍 / 妆容进度图），请重点看图给具体建议。"
     try:
-        return qwen_client.chat_text(user_message, system=system, history=history)
+        return qwen_client.chat_text(
+            user_message, system=system, history=history, image_url=image_url
+        )
     except qwen_client.QwenUnavailable as exc:
         log.warning("Qwen chat unavailable, fallback to mock: %s", exc)
 

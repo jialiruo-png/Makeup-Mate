@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from ..db import get_db
 from ..models.chat import ChatMessage as ChatMessageModel
 from ..models.chat import ChatSession as ChatSessionModel
+from ..models.media_asset import MediaAsset as MediaAssetModel
 from ..routes.makeup_cards import _CARD_CACHE
 from ..schemas.chat import (
     ChatMessage,
@@ -60,7 +61,13 @@ def _row_to_schema(row: ChatMessageModel) -> ChatMessage:
 
 
 def _persist_message(
-    db: Session, *, session_id: str, role: str, content: str, message_type: str = "text"
+    db: Session,
+    *,
+    session_id: str,
+    role: str,
+    content: str,
+    message_type: str = "text",
+    metadata: dict | None = None,
 ) -> ChatMessageModel:
     row = ChatMessageModel(
         id=_make_id("msg"),
@@ -68,12 +75,22 @@ def _persist_message(
         role=role,
         content=content,
         message_type=message_type,
-        msg_metadata={},
+        msg_metadata=metadata or {},
         created_at=_now().replace(tzinfo=None),
     )
     db.add(row)
     db.flush()
     return row
+
+
+def _media_public_url(media_asset_id: str, db: Session) -> str | None:
+    row = db.get(MediaAssetModel, media_asset_id)
+    if not row or row.file_type != "image":
+        return None
+    base = _settings.public_base_url.rstrip("/")
+    if not base:
+        return None
+    return f"{base}/api/media/{media_asset_id}/raw"
 
 
 @router.post("/sessions", response_model=ChatSession, response_model_by_alias=True)
@@ -148,13 +165,20 @@ def send_message(
     if not session_row:
         raise HTTPException(status_code=404, detail="会话不存在")
 
+    # 解析图（如果带了）
+    image_url = (
+        _media_public_url(payload.media_asset_id, db) if payload.media_asset_id else None
+    )
+
     # 写用户消息
+    user_msg_type = "image" if image_url else (payload.message_type or "text")
     user_row = _persist_message(
         db,
         session_id=session_id,
         role="user",
         content=payload.content,
-        message_type=payload.message_type,
+        message_type=user_msg_type,
+        metadata={"mediaAssetId": payload.media_asset_id} if payload.media_asset_id else None,
     )
 
     # 取最近 N 轮历史（不含刚刚写入的这条 user）作为 AI 的上下文
@@ -182,6 +206,7 @@ def send_message(
         card.title if card else None,
         payload.content,
         history=history,
+        image_url=image_url,
     )
 
     assistant_row = _persist_message(

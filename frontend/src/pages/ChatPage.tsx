@@ -1,8 +1,11 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import creatorProfiles from "@/data/creator_profiles_merged.json";
 import librarySchema from "@/data/makeup_mate_creator_library_schema.json";
 import { appActions, useAppState } from "@/state/appStore";
 import type { InspirationType, MakeupCard } from "@/types";
+import { createSession, sendMessage as apiSendMessage } from "@/api/chat";
+import { uploadMedia } from "@/api/media";
+import { apiBase } from "@/api/client";
 import "./ChatPage.css";
 
 type TopTab = "library" | "conversation";
@@ -44,6 +47,7 @@ interface ChatMessage {
   id: string;
   role: "assistant" | "user";
   text: string;
+  imageUrl?: string;
 }
 
 const profiles = creatorProfiles as CreatorProfile[];
@@ -182,6 +186,14 @@ export function ChatPage() {
   const [filter, setFilter] = useState("全部");
   const [modal, setModal] = useState<ModalType>(null);
   const [message, setMessage] = useState("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const [pendingImage, setPendingImage] = useState<{
+    file: File;
+    previewUrl: string;
+    mediaAssetId?: string;
+  } | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "msg_welcome",
@@ -189,6 +201,64 @@ export function ChatPage() {
       text: "今天想复刻哪种妆？可以从美妆灵感库选，也可以导入首页的解析卡片。",
     },
   ]);
+
+  // 第一次进入「陪伴聊天」时创建后端 session
+  useEffect(() => {
+    if (tab !== "conversation" || sessionId) return;
+    let cancelled = false;
+    createSession({
+      cardId: currentCard?.cardId ?? null,
+      mode: "text_companion",
+    })
+      .then((session) => {
+        if (cancelled) return;
+        setSessionId(session.sessionId);
+        if (session.messages?.length) {
+          setMessages(
+            session.messages.map((m) => ({
+              id: m.messageId,
+              role: m.role === "user" ? "user" : "assistant",
+              text: m.content,
+            })),
+          );
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        appActions.showToast("聊天会话创建失败，稍后再试", "warn");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, currentCard?.cardId, sessionId]);
+
+  const onPickImage = (file: File | undefined) => {
+    if (!file) return;
+    const previewUrl = URL.createObjectURL(file);
+    setPendingImage({ file, previewUrl });
+    uploadMedia({
+      file,
+      purpose: "selfie",
+      retentionPolicy: "session_only",
+    })
+      .then((asset) => {
+        setPendingImage((prev) =>
+          prev && prev.file === file
+            ? { ...prev, mediaAssetId: asset.mediaAssetId }
+            : prev,
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+        appActions.showToast("图片上传失败", "warn");
+        setPendingImage(null);
+      });
+  };
+
+  const clearPendingImage = () => {
+    if (pendingImage?.previewUrl) URL.revokeObjectURL(pendingImage.previewUrl);
+    setPendingImage(null);
+  };
 
   const cards = useMemo(() => {
     const items = cardsForEntry(entry);
@@ -239,16 +309,69 @@ export function ChatPage() {
     importCardToChat(item);
   };
 
-  const sendMessage = (event: FormEvent) => {
+  const sendMessage = async (event: FormEvent) => {
     event.preventDefault();
     const text = message.trim();
-    if (!text) return;
-    setMessage("");
+    if (!text && !pendingImage) return;
+    if (!sessionId) {
+      appActions.showToast("聊天还在准备，稍等一下", "warn");
+      return;
+    }
+    if (pendingImage && !pendingImage.mediaAssetId) {
+      appActions.showToast("图片还在上传，稍等一下", "warn");
+      return;
+    }
+
+    setSending(true);
+    const localUserId = `user_${Date.now()}`;
     setMessages((prev) => [
       ...prev,
-      { id: `user_${Date.now()}`, role: "user", text },
-      { id: `ai_${Date.now()}`, role: "assistant", text: generateReply(text) },
+      {
+        id: localUserId,
+        role: "user",
+        text,
+        imageUrl: pendingImage?.previewUrl,
+      },
     ]);
+    setMessage("");
+    const sentImage = pendingImage;
+    setPendingImage(null);
+
+    try {
+      const res = await apiSendMessage(sessionId, {
+        content: text,
+        messageType: sentImage ? "image" : "text",
+        // @ts-expect-error: 后端新加的字段，types 里我等会补
+        mediaAssetId: sentImage?.mediaAssetId ?? null,
+      });
+      setMessages((prev) =>
+        prev
+          .map((m) =>
+            m.id === localUserId
+              ? {
+                  id: res.userMessage.messageId,
+                  role: "user" as const,
+                  text: res.userMessage.content,
+                  imageUrl: sentImage
+                    ? `${apiBase}/media/${sentImage.mediaAssetId}/raw`
+                    : undefined,
+                }
+              : m,
+          )
+          .concat({
+            id: res.assistantMessage.messageId,
+            role: "assistant",
+            text: res.assistantMessage.content,
+          }),
+      );
+      if (sentImage?.previewUrl) URL.revokeObjectURL(sentImage.previewUrl);
+    } catch (err) {
+      console.error(err);
+      appActions.showToast("发送失败，请重试", "warn");
+      setMessages((prev) => prev.filter((m) => m.id !== localUserId));
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -350,6 +473,18 @@ export function ChatPage() {
             <div className="chat-stream">
               {messages.map((m) => (
                 <div key={m.id} className={`chat-bubble chat-bubble--${m.role}`}>
+                  {m.imageUrl && (
+                    <img
+                      src={m.imageUrl}
+                      alt=""
+                      style={{
+                        maxWidth: "180px",
+                        borderRadius: "12px",
+                        display: "block",
+                        marginBottom: m.text ? "8px" : 0,
+                      }}
+                    />
+                  )}
                   {m.text}
                 </div>
               ))}
@@ -362,10 +497,9 @@ export function ChatPage() {
                     <button
                       type="button"
                       key={q}
-                      onClick={() => setMessages((prev) => [
-                        ...prev,
-                        { id: `quick_${Date.now()}`, role: "assistant", text: generateReply(q) },
-                      ])}
+                      onClick={() => {
+                        setMessage(q);
+                      }}
                     >
                       {q}
                     </button>
@@ -374,13 +508,61 @@ export function ChatPage() {
               </div>
             </div>
           </div>
+          {pendingImage && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                background: "rgba(0,0,0,0.04)",
+                borderTop: "1px solid rgba(0,0,0,0.06)",
+              }}
+            >
+              <img
+                src={pendingImage.previewUrl}
+                alt=""
+                style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 8 }}
+              />
+              <span style={{ fontSize: 13, flex: 1 }}>
+                {pendingImage.mediaAssetId ? "图片已就绪，跟一句话一起发" : "图片上传中…"}
+              </span>
+              <button
+                type="button"
+                onClick={clearPendingImage}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  fontSize: 18,
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+            </div>
+          )}
           <form className="chat-page__input-bar" onSubmit={sendMessage}>
-            <button type="button" className="chat-page__icon-btn" onClick={() => setModal("upload")}>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                onPickImage(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+            <button
+              type="button"
+              className="chat-page__icon-btn"
+              onClick={() => imageInputRef.current?.click()}
+              aria-label="上传图片"
+            >
               ＋
             </button>
             <input
               className="chat-page__input"
-              placeholder="问我下一步怎么画…"
+              placeholder={pendingImage ? "说一句想问的（可选）..." : "问我下一步怎么画…"}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
@@ -401,7 +583,13 @@ export function ChatPage() {
                 <line x1="9" y1="21" x2="15" y2="21" />
               </svg>
             </button>
-            <button type="submit" className="chat-page__send">发送</button>
+            <button
+              type="submit"
+              className="chat-page__send"
+              disabled={sending || (!message.trim() && !pendingImage)}
+            >
+              {sending ? "..." : "发送"}
+            </button>
           </form>
         </>
       )}
@@ -527,10 +715,3 @@ function entryIcon(entry: LibraryEntry) {
   return "✓";
 }
 
-function generateReply(text: string) {
-  if (text.includes("没有")) return "没关系，我会按产品类型给替代方案：没有杏粉腮红时，可以用低饱和豆沙口红轻点后晕开。";
-  if (text.includes("拍照")) return "可以上传当前进度图，我会重点看眼线长度、腮红位置和底妆厚度。";
-  if (text.includes("完成")) return "好，下一步进入眉眼。先顺着原眉补空，不要急着加深眉尾。";
-  if (text.includes("换种说法")) return "简单说：这一步只要把底妆铺匀，先别追求遮得很满。";
-  return "收到。按你的情况，我建议先降低难度：保留核心氛围，减少修容和复杂眼线。";
-}

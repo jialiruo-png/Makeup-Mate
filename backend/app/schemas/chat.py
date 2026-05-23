@@ -34,9 +34,10 @@ class CreateSessionRequest(CamelModel):
 
 
 class SendMessageRequest(CamelModel):
-    content: str
+    content: str = ""
     message_type: MessageType = Field(default="text", alias="messageType")
     quick_action: str | None = Field(default=None, alias="quickAction")
+    media_asset_id: str | None = Field(default=None, alias="mediaAssetId")
 
 
 class SendMessageResponse(CamelModel):
