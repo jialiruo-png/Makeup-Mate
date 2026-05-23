@@ -40,7 +40,9 @@ Mock API 替代前端假数据
         ↓
 数据库持久化
         ↓
-接入 AI 文本 / 图片能力
+接入多模态 AI 文本 / 图片 / 视频理解能力
+        ↓
+接入 MediaPipe 用户脸部几何解析
         ↓
 语音 / 视频陪伴增强
         ↓
@@ -102,6 +104,123 @@ PostgreSQL + Redis + OSS / R2
 - 调试简单；
 - 适合黑客松和产品原型阶段。
 
+### 2.4 视觉理解与脸部解析技术路线
+
+第一阶段将视觉能力拆成三层，避免把所有任务都压到多模态 AI 或 MediaPipe 任意一方：
+
+```text
+视频/照片证据增强：MediaPipe + 图像处理
+妆容语义理解：多模态 AI
+聊天页上传自拍后的脸部几何解析：MediaPipe Face Landmarker + 短期/长期记忆规则
+```
+
+#### MediaPipe 证据增强层
+
+用于在多模态 AI 判断前，把视频/图片处理成更精细、更可解释的视觉证据：
+
+```text
+从视频中抽取关键帧
+筛选有人脸、清晰、正脸、遮挡少的帧
+定位眼部、眉毛、脸颊、嘴唇区域
+裁剪全脸 / 眼妆 / 腮红 / 唇妆局部图
+提取区域色彩、位置、变化趋势等辅助特征
+生成 VideoEvidence JSON
+```
+
+MediaPipe 在这里不判断“清冷感 / 韩系 / 港风”，但它会帮助 AI 看得更细：AI 不再只看整张图，而是同时看到关键帧、局部 crop 和结构化证据。
+
+#### 多模态 AI 负责
+
+用于基于关键帧、局部 crop、字幕/ASR 和 VideoEvidence 理解美妆视频、截图、聊天页上传照片中的语义内容：
+
+```text
+视频是什么妆容
+视频中出现了哪些步骤
+使用了哪些产品类型
+妆容风格、难度、耗时
+是否像美妆教程
+用户当前妆容进度照片的问题点
+```
+
+第一阶段不自研视频理解模型，不要求 MediaPipe 判断妆容风格。后端通过 `ai_service` 封装多模态模型调用，统一输出结构化 JSON。
+
+#### AI 结果校验层
+
+多模态 AI 生成 MakeupCard 后，后端使用 VideoEvidence 做轻量校验和置信度修正：
+
+```text
+AI 说“眼线较长” → 检查眼尾区域 evidence 是否支持
+AI 说“腮红偏低” → 检查脸颊色块位置是否支持
+AI 说“豆沙唇” → 检查唇部区域主色是否接近低饱和红棕
+AI 说“步骤包含唇妆” → 检查后段帧唇部区域是否有明显变化
+证据不足 → 降低置信度或改写为“不明显 / 推测”
+```
+
+这层不是为了推翻 AI，而是减少 AI 在妆容细节上的自由发挥，让最终卡片更稳定。
+
+#### MediaPipe 负责
+
+用于解析聊天页上传自拍的人脸关键点和基础几何特征，也复用在视频关键帧证据增强中：
+
+```text
+是否检测到人脸
+脸部轮廓关键点
+眼部、眉毛、唇部关键点
+面部朝向和基础姿态
+脸型比例辅助特征
+眼线、腮红、唇妆建议所需的几何位置
+```
+
+MediaPipe 的输出不直接等于“美妆结论”。后端会把 MediaPipe 几何特征、多模态 AI 结果和产品规则合并，生成 `BeautyProfile`。
+
+自拍上传保持 PRD 设计：入口放在聊天页右上角，是可选功能。用户不上传自拍时，仍可基于妆容卡片进行通用版文字陪伴；用户上传后，当前聊天会话获得短期图片上下文，用户选择保存档案后才写入长期结构化记忆。
+
+#### 调用方式
+
+MVP 阶段：
+
+```text
+视频 / 图片输入
+        ↓
+video_service 抽帧或读取图片
+        ↓
+mediapipe_service 提取人脸关键点和局部区域
+        ↓
+video_evidence_service 生成 VideoEvidence
+        ↓
+ai_service 基于关键帧、局部 crop、字幕/ASR、VideoEvidence 生成 MakeupCard
+        ↓
+makeup_card_validator 使用 VideoEvidence 校验 AI 输出
+```
+
+聊天页上传自拍：
+
+```text
+FastAPI 接收聊天页上传自拍
+        ↓
+Python MediaPipe Face Landmarker 提取关键点
+        ↓
+后端整理为 face_geometry JSON
+        ↓
+多模态 AI + 规则生成 BeautyProfile
+        ↓
+原始图片仅进入当前 ChatSession 短期上下文
+        ↓
+用户确认后，仅保存 BeautyProfile / face_geometry_summary 到长期档案
+```
+
+后续实时视频陪伴阶段：
+
+```text
+React 前端接 @mediapipe/tasks-vision
+        ↓
+浏览器本地 detectForVideo
+        ↓
+只把阶段性结果或用户授权截图发给后端
+```
+
+当前仓库中的 `mediapipe-master` 作为源码参考和后续二次定制储备。第一阶段优先使用 Python 包或可运行的 Tasks API，不直接编译整个 `mediapipe-master` 源码仓库。
+
 ---
 
 ## 三、项目目录结构
@@ -160,6 +279,9 @@ makeup-mate/
 │   │       ├── ai_service.py
 │   │       ├── video_service.py
 │   │       ├── image_service.py
+│   │       ├── mediapipe_service.py
+│   │       ├── video_evidence_service.py
+│   │       ├── makeup_card_validator.py
 │   │       ├── memory_service.py
 │   │       └── share_service.py
 │   ├── requirements.txt
@@ -368,6 +490,14 @@ pip install fastapi uvicorn pydantic python-multipart sqlalchemy
 pip freeze > requirements.txt
 ```
 
+接入用户脸部几何解析时，后端增加：
+
+```bash
+pip install mediapipe opencv-python pillow numpy
+```
+
+如果部署环境不方便安装完整 OpenCV，可优先评估 `opencv-python-headless`。
+
 启动命令：
 
 ```bash
@@ -424,6 +554,8 @@ DELETE /api/profile/me/memory
 用途：
 
 - 上传照片并分析个人风格；
+- 调用 MediaPipe 提取脸部关键点和几何特征；
+- 调用多模态 AI / 规则生成结构化 BeautyProfile；
 - 获取我的妆容档案；
 - 修改档案；
 - 清空记忆。
@@ -511,9 +643,12 @@ user_id
 makeup_card_id
 mode
 current_step
+short_term_context
 created_at
 updated_at
 ```
+
+`short_term_context` 用于当前会话内的临时上下文，例如本次上传图片的分析摘要、当前步骤偏好、临时改写建议。它不等同于长期档案，默认不进入 `beauty_profiles` 或 `memory_items`。
 
 ---
 
@@ -559,8 +694,30 @@ skill_level
 time_preference
 memory_enabled
 save_raw_photo
+face_geometry_summary
 created_at
 updated_at
+```
+
+`face_geometry_summary` 用于保存 MediaPipe 解析后的结构化摘要，不保存原始人脸图片。例如：
+
+```json
+{
+  "faceDetected": true,
+  "landmarkVersion": "mediapipe_face_landmarker",
+  "faceRatio": "slightly_round",
+  "eyeDistanceRatio": 0.42,
+  "jawWidthRatio": 0.86,
+  "headPose": {
+    "yaw": "front",
+    "pitch": "neutral"
+  },
+  "suggestionAnchors": {
+    "blushArea": "under_eye_outer",
+    "eyelinerArea": "outer_third",
+    "lipArea": "natural_lip_boundary"
+  }
+}
 ```
 
 ---
@@ -575,10 +732,65 @@ user_id
 file_type
 file_url
 purpose
+analysis_status
+analysis_result
+retention_policy
+expires_at
 created_at
 ```
 
 第一阶段如果不接对象存储，可以只保存本地路径或 mock URL。
+
+`analysis_result` 可保存多模态 AI 对视频/照片的语义理解结果，或 MediaPipe 对自拍的几何解析摘要。聊天页上传的原始自拍默认只作为短期会话素材，`retention_policy` 默认为 `session_only`，可在会话结束或过期后清理。长期档案只保存用户确认后的结构化摘要。
+
+---
+
+#### video_evidence
+
+用于保存 MediaPipe + 图像处理生成的视觉证据摘要。第一阶段也可以不单独建表，先作为 `media_assets.analysis_result.videoEvidence` 保存。
+
+```text
+id
+media_asset_id
+source_type
+selected_frames
+region_assets
+visual_hints
+quality_summary
+validator_notes
+created_at
+```
+
+示例结构：
+
+```json
+{
+  "sourceType": "uploaded_video",
+  "selectedFrames": [
+    {
+      "frameId": "frame_014",
+      "timestampMs": 8200,
+      "faceDetected": true,
+      "quality": {
+        "frontFacing": true,
+        "blur": "low",
+        "occlusion": "low"
+      }
+    }
+  ],
+  "regions": {
+    "eyes": ["eye_crop_014.jpg"],
+    "cheeks": ["cheek_crop_020.jpg"],
+    "lips": ["lip_crop_032.jpg"]
+  },
+  "visualHints": {
+    "lipColor": "low_saturation_red_brown",
+    "blushPosition": "under_eye_outer",
+    "eyeMakeupTone": "light_brown",
+    "eyelinerLengthHint": "outer_third_short"
+  }
+}
+```
 
 ---
 
@@ -653,6 +865,24 @@ privacy_setting
 }
 ```
 
+后续接入真实视频 / 图片上传后，首页解析路径升级为：
+
+```text
+链接 / 视频 / 截图
+        ↓
+video_service 抽帧或读取图片
+        ↓
+mediapipe_service 定位人脸和妆容关键区域
+        ↓
+video_evidence_service 生成 VideoEvidence
+        ↓
+ai_service 基于关键帧、局部 crop、字幕/ASR、VideoEvidence 生成 MakeupCard
+        ↓
+makeup_card_validator 校验并修正 AI 输出置信度
+        ↓
+返回最终妆容复刻卡片
+```
+
 ---
 
 ### Step 3：卡片导入聊天
@@ -698,7 +928,7 @@ AI 返回回复
 
 ### Step 5：上传照片分析
 
-聊天页右上角上传照片。
+聊天页右上角上传照片。该功能是可选能力，不阻塞首页解析和通用版聊天陪伴。
 
 流程：
 
@@ -709,11 +939,19 @@ AI 返回回复
         ↓
 用户上传自拍
         ↓
-后端返回个人风格分析
+后端调用 MediaPipe 提取脸部关键点 / 几何特征
         ↓
-用户选择仅本次使用 / 保存到我的妆容档案
+后端调用多模态 AI 或规则生成个人风格分析
         ↓
-聊天页根据档案改写妆容步骤
+分析结果进入当前 ChatSession 短期记忆
+        ↓
+用户选择仅本次使用 / 保存结构化档案
+        ↓
+仅本次使用：只影响当前对话，不写入长期档案
+        ↓
+保存结构化档案：写入 BeautyProfile / memory_items
+        ↓
+聊天页根据短期记忆或长期档案改写妆容步骤
 ```
 
 第一版可先返回 mock 分析：
@@ -728,6 +966,31 @@ AI 返回回复
   "preferredEyeliner": "后半段短眼线",
   "preferredLipColors": ["奶茶色", "豆沙色", "低饱和红棕"],
   "avoidStyles": ["重修容", "过长上挑眼线"]
+}
+```
+
+第一版可以先 mock 多模态 AI 结果，但接口结构要保留两类输出：
+
+```json
+{
+  "retention": {
+    "rawImage": "session_only",
+    "longTermProfileSaved": false
+  },
+  "faceGeometry": {
+    "faceDetected": true,
+    "source": "mediapipe",
+    "faceRatio": "slightly_round",
+    "suggestionAnchors": {
+      "blushArea": "under_eye_outer",
+      "eyelinerArea": "outer_third"
+    }
+  },
+  "beautyProfile": {
+    "faceShape": "方圆脸",
+    "skinTone": "自然偏暖",
+    "featureStyle": "淡颜偏自然"
+  }
 }
 ```
 
@@ -778,14 +1041,18 @@ AI 已记住
 
 ## 八、AI 接入计划
 
-### 8.1 第一阶段：不直接接 AI，先保留接口
+### 8.1 第一阶段：保留真实接口，AI 和 MediaPipe 先可 mock
 
 先让后端返回 mock 数据，但命名为真实服务：
 
 ```text
 ai_service.generate_makeup_card()
 ai_service.generate_chat_reply()
-ai_service.analyze_beauty_profile()
+ai_service.analyze_video_or_image()
+ai_service.generate_beauty_profile()
+mediapipe_service.extract_face_geometry()
+video_evidence_service.build_video_evidence()
+makeup_card_validator.validate_with_evidence()
 ```
 
 这样后续替换真实模型时不用改前端。
@@ -812,28 +1079,109 @@ Prompt 约束：
 
 ---
 
-### 8.3 第三阶段：接视觉模型
+### 8.3 第三阶段：接多模态视觉模型
 
 用于：
 
 ```text
-上传自拍分析个人风格
-拍照检查当前妆容
-分析视频关键帧
+美妆视频内容理解
+视频关键帧 / 截图语义分析
+上传照片中的妆容风格分析
+拍照检查当前妆容进度
 ```
 
 输出必须结构化，不要让模型自由发挥：
 
 ```json
 {
-  "faceShape": "",
-  "skinTone": "",
-  "featureStyle": "",
-  "eyeType": "",
-  "makeupSuggestions": [],
-  "avoidStyles": [],
+  "contentType": "makeup_video",
+  "makeupStyle": "",
+  "steps": [],
+  "products": [],
+  "riskPoints": [],
+  "difficulty": "",
+  "estimatedTime": "",
   "confidence": ""
 }
+```
+
+多模态 AI 负责判断“视频里是什么妆、有什么步骤、照片里当前妆容哪里需要调整”。它不负责稳定输出脸部关键点。
+
+多模态 AI 的输入应尽量包含 MediaPipe 处理后的证据，而不是只上传原始整段视频：
+
+```text
+精选关键帧
+眼妆 / 腮红 / 唇妆局部 crop
+字幕 / ASR 文本
+VideoEvidence JSON
+```
+
+AI 输出后必须经过 `makeup_card_validator` 做证据一致性检查：
+
+```text
+字段缺失 → 后端兜底
+证据支持 → 保持结论
+证据不足 → 降低 confidence 或改成“推测”
+证据冲突 → 保留更保守表达，避免过度确定
+```
+
+### 8.3.0 MediaPipe 视频证据增强
+
+MediaPipe 在视频/图片解析环节作为 AI 的前处理和后校验依据：
+
+```text
+video_service.extract_frames()
+mediapipe_service.detect_face_landmarks()
+mediapipe_service.crop_makeup_regions()
+image_service.extract_region_color_hints()
+video_evidence_service.build_video_evidence()
+ai_service.generate_makeup_card(evidence)
+makeup_card_validator.validate_with_evidence(card, evidence)
+```
+
+第一阶段可 mock `VideoEvidence`，第二阶段再接真实抽帧和 MediaPipe。
+
+### 8.3.1 MediaPipe 用户脸部解析
+
+MediaPipe 不负责判断“这个妆好不好看”或“用户适合什么风格”，只负责稳定提取用户自拍中的脸部几何数据：
+
+```text
+人脸检测状态
+脸部关键点
+脸部轮廓比例
+眼部 / 眉毛 / 唇部位置
+面部姿态
+用于腮红、眼线、唇妆建议的几何锚点
+```
+
+后端输出示例：
+
+```json
+{
+  "faceDetected": true,
+  "landmarks": "internal_or_reduced",
+  "faceRatio": "slightly_round",
+  "headPose": {
+    "yaw": "front",
+    "pitch": "neutral"
+  },
+  "suggestionAnchors": {
+    "blushArea": "under_eye_outer",
+    "eyelinerArea": "outer_third",
+    "lipArea": "natural_lip_boundary"
+  }
+}
+```
+
+隐私要求：
+
+```text
+默认不保存原始自拍
+默认不保存完整 landmark 明细到长期档案
+聊天页上传图片默认只进入当前 ChatSession 短期记忆
+长期档案只保存结构化摘要
+用户选择“仅本次分析”时，不写入 beauty_profiles
+用户明确选择“保存到我的妆容档案”后，才写入 BeautyProfile / memory_items
 ```
 
 ---
@@ -862,11 +1210,13 @@ Prompt 约束：
 前端 React 工程化
 三页底部导航
 首页链接解析 mock API
+VideoEvidence mock 结构
 妆容卡片生成
 卡片导入聊天
 聊天消息 API
 上传照片入口
-个人风格分析 mock API
+MediaPipe 脸部几何解析接口可 mock
+个人风格分析 mock API（合并 faceGeometry + beautyProfile）
 我的页妆容档案
 历史记录弹层
 ```
@@ -877,6 +1227,10 @@ Prompt 约束：
 
 ```text
 真实文本大模型聊天
+多模态 AI 分析视频 / 图片内容
+MediaPipe Face Landmarker 真实接入
+MediaPipe 视频关键帧证据增强
+MakeupCard 证据一致性校验
 用户反馈写入记忆
 分享卡片生成图片
 TTS 语音播报
@@ -890,6 +1244,7 @@ TTS 语音播报
 
 ```text
 真实视频抽帧
+更精细的时序步骤识别
 真实抖音链接解析
 实时视频陪伴
 AR 试妆
@@ -953,6 +1308,7 @@ Swagger 可访问
 ```text
 完成 /api/makeup-cards/analyze-link
 首页点击解析显示 loading
+后端返回 mock VideoEvidence
 后端返回妆容卡片
 前端展示 MakeupCard
 支持分享提示
@@ -963,6 +1319,7 @@ Swagger 可访问
 
 ```text
 首页闭环完成
+MakeupCard 接口已预留 videoEvidence 和 confidence 字段
 ```
 
 ---
@@ -995,9 +1352,10 @@ Swagger 可访问
 ```text
 UploadModal
 上传图片接口
+MediaPipe 解析 faceGeometry
 返回个人风格分析
-支持仅本次使用 / 保存档案
-聊天页使用档案改写建议
+支持仅本次使用 / 保存结构化档案
+聊天页使用短期记忆或长期档案改写建议
 ```
 
 交付：
@@ -1072,7 +1430,11 @@ HistoryModal 接 API
    - Toast
 3. 保留当前 UI 视觉，不要重做风格。
 4. 初始化 backend，使用 FastAPI。
-5. 建立基础 API：
+5. 增加视觉服务骨架：
+   - services/mediapipe_service.py：调用 MediaPipe Face Landmarker，解析人脸关键点、妆容局部区域和几何摘要。
+   - services/video_evidence_service.py：基于关键帧、局部 crop、颜色提示生成 VideoEvidence。
+   - services/makeup_card_validator.py：用 VideoEvidence 校验 AI 生成的 MakeupCard。
+6. 建立基础 API：
    - POST /api/makeup-cards/analyze-link
    - GET /api/makeup-cards/{card_id}
    - POST /api/makeup-cards/{card_id}/share
@@ -1083,17 +1445,22 @@ HistoryModal 接 API
    - GET /api/profile/me
    - PATCH /api/profile/me
    - GET /api/history
-6. 第一版 API 可以先返回 mock 数据，但接口结构要真实。
-7. 前端必须从 API 获取数据，不要继续把所有数据写死在组件里。
-8. 完成后给出项目目录、启动方式、已完成内容和下一步建议。
+7. 第一版 API 可以先返回 mock 数据，但接口结构要真实。视频/照片内容理解字段按多模态 AI 输出设计；视频/图片证据增强字段按 VideoEvidence 输出设计；用户脸部解析字段按 MediaPipe faceGeometry 输出设计。
+8. 前端必须从 API 获取数据，不要继续把所有数据写死在组件里。
+9. 完成后给出项目目录、启动方式、已完成内容和下一步建议。
 
 重要限制：
 - 底部导航只能有：首页、聊天、我的。
 - 上传照片和历史记录必须放在聊天页右上角。
 - 首页只负责粘贴链接、解析视频、生成卡片、分享卡片、导入聊天。
 - 我的页只负责妆容档案、AI 已记住、历史总结、隐私设置。
+- 聊天页上传的原始图片默认只进入当前会话短期记忆，不自动写入长期档案。
+- 只有用户选择保存结构化档案时，才把 BeautyProfile / faceGeometry 摘要写入长期记忆。
 - 不要引入复杂登录系统。
 - 不要做真实抖音爬虫。
+- 视频和照片内容理解由多模态 AI 完成，但输入应优先使用 MediaPipe 处理后的关键帧、局部 crop 和 VideoEvidence。
+- MediaPipe 不硬判妆容风格，它负责视频/图片证据增强、用户自拍人脸关键点、几何特征和建议锚点。
+- AI 生成 MakeupCard 后，要用 VideoEvidence 做轻量校验：证据不足时降低置信度或使用更保守表达。
 - 不要做颜值评分、医学诊断、人脸识别。
 ```
 
@@ -1146,6 +1513,33 @@ HistoryModal 接 API
 
 ---
 
+### 12.2.1 多模态 AI 与 MediaPipe 职责混淆风险
+
+风险：
+
+```text
+误用 MediaPipe 判断妆容风格
+误用多模态 AI 输出精确脸部关键点
+多模态 AI 直接看整段视频导致细节粗糙或幻觉
+缺少 VideoEvidence 导致 MakeupCard 难以解释和校验
+自拍分析结果缺少稳定几何依据
+长期档案保存过细的人脸数据
+```
+
+控制：
+
+```text
+视频/照片语义理解统一走多模态 AI
+视频/图片先经过 MediaPipe 证据增强，生成关键帧、局部 crop 和 VideoEvidence
+MakeupCard 输出后用 VideoEvidence 做轻量一致性校验
+用户脸部关键点和几何锚点统一走 MediaPipe
+BeautyProfile 由后端合并 AI 语义、MediaPipe 几何和产品规则生成
+聊天页上传图片默认进入短期会话记忆
+长期档案只保存用户确认后的结构化摘要，不保存完整 landmarks 和原始照片
+```
+
+---
+
 ### 12.3 上传照片隐私风险
 
 风险：
@@ -1160,7 +1554,8 @@ HistoryModal 接 API
 
 ```text
 默认不保存原始照片
-只保存结构化妆容档案
+聊天页上传图片默认只用于当前会话短期记忆
+只有用户确认后才保存结构化妆容档案
 提供仅本次分析
 提供删除档案
 明确不做人脸识别和颜值评分
@@ -1201,6 +1596,6 @@ HistoryModal 接 API
 
 第一阶段成功标准：
 
-> 用户能在首页粘贴链接，生成妆容卡片，导入聊天，与 AI 对话，上传照片分析个人风格，并在我的页看到自己的妆容档案。
+> 用户能在首页粘贴链接，生成妆容卡片，导入聊天，与 AI 对话；可选在聊天页上传照片做本次短期分析，并在用户确认后把结构化个人档案沉淀到我的页。
 
 这就是当前版本最应该完成的全栈 MVP。
