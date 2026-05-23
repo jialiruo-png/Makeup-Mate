@@ -1,0 +1,416 @@
+{
+  "libraryName": "Makeup Mate Douyin Creator Style Library",
+  "version": "1.0",
+  "lastUpdated": "2026-05-23",
+  "platform": "douyin",
+  "styleCategories": [
+    {
+      "categoryId": "beginner_makeup",
+      "categoryName": "入门妆",
+      "aliases": [
+        "新手妆",
+        "基础妆",
+        "新手化妆",
+        "化妆入门"
+      ],
+      "description": "面向新手用户的基础化妆教学，重点覆盖底妆、眉毛、眼线、腮红、唇妆等基础步骤。",
+      "styleTags": [
+        "新手友好",
+        "基础教学",
+        "低翻车",
+        "步骤清晰"
+      ],
+      "fitUsers": [
+        "化妆新手",
+        "学生党",
+        "手残党",
+        "第一次学化妆用户"
+      ],
+      "representativeLooks": [
+        "新手全脸妆",
+        "10分钟快速妆",
+        "基础通勤妆",
+        "新手眼线教学"
+      ],
+      "difficulty": "新手",
+      "keyFeatures": [
+        "步骤拆解清楚",
+        "强调工具和手法",
+        "妆感自然",
+        "降低操作难度"
+      ],
+      "riskPoints": [
+        "底妆厚重",
+        "眉毛过粗",
+        "眼线不对称",
+        "腮红位置过低"
+      ],
+      "makeupMateUseCase": "适合作为新手陪练智能体，帮助用户从零开始完成基础妆容。"
+    },
+    {
+      "categoryId": "japanese_korean_makeup",
+      "categoryName": "日韩妆",
+      "aliases": [
+        "韩系妆",
+        "日系妆",
+        "韩妆",
+        "日妆",
+        "女团妆",
+        "日杂妆"
+      ],
+      "description": "以日韩美妆风格为代表，强调干净底妆、低饱和色彩、透明感、卧蚕和自然氛围。",
+      "styleTags": [
+        "低饱和",
+        "清透",
+        "自然",
+        "卧蚕",
+        "水光感"
+      ],
+      "fitUsers": [
+        "淡颜用户",
+        "学生党",
+        "日常通勤用户",
+        "喜欢自然妆感用户"
+      ],
+      "representativeLooks": [
+        "韩系裸妆",
+        "水光肌妆",
+        "日系透明感妆",
+        "女团妆"
+      ],
+      "difficulty": "中等",
+      "keyFeatures": [
+        "底妆轻薄",
+        "眼妆柔和",
+        "卧蚕明显",
+        "唇色低饱和",
+        "整体干净"
+      ],
+      "riskPoints": [
+        "水光底妆显油",
+        "卧蚕画脏",
+        "眼影层次不明显",
+        "唇色过浅显没气色"
+      ],
+      "makeupMateUseCase": "适合作为日韩风格复刻智能体，帮助用户生成自然、清透、低饱和的妆容方案。"
+    },
+    {
+      "categoryId": "western_makeup",
+      "categoryName": "欧美妆",
+      "aliases": [
+        "欧美风",
+        "欧美截断妆",
+        "美式妆",
+        "辣妹妆"
+      ],
+      "description": "强调立体五官、强轮廓、眼窝结构、长眼线和饱满唇形，适合高对比和上镜妆容。",
+      "styleTags": [
+        "强轮廓",
+        "截断眼妆",
+        "高对比",
+        "立体修容",
+        "上镜"
+      ],
+      "fitUsers": [
+        "浓颜用户",
+        "拍照用户",
+        "派对场景",
+        "舞台妆需求用户"
+      ],
+      "representativeLooks": [
+        "欧美截断妆",
+        "辣妹妆",
+        "高鼻梁修容妆",
+        "强轮廓上镜妆"
+      ],
+      "difficulty": "进阶",
+      "keyFeatures": [
+        "眼窝结构明显",
+        "修容强",
+        "眉眼存在感高",
+        "唇部饱满",
+        "妆感强"
+      ],
+      "riskPoints": [
+        "修容显脏",
+        "眼妆过重",
+        "眉毛过挑",
+        "不适合日常场景"
+      ],
+      "makeupMateUseCase": "适合作为进阶妆容智能体，帮助用户判断欧美妆是否适合自己并生成降难度版本。"
+    },
+    {
+      "categoryId": "asian_makeup",
+      "categoryName": "亚裔妆",
+      "aliases": [
+        "Asian Makeup",
+        "东亚妆",
+        "亚裔眼妆",
+        "适合亚洲五官妆容"
+      ],
+      "description": "围绕东亚/亚裔五官特点设计的妆容，重点解决肿眼泡、内双、扁平面中、低山根等适配问题。",
+      "styleTags": [
+        "东亚五官适配",
+        "内双友好",
+        "低山根修饰",
+        "自然提气色"
+      ],
+      "fitUsers": [
+        "东亚五官用户",
+        "内双用户",
+        "肿眼泡用户",
+        "淡颜用户"
+      ],
+      "representativeLooks": [
+        "亚裔日常妆",
+        "内双眼妆",
+        "肿眼泡消肿妆",
+        "低山根修容妆"
+      ],
+      "difficulty": "中等",
+      "keyFeatures": [
+        "强调五官适配",
+        "眼妆不压眼",
+        "修容自然",
+        "提气色但不夸张"
+      ],
+      "riskPoints": [
+        "眼影压眼",
+        "鼻影显脏",
+        "眼线过长显凶",
+        "修容过度"
+      ],
+      "makeupMateUseCase": "适合作为个人适配智能体，帮助用户把流行妆容改写为适合东亚五官的版本。"
+    },
+    {
+      "categoryId": "daily_makeup",
+      "categoryName": "日常妆",
+      "aliases": [
+        "通勤妆",
+        "上课妆",
+        "面试妆",
+        "通勤淡妆",
+        "早八妆"
+      ],
+      "description": "面向日常生活场景的轻妆容，强调快速、自然、干净、提气色，不追求强妆感。",
+      "styleTags": [
+        "通勤",
+        "上课",
+        "自然",
+        "快速",
+        "低存在感"
+      ],
+      "fitUsers": [
+        "上班族",
+        "学生党",
+        "日常淡妆用户",
+        "时间有限用户"
+      ],
+      "representativeLooks": [
+        "清冷通勤妆",
+        "早八快速妆",
+        "面试提气色妆",
+        "日常淡妆"
+      ],
+      "difficulty": "新手",
+      "keyFeatures": [
+        "步骤少",
+        "妆感轻",
+        "提气色",
+        "适配多场景",
+        "时间可控"
+      ],
+      "riskPoints": [
+        "气色不足",
+        "底妆斑驳",
+        "步骤太复杂",
+        "用色太浓"
+      ],
+      "makeupMateUseCase": "适合作为高频陪伴智能体，帮助用户生成 5-15 分钟可完成的日常妆容。"
+    },
+    {
+      "categoryId": "pure_desire_makeup",
+      "categoryName": "纯欲妆",
+      "aliases": [
+        "纯欲风",
+        "氛围感妆",
+        "微醺妆",
+        "白开水纯欲"
+      ],
+      "description": "强调清透底妆、微醺腮红、水润唇妆和氛围感，介于清纯和轻微性感之间。",
+      "styleTags": [
+        "氛围感",
+        "微醺腮红",
+        "清透",
+        "水润唇",
+        "拍照"
+      ],
+      "fitUsers": [
+        "约会场景",
+        "拍照用户",
+        "淡颜用户",
+        "喜欢氛围感用户"
+      ],
+      "representativeLooks": [
+        "纯欲约会妆",
+        "微醺腮红妆",
+        "白开水妆",
+        "氛围感拍照妆"
+      ],
+      "difficulty": "中等",
+      "keyFeatures": [
+        "底妆清透",
+        "腮红范围明显",
+        "唇妆水润",
+        "眼妆轻但有神"
+      ],
+      "riskPoints": [
+        "腮红过重",
+        "底妆太白",
+        "唇妆油腻",
+        "容易显廉价"
+      ],
+      "makeupMateUseCase": "适合作为氛围感妆容智能体，帮助用户在不过度浓妆的情况下提升拍照效果。"
+    },
+    {
+      "categoryId": "hongkong_retro_makeup",
+      "categoryName": "港风妆",
+      "aliases": [
+        "港风复古",
+        "复古港风",
+        "红唇复古妆",
+        "浓颜港风"
+      ],
+      "description": "强调红唇、野生眉、轮廓感和复古氛围，适合拍照、聚会、浓颜或想提升气场的用户。",
+      "styleTags": [
+        "复古",
+        "红唇",
+        "野生眉",
+        "轮廓感",
+        "气场"
+      ],
+      "fitUsers": [
+        "浓颜用户",
+        "拍照用户",
+        "聚会场景",
+        "想增强气场用户"
+      ],
+      "representativeLooks": [
+        "港风红唇妆",
+        "复古卷发妆",
+        "浓颜港风妆",
+        "胶片感妆容"
+      ],
+      "difficulty": "中等",
+      "keyFeatures": [
+        "红唇突出",
+        "眉毛自然有存在感",
+        "轮廓清晰",
+        "整体有复古氛围"
+      ],
+      "riskPoints": [
+        "唇色太重显成熟",
+        "眉毛过粗",
+        "修容过脏",
+        "淡颜照搬容易压五官"
+      ],
+      "makeupMateUseCase": "适合作为复古风格智能体，帮助用户判断港风妆适配度并生成淡颜降难度版本。"
+    },
+    {
+      "categoryId": "cos_makeup",
+      "categoryName": "Cos妆",
+      "aliases": [
+        "COS妆",
+        "二次元妆",
+        "角色妆",
+        "动漫妆",
+        "舞台妆"
+      ],
+      "description": "服务于角色还原、漫展、拍摄和舞台展示，妆容夸张度较高，强调角色特征和镜头表现。",
+      "styleTags": [
+        "角色还原",
+        "二次元",
+        "舞台感",
+        "夸张眼妆",
+        "拍摄"
+      ],
+      "fitUsers": [
+        "Cos玩家",
+        "漫展用户",
+        "拍摄用户",
+        "角色仿妆用户"
+      ],
+      "representativeLooks": [
+        "动漫角色妆",
+        "舞台大眼妆",
+        "角色还原妆",
+        "二次元眼妆"
+      ],
+      "difficulty": "进阶",
+      "keyFeatures": [
+        "眼妆夸张",
+        "假睫毛明显",
+        "修容服务角色",
+        "色彩饱和度高",
+        "镜头效果优先"
+      ],
+      "riskPoints": [
+        "日常不适用",
+        "眼妆复杂",
+        "假睫毛难贴",
+        "妆面容易显脏"
+      ],
+      "makeupMateUseCase": "适合作为角色复刻智能体，帮助用户从角色图或 Cos 视频中拆解妆容步骤。"
+    }
+  ],
+  "creatorProfileSchema": {
+    "creatorId": "唯一ID，例如 douyin_creator_xxx",
+    "creatorName": "博主昵称",
+    "displayName": "前端展示名称",
+    "platform": "douyin",
+    "douyinId": "抖音号，如无法核验则为空字符串",
+    "profileUrl": "抖音主页链接，如无法核验则为空字符串",
+    "avatarUrl": "头像链接，如无法核验则为空字符串",
+    "avatarLocalPath": "本地头像路径，默认空字符串",
+    "followerCount": null,
+    "followerCountText": "例如 1973.7万，如无法核验则为空字符串",
+    "followerCountCapturedAt": "YYYY-MM-DD，如无法核验则为空字符串",
+    "followerCountSource": "粉丝数来源，例如 抖音主页截图 / 飞瓜数据 / 蝉妈妈 / 媒体报道 / 人工录入",
+    "primaryCategoryId": "必须从 styleCategories 的 categoryId 中选择一个",
+    "secondaryCategoryIds": [
+      "可选，从 styleCategories 的 categoryId 中选择多个"
+    ],
+    "creatorType": "教程型 / 风格型 / 测评型 / 改造型 / 仿妆型 / 综合型",
+    "status": "active / paused / retired / controversial / unknown",
+    "styleTags": [
+      "最多 8 个风格标签"
+    ],
+    "representativeLooks": [
+      "代表妆容或内容方向"
+    ],
+    "fitUsers": [
+      "适合用户群体"
+    ],
+    "difficulty": "新手 / 中等 / 进阶",
+    "keyFeatures": [
+      "妆容或内容风格特点，3-6条"
+    ],
+    "riskPoints": [
+      "用户复刻时容易翻车的点，2-5条"
+    ],
+    "sourceLinks": [
+      "公开来源链接，可以是抖音主页、公开视频、媒体报道"
+    ],
+    "representativeVideoLinks": [
+      "代表视频链接，如没有则为空数组"
+    ],
+    "styleSummary": "80 字以内总结该博主风格",
+    "makeupMateUseCase": "说明该博主适合在妆搭中作为哪类智能体入口",
+    "agentPrompt": "当用户选择该博主风格时，AI 应如何生成复刻建议",
+    "notes": "补充说明，例如停更、争议、数据不完整、需要人工复核等",
+    "dataConfidence": "high / medium / low",
+    "lastUpdated": "YYYY-MM-DD",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  "creatorProfiles": []
+}
