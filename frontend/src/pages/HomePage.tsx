@@ -1,35 +1,88 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { appActions } from "@/state/appStore";
-import type { MakeupCard } from "@/types";
+import type { MakeupCard, SourceType } from "@/types";
+import { uploadMedia } from "@/api/media";
 import { request } from "@/api/client";
 import "./HomePage.css";
 
+type SourceTab = Extract<SourceType, "link" | "image" | "video">;
 type AnalyzeStatus = "idle" | "loading" | "ready";
 
+const SOURCE_TABS: Array<{ key: SourceTab; label: string; icon: string }> = [
+  { key: "link", label: "粘贴链接", icon: "↗" },
+  { key: "image", label: "上传图片", icon: "▧" },
+  { key: "video", label: "上传视频", icon: "▶" },
+];
+
+interface PickedFile {
+  file: File;
+  mediaAssetId?: string;
+}
+
 export function HomePage() {
+  const [source, setSource] = useState<SourceTab>("link");
   const [link, setLink] = useState("");
+  const [picked, setPicked] = useState<Partial<Record<"image" | "video", PickedFile>>>({});
   const [status, setStatus] = useState<AnalyzeStatus>("idle");
   const [card, setCard] = useState<MakeupCard | undefined>();
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+
+  const canAnalyze = useMemo(() => {
+    if (source === "link") return link.trim().length > 0;
+    return Boolean(picked[source]);
+  }, [link, picked, source]);
+
+  const openPicker = (type: "image" | "video") => {
+    (type === "image" ? imageInputRef : videoInputRef).current?.click();
+  };
+
+  const onFilePicked = async (type: "image" | "video", file: File | undefined) => {
+    if (!file) return;
+    setPicked((prev) => ({ ...prev, [type]: { file } }));
+    appActions.showToast(`已选择：${file.name}`, "success");
+    try {
+      const purpose = type === "image" ? "makeup_source_image" : "makeup_source_video";
+      const asset = await uploadMedia({ file, purpose, retentionPolicy: "temporary_source" });
+      setPicked((prev) => ({ ...prev, [type]: { file, mediaAssetId: asset.mediaAssetId } }));
+      appActions.showToast("文件已上传，可以解析了", "success");
+    } catch (err) {
+      console.error(err);
+      appActions.showToast("上传失败，请重试", "warn");
+      setPicked((prev) => {
+        const next = { ...prev };
+        delete next[type];
+        return next;
+      });
+    }
+  };
 
   const onAnalyze = async () => {
-    if (!link.trim()) {
-      appActions.showToast("请先粘贴一个抖音美妆视频链接", "warn");
+    if (!canAnalyze) {
+      appActions.showToast("请先粘贴链接，或上传图片/视频", "warn");
       return;
+    }
+    if (source !== "link") {
+      const ready = picked[source]?.mediaAssetId;
+      if (!ready) {
+        appActions.showToast("文件还在上传中，稍等一下", "warn");
+        return;
+      }
     }
     setStatus("loading");
     try {
       const res = await request<{ card: MakeupCard }>("/makeup-cards/analyze", {
         method: "POST",
         body: {
-          sourceType: "link",
-          sourceUrl: link.trim(),
-          mediaAssetId: null,
+          sourceType: source,
+          sourceUrl: source === "link" ? link.trim() : null,
+          mediaAssetId: source === "link" ? null : picked[source]?.mediaAssetId,
         },
       });
       setCard(res.card);
       appActions.setCurrentCard(res.card);
       setStatus("ready");
-      appActions.showToast("复刻卡片已生成", "success");
+      appActions.showToast("解析卡片已生成", "success");
     } catch (err) {
       console.error(err);
       setStatus("idle");
@@ -47,29 +100,96 @@ export function HomePage() {
   return (
     <div className="home-page">
       <header className="home-page__hero">
-        <h1 className="home-page__title">
-          粘贴抖音美妆视频
-          <br />
-          生成复刻卡片
-        </h1>
+        <h1 className="home-page__title">粘贴美妆视频链接，生成复刻卡片</h1>
         <p className="home-page__subtitle">
-          复制抖音美妆视频链接，AI 将解析妆容重点，生成适合你的复刻步骤。
+          支持抖音、小红书、B站链接，也可上传截图或短视频。
         </p>
       </header>
 
       <section className="home-page__panel">
-        <div className="home-page__input-label">
-          <span>抖音链接解析</span>
-          <b>V1</b>
+        <div className="home-page__source-switcher" role="tablist" aria-label="内容来源">
+          {SOURCE_TABS.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={`home-page__source-tab${source === item.key ? " is-active" : ""}`}
+              onClick={() => setSource(item.key)}
+            >
+              <span>{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
         </div>
 
-        <input
-          className="home-page__link"
-          placeholder="粘贴抖音美妆视频链接"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-        />
-        <p className="home-page__hint">目前仅支持抖音美妆视频链接。</p>
+        {source === "link" && (
+          <div className="home-page__source-panel">
+            <input
+              className="home-page__link"
+              placeholder="粘贴抖音 / 小红书 / B站美妆链接"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+            <p className="home-page__hint">第一版重点支持抖音链接，也可用截图和短视频演示。</p>
+          </div>
+        )}
+
+        {source === "image" && (
+          <>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => onFilePicked("image", e.target.files?.[0])}
+            />
+            <button
+              type="button"
+              className={`home-page__upload-zone${picked.image ? " has-file" : ""}`}
+              onClick={() => openPicker("image")}
+            >
+              <span className="home-page__upload-icon">▧</span>
+              <span className="home-page__upload-title">
+                {picked.image?.file.name ?? "上传妆容截图 / 封面图"}
+              </span>
+              <span className="home-page__upload-sub">
+                {picked.image
+                  ? picked.image.mediaAssetId
+                    ? `${(picked.image.file.size / 1024 / 1024).toFixed(1)} MB · 已上传`
+                    : "上传中…"
+                  : "适合博主妆容图、封面图、想复刻的妆容照片"}
+              </span>
+            </button>
+          </>
+        )}
+
+        {source === "video" && (
+          <>
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/*"
+              hidden
+              onChange={(e) => onFilePicked("video", e.target.files?.[0])}
+            />
+            <button
+              type="button"
+              className={`home-page__upload-zone${picked.video ? " has-file" : ""}`}
+              onClick={() => openPicker("video")}
+            >
+              <span className="home-page__upload-icon">▶</span>
+              <span className="home-page__upload-title">
+                {picked.video?.file.name ?? "上传本地短视频片段"}
+              </span>
+              <span className="home-page__upload-sub">
+                {picked.video
+                  ? picked.video.mediaAssetId
+                    ? `${(picked.video.file.size / 1024 / 1024).toFixed(1)} MB · 已上传`
+                    : "上传中…"
+                  : "系统会抽取关键帧，识别妆容步骤和翻车点"}
+              </span>
+            </button>
+          </>
+        )}
 
         <button
           type="button"
@@ -77,16 +197,16 @@ export function HomePage() {
           onClick={onAnalyze}
           disabled={status === "loading"}
         >
-          {status === "loading" ? "正在生成复刻卡片" : "开始生成复刻卡片"}
+          {status === "loading" ? "正在生成解析卡片" : "开始解析妆容"}
         </button>
       </section>
 
       {status === "loading" && (
         <div className="home-page__loading" aria-live="polite">
-          <div className="home-page__loading-step is-done">读取抖音链接</div>
-          <div className="home-page__loading-step is-active">提取视频关键帧</div>
+          <div className="home-page__loading-step is-done">读取内容来源</div>
+          <div className="home-page__loading-step is-active">提取画面关键帧</div>
           <div className="home-page__loading-step">识别妆容风格</div>
-          <div className="home-page__loading-step">生成复刻卡片</div>
+          <div className="home-page__loading-step">生成解析卡片</div>
         </div>
       )}
 
@@ -104,7 +224,7 @@ export function HomePage() {
         <div className="home-page__recent-empty">
           <span className="home-page__recent-glyph" aria-hidden>✎</span>
           <p>还没有生成记录</p>
-          <small>粘贴一个抖音美妆视频，生成你的第一张复刻卡片。</small>
+          <small>粘贴一个美妆视频，开始试试。</small>
         </div>
       </section>
 
