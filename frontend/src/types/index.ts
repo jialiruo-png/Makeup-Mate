@@ -166,3 +166,17 @@ export interface ToastState {
 }
 
 export type ActiveTab = "home" | "chat" | "profile";
+
+// ============== 鉴权 ==============
+export interface UserPublic {
+  userId: string;
+  username: string;
+  nickname: string;
+  isGuest: boolean;
+}
+
+export interface TokenResponse {
+  accessToken: string;
+  tokenType: string;
+  user: UserPublic;
+}

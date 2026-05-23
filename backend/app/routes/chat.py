@@ -5,9 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..db import get_db
+from ..deps import get_current_user
 from ..models.chat import ChatMessage as ChatMessageModel
 from ..models.chat import ChatSession as ChatSessionModel
 from ..models.media_asset import MediaAsset as MediaAssetModel
+from ..models.user import User
 from ..routes.makeup_cards import _CARD_CACHE
 from ..schemas.chat import (
     ChatMessage,
@@ -95,14 +97,16 @@ def _media_public_url(media_asset_id: str, db: Session) -> str | None:
 
 @router.post("/sessions", response_model=ChatSession, response_model_by_alias=True)
 def create_session(
-    payload: CreateSessionRequest, db: Session = Depends(get_db)
+    payload: CreateSessionRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ) -> ChatSession:
     card = _CARD_CACHE.get(payload.card_id) if payload.card_id else None
     session_id = _make_id("chat")
 
     session_row = ChatSessionModel(
         id=session_id,
-        user_id=_settings.default_user_id,
+        user_id=user.id,
         makeup_card_id=payload.card_id,
         inspiration_id=payload.inspiration_id,
         mode=payload.mode,
@@ -136,10 +140,12 @@ def create_session(
     response_model_by_alias=True,
 )
 def list_messages(
-    session_id: str, db: Session = Depends(get_db)
+    session_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ) -> ListMessagesResponse:
     session_row = db.get(ChatSessionModel, session_id)
-    if not session_row:
+    if not session_row or session_row.user_id != user.id:
         raise HTTPException(status_code=404, detail="会话不存在")
     rows = (
         db.query(ChatMessageModel)
@@ -159,10 +165,13 @@ def list_messages(
     response_model_by_alias=True,
 )
 def send_message(
-    session_id: str, payload: SendMessageRequest, db: Session = Depends(get_db)
+    session_id: str,
+    payload: SendMessageRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ) -> SendMessageResponse:
     session_row = db.get(ChatSessionModel, session_id)
-    if not session_row:
+    if not session_row or session_row.user_id != user.id:
         raise HTTPException(status_code=404, detail="会话不存在")
 
     # 解析图（如果带了）

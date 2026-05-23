@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from ..config import get_settings
+from ..deps import require_real_user
+from ..models.user import User
 from ..schemas.beauty_profile import (
     AnalyzePhotoRequest,
     AnalyzePhotoResponse,
@@ -35,7 +37,10 @@ def _default_beauty_profile() -> BeautyProfile:
     response_model=AnalyzePhotoResponse,
     response_model_by_alias=True,
 )
-def analyze_photo(payload: AnalyzePhotoRequest) -> AnalyzePhotoResponse:
+def analyze_photo(
+    payload: AnalyzePhotoRequest,
+    _user: User = Depends(require_real_user),
+) -> AnalyzePhotoResponse:
     face_geometry = mediapipe_service.extract_face_geometry()
     return AnalyzePhotoResponse(
         retention=RetentionInfo(
@@ -48,17 +53,20 @@ def analyze_photo(payload: AnalyzePhotoRequest) -> AnalyzePhotoResponse:
 
 
 @router.get("/me", response_model=MeResponse, response_model_by_alias=True)
-def get_me() -> MeResponse:
-    return memory_service.get_me(_settings.default_user_id)
+def get_me(user: User = Depends(require_real_user)) -> MeResponse:
+    return memory_service.get_me(user.id)
 
 
 @router.patch("/me", response_model=MeResponse, response_model_by_alias=True)
-def update_me(_payload: UpdateMeRequest) -> MeResponse:
+def update_me(
+    _payload: UpdateMeRequest,
+    user: User = Depends(require_real_user),
+) -> MeResponse:
     # 第一阶段先返回固定档案，后续接 DB 落地。
-    return memory_service.get_me(_settings.default_user_id)
+    return memory_service.get_me(user.id)
 
 
 @router.delete("/me/memory", response_model=OkResponse)
-def clear_memory() -> OkResponse:
+def clear_memory(_user: User = Depends(require_real_user)) -> OkResponse:
     # 第一阶段直接返回成功；落库后清空 memory_items。
     return OkResponse(ok=True)

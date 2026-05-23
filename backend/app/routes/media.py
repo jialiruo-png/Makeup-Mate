@@ -8,7 +8,9 @@ from sqlalchemy.orm import Session
 
 from ..config import get_settings
 from ..db import get_db
+from ..deps import get_current_user, is_guest
 from ..models.media_asset import MediaAsset as MediaAssetModel
+from ..models.user import User
 from ..schemas.media import MediaAsset
 
 router = APIRouter(prefix="/media", tags=["media"])
@@ -36,6 +38,7 @@ async def upload(
     sessionId: str | None = Form(default=None),
     retentionPolicy: str = Form(default="session_only"),
     db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ) -> MediaAsset:
     if not file.filename:
         raise HTTPException(status_code=400, detail="缺少文件名")
@@ -51,16 +54,17 @@ async def upload(
     target.write_bytes(content)
 
     expires_at = datetime.now(timezone(timedelta(hours=8))) + timedelta(hours=24)
+    effective_retention = "session_only" if is_guest(user) else retentionPolicy
 
     row = MediaAssetModel(
         id=media_id,
-        user_id=_settings.default_user_id,
+        user_id=user.id,
         file_type=file_type,
         file_url=str(target),
         purpose=purpose,
         analysis_status="pending",
         analysis_result={},
-        retention_policy=retentionPolicy,
+        retention_policy=effective_retention,
         expires_at=expires_at.replace(tzinfo=None),
     )
     db.add(row)
@@ -71,7 +75,7 @@ async def upload(
         fileType=file_type,  # type: ignore[arg-type]
         purpose=purpose,  # type: ignore[arg-type]
         analysisStatus="pending",
-        retentionPolicy=retentionPolicy,  # type: ignore[arg-type]
+        retentionPolicy=effective_retention,  # type: ignore[arg-type]
         expiresAt=expires_at,
     )
 
