@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from . import (
+    auth,
     makeup_cards,
     inspirations,
     chat,
@@ -10,6 +11,7 @@ from . import (
 )
 
 api_router = APIRouter(prefix="/api")
+api_router.include_router(auth.router)
 api_router.include_router(makeup_cards.router)
 api_router.include_router(inspirations.router)
 api_router.include_router(chat.router)

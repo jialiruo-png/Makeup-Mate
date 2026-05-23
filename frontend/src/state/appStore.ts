@@ -4,9 +4,17 @@ import type {
   ChatSession,
   MakeupCard,
   ToastState,
+  UserPublic,
 } from "@/types";
+import {
+  clearToken,
+  getCachedUser,
+  getToken,
+  setCachedUser,
+  setToken,
+} from "@/lib/auth";
 
-export type AuthMethod = "phone" | "wechat" | "guest";
+export type AuthMethod = "password" | "guest";
 
 export interface AppState {
   activeTab: ActiveTab;
@@ -16,18 +24,39 @@ export interface AppState {
   toast?: ToastState;
   isAuthed: boolean;
   authMethod?: AuthMethod;
+  currentUser?: UserPublic;
 }
 
-const initialState: AppState = {
-  activeTab: "home",
-  currentUserId: "user_demo",
-  isAuthed: false,
+const GUEST_USER: UserPublic = {
+  userId: "guest",
+  username: "guest",
+  nickname: "游客",
+  isGuest: true,
 };
+
+function bootstrap(): AppState {
+  const cached = getCachedUser();
+  const token = getToken();
+  if (cached && token && !cached.isGuest) {
+    return {
+      activeTab: "home",
+      currentUserId: cached.userId,
+      isAuthed: true,
+      authMethod: "password",
+      currentUser: cached,
+    };
+  }
+  return {
+    activeTab: "home",
+    currentUserId: GUEST_USER.userId,
+    isAuthed: false,
+  };
+}
 
 type Listener = () => void;
 
 class Store {
-  private state: AppState = initialState;
+  private state: AppState = bootstrap();
   private listeners = new Set<Listener>();
 
   getState = (): AppState => this.state;
@@ -62,8 +91,38 @@ export const appActions = {
   showToast: (message: string, tone: ToastState["tone"] = "info") =>
     store.setState({ toast: { message, tone } }),
   hideToast: () => store.setState({ toast: undefined }),
-  signIn: (method: AuthMethod) =>
-    store.setState({ isAuthed: true, authMethod: method, activeTab: "home" }),
-  signOut: () =>
-    store.setState({ isAuthed: false, authMethod: undefined, activeTab: "home" }),
+
+  signInWithPassword: (user: UserPublic, accessToken: string) => {
+    setToken(accessToken);
+    setCachedUser(user);
+    store.setState({
+      isAuthed: true,
+      authMethod: "password",
+      currentUser: user,
+      currentUserId: user.userId,
+      activeTab: "home",
+    });
+  },
+
+  signInAsGuest: () => {
+    clearToken();
+    store.setState({
+      isAuthed: true,
+      authMethod: "guest",
+      currentUser: { ...GUEST_USER },
+      currentUserId: GUEST_USER.userId,
+      activeTab: "home",
+    });
+  },
+
+  signOut: () => {
+    clearToken();
+    store.setState({
+      isAuthed: false,
+      authMethod: undefined,
+      currentUser: undefined,
+      currentUserId: GUEST_USER.userId,
+      activeTab: "home",
+    });
+  },
 };

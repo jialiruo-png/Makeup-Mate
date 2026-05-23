@@ -1,4 +1,8 @@
+import { clearToken, getToken } from "@/lib/auth";
+
 const API_BASE = import.meta.env.VITE_API_BASE ?? "/api";
+
+export const UNAUTHORIZED_EVENT = "mm:unauthorized";
 
 export class ApiError extends Error {
   status: number;
@@ -33,10 +37,12 @@ function buildUrl(path: string, query?: Query): string {
 export async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
   const { body, query, headers, ...rest } = opts;
   const isForm = body instanceof FormData;
+  const token = getToken();
   const res = await fetch(buildUrl(path, query), {
     ...rest,
     headers: {
       ...(isForm ? {} : { "Content-Type": "application/json" }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(headers ?? {}),
     },
     body: body == null ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
@@ -48,6 +54,14 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
     : await res.text().catch(() => null);
 
   if (!res.ok) {
+    if (res.status === 401) {
+      clearToken();
+      try {
+        window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+      } catch {
+        /* noop */
+      }
+    }
     throw new ApiError(res.status, `API ${res.status} ${path}`, parsed);
   }
   return parsed as T;

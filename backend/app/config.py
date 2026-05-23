@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     # 形如 http://121.43.144.91:8080。Qwen 会去 {public_base_url}/api/media/{id}/raw 拉图
     public_base_url: str = ""
 
+    # ---------- 鉴权 ----------
+    jwt_secret: str = "dev-secret-change-me"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_days: int = 7
+    guest_user_id: str = "guest"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

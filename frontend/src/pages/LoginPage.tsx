@@ -1,50 +1,57 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
+import { ApiError } from "@/api/client";
+import { login, register } from "@/api/auth";
 import { appActions } from "@/state/appStore";
 import "./LoginPage.css";
 
-const PHONE_REGEX = /^1[3-9]\d{9}$/;
+type Mode = "login" | "register";
+
+const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 
 export function LoginPage() {
-  const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
-  const [countdown, setCountdown] = useState(0);
+  const [mode, setMode] = useState<Mode>("login");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = window.setTimeout(() => setCountdown(countdown - 1), 1000);
-    return () => window.clearTimeout(timer);
-  }, [countdown]);
+  const usernameValid = USERNAME_RE.test(username);
+  const passwordValid = password.length >= 6 && password.length <= 64;
+  const canSubmit = usernameValid && passwordValid && !submitting;
 
-  const phoneValid = PHONE_REGEX.test(phone);
-  const canSubmit = phoneValid && code.trim().length >= 4;
-
-  const requestCode = () => {
-    if (!phoneValid) {
-      appActions.showToast("请输入正确的手机号", "warn");
-      return;
-    }
-    setCountdown(60);
-    appActions.showToast("验证码已发送（演示）", "success");
-  };
-
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!canSubmit) {
-      appActions.showToast("请填写手机号和验证码", "warn");
+      if (!usernameValid) {
+        appActions.showToast("用户名需 3-20 位字母、数字或下划线", "warn");
+      } else if (!passwordValid) {
+        appActions.showToast("密码长度需 6-64 位", "warn");
+      }
       return;
     }
-    appActions.signIn("phone");
-    appActions.showToast("欢迎来到妆搭", "success");
-  };
-
-  const signInWechat = () => {
-    appActions.signIn("wechat");
-    appActions.showToast("已使用微信登录", "success");
+    setSubmitting(true);
+    try {
+      const res = await (mode === "login"
+        ? login(username, password)
+        : register(username, password));
+      appActions.signInWithPassword(res.user, res.accessToken);
+      appActions.showToast(
+        mode === "login" ? `欢迎回来，${res.user.nickname}` : "注册成功，欢迎来到妆搭",
+        "success",
+      );
+    } catch (err) {
+      const apiErr = err as ApiError;
+      const detail =
+        (apiErr.body as { detail?: string } | null)?.detail ??
+        (mode === "login" ? "登录失败" : "注册失败");
+      appActions.showToast(detail, "error");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const signInGuest = () => {
-    appActions.signIn("guest");
-    appActions.showToast("已进入游客模式", "info");
+    appActions.signInAsGuest();
+    appActions.showToast("已进入游客模式（数据不会保存到账号）", "info");
   };
 
   return (
@@ -59,46 +66,50 @@ export function LoginPage() {
         </p>
       </header>
 
+      <div className="login-page__tabs">
+        <button
+          type="button"
+          className={`login-page__tab${mode === "login" ? " login-page__tab--active" : ""}`}
+          onClick={() => setMode("login")}
+        >
+          登录
+        </button>
+        <button
+          type="button"
+          className={`login-page__tab${mode === "register" ? " login-page__tab--active" : ""}`}
+          onClick={() => setMode("register")}
+        >
+          注册
+        </button>
+      </div>
+
       <form className="login-page__form" onSubmit={submit}>
         <label className="login-page__field">
-          <span className="login-page__field-prefix">+86</span>
-          <input
-            className="login-page__input"
-            type="tel"
-            inputMode="numeric"
-            maxLength={11}
-            placeholder="请输入手机号"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-          />
-        </label>
-
-        <label className="login-page__field login-page__field--code">
           <input
             className="login-page__input"
             type="text"
-            inputMode="numeric"
-            maxLength={6}
-            placeholder="6 位短信验证码"
-            value={code}
-            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+            autoComplete="username"
+            maxLength={20}
+            placeholder="用户名（3-20 位字母/数字/下划线）"
+            value={username}
+            onChange={(e) => setUsername(e.target.value.trim())}
           />
-          <button
-            type="button"
-            className="login-page__code-btn"
-            onClick={requestCode}
-            disabled={countdown > 0}
-          >
-            {countdown > 0 ? `${countdown}s 后重发` : "获取验证码"}
-          </button>
         </label>
 
-        <button
-          type="submit"
-          className="login-page__cta"
-          disabled={!canSubmit}
-        >
-          进入妆搭
+        <label className="login-page__field">
+          <input
+            className="login-page__input"
+            type="password"
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            maxLength={64}
+            placeholder="密码（至少 6 位）"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+
+        <button type="submit" className="login-page__cta" disabled={!canSubmit}>
+          {submitting ? "请稍候…" : mode === "login" ? "登录" : "注册并进入"}
         </button>
       </form>
 
@@ -107,18 +118,6 @@ export function LoginPage() {
       </div>
 
       <div className="login-page__alts">
-        <button type="button" className="login-page__wechat" onClick={signInWechat}>
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M8.7 4C4.7 4 1.5 6.7 1.5 10c0 1.9 1.1 3.6 2.8 4.8L3.6 17l2.5-1.3c.8.2 1.7.3 2.6.3.3 0 .5 0 .8-.1-.2-.5-.3-1-.3-1.6 0-2.9 2.8-5.3 6.3-5.3.2 0 .4 0 .6 0C15.5 6 12.4 4 8.7 4ZM6 8.6a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm5.5 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm9 7.5c0-2.7-2.7-4.9-6-4.9s-6 2.2-6 4.9 2.7 4.9 6 4.9c.7 0 1.3-.1 1.9-.2l1.9 1-.5-1.7c1.6-1 2.7-2.5 2.7-4Zm-8.2-1.4a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Zm4.4 0a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Z" />
-          </svg>
-          微信一键登录
-        </button>
         <button type="button" className="login-page__guest" onClick={signInGuest}>
           暂不登录 · 游客体验
         </button>
@@ -130,7 +129,7 @@ export function LoginPage() {
         与
         <a>《隐私政策》</a>
         <br />
-        妆搭默认不保存原始自拍，仅保存结构化档案
+        游客模式下数据不会保存到你的账号
       </p>
     </div>
   );
