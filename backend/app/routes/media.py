@@ -50,7 +50,9 @@ async def upload(
 
     media_id = f"media_{uuid4().hex[:10]}"
     ext = Path(file.filename).suffix.lower()
-    target = _settings.storage_path / f"{media_id}{ext}"
+    # 存的是 storage_dir 下的相对 key，落库时不要写绝对路径 —— 否则换机器/换部署路径会 410。
+    file_key = f"{media_id}{ext}"
+    target = _settings.storage_path / file_key
     target.write_bytes(content)
 
     expires_at = datetime.now(timezone(timedelta(hours=8))) + timedelta(hours=24)
@@ -60,7 +62,7 @@ async def upload(
         id=media_id,
         user_id=user.id,
         file_type=file_type,
-        file_url=str(target),
+        file_url=file_key,
         purpose=purpose,
         analysis_status="pending",
         analysis_result={},
@@ -89,7 +91,11 @@ def get_raw(media_id: str, db: Session = Depends(get_db)) -> FileResponse:
     row = db.get(MediaAssetModel, media_id)
     if not row:
         raise HTTPException(status_code=404, detail="media not found")
-    p = Path(row.file_url)
+    # file_url 现在存的是相对 key（如 media_xxx.jpg）；老数据里仍是绝对路径，要兼容。
+    raw = row.file_url or ""
+    p = Path(raw)
+    if not p.is_absolute():
+        p = _settings.storage_path / raw
     if not p.exists():
         raise HTTPException(status_code=410, detail="media file expired or removed")
     ext = p.suffix.lower().lstrip(".")
