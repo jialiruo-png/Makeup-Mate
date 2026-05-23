@@ -18,6 +18,11 @@ class Settings(BaseSettings):
 
     storage_dir: str = "./storage/tmp"
 
+    # ---------- AI (Qwen-VL-Max via DashScope 原生 or OpenAI 兼容中转) ----------
+    dashscope_api_key: str = ""
+    dashscope_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    qwen_vl_model: str = "qwen-vl-max"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
