@@ -9,6 +9,8 @@ httpx==0.27.2
 
 # 鉴权
 passlib[bcrypt]==1.7.4
+# bcrypt >= 4.1 移除了 __about__ 属性，passlib 1.7.4 还在用，必须锁老版本
+bcrypt==4.0.1
 python-jose[cryptography]==3.3.0
 
 # 数据库驱动
