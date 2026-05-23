@@ -3,6 +3,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from ..config import get_settings
@@ -73,3 +74,19 @@ async def upload(
         retentionPolicy=retentionPolicy,  # type: ignore[arg-type]
         expiresAt=expires_at,
     )
+
+
+@router.get("/{media_id}/raw")
+def get_raw(media_id: str, db: Session = Depends(get_db)) -> FileResponse:
+    """通过 mediaAssetId 下载文件 —— 给 Qwen-VL 拉图用的公开 URL。
+
+    第一阶段没做权限校验，因为 ID 是 uuid 难猜；后续要接登录后加 user_id 校验。
+    """
+    row = db.get(MediaAssetModel, media_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="media not found")
+    p = Path(row.file_url)
+    if not p.exists():
+        raise HTTPException(status_code=410, detail="media file expired or removed")
+    media_type = "image/jpeg" if row.file_type == "image" else "video/mp4"
+    return FileResponse(path=p, media_type=media_type, filename=p.name)

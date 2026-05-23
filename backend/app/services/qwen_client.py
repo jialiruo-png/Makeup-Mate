@@ -1,17 +1,16 @@
 """阿里云 DashScope · Qwen-VL-Max 调用封装。
 
 只对外暴露两个函数：
-- analyze_makeup_image(image_path, prompt) -> dict  （图 → 妆容卡片 JSON）
+- analyze_makeup_image(image_url, prompt) -> dict  （图 URL → 妆容卡片 JSON）
 - chat_text(user_message, system, history) -> str  （文本对话）
 
-如果环境变量没配 DASHSCOPE_API_KEY，调用方应自行 fallback 到 mock。
+注意：image_url 必须是公网 HTTP(S) URL，不要传 base64 data URL —— 部分 OpenAI 兼容
+中转站（如 openai-next）会拦截 data URL，得让 Qwen 自己去拉。
 """
 from __future__ import annotations
 
-import base64
 import json
 import logging
-from pathlib import Path
 
 import httpx
 
@@ -35,17 +34,11 @@ def _require_key() -> str:
     return key
 
 
-def _image_data_url(path: str) -> str:
-    p = Path(path)
-    ext = p.suffix.lower().lstrip(".") or "jpeg"
-    if ext == "jpg":
-        ext = "jpeg"
-    b64 = base64.b64encode(p.read_bytes()).decode("ascii")
-    return f"data:image/{ext};base64,{b64}"
+def analyze_makeup_image(image_url: str, prompt: str) -> dict:
+    """让 Qwen-VL-Max 看图 + 按 prompt 输出 JSON。失败抛 QwenUnavailable。
 
-
-def analyze_makeup_image(image_path: str, prompt: str) -> dict:
-    """让 Qwen-VL-Max 看图 + 按 prompt 输出 JSON。失败抛 QwenUnavailable。"""
+    image_url 必须是 Qwen 能直接 GET 到的公网 URL（不能是 data:）。
+    """
     key = _require_key()
     payload = {
         "model": _settings.qwen_vl_model,
@@ -53,7 +46,7 @@ def analyze_makeup_image(image_path: str, prompt: str) -> dict:
             {
                 "role": "user",
                 "content": [
-                    {"type": "image_url", "image_url": {"url": _image_data_url(image_path)}},
+                    {"type": "image_url", "image_url": {"url": image_url}},
                     {"type": "text", "text": prompt},
                 ],
             }

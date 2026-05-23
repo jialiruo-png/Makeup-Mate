@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     dashscope_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     qwen_vl_model: str = "qwen-vl-max"
 
+    # ---------- 公网回调地址（给 Qwen 拉图用） ----------
+    # 形如 http://121.43.144.91:8080。Qwen 会去 {public_base_url}/api/media/{id}/raw 拉图
+    public_base_url: str = ""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

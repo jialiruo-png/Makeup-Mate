@@ -8,6 +8,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from uuid import uuid4
 
+from ..config import get_settings
 from ..db import SessionLocal
 from ..models.media_asset import MediaAsset as MediaAssetModel
 from ..schemas.makeup_card import (
@@ -22,6 +23,7 @@ from ..schemas.makeup_card import (
 from . import qwen_client
 
 log = logging.getLogger("makeup-mate.ai")
+_settings = get_settings()
 
 
 _ANALYZE_PROMPT = """你是「妆搭 Makeup Mate」的妆容解析助手。请仔细看这张图，输出一张可以复刻的妆容卡片。
@@ -78,8 +80,8 @@ def _mock_card(req: AnalyzeRequest) -> MakeupCard:
     )
 
 
-def _qwen_card_from_image(req: AnalyzeRequest, image_path: str) -> MakeupCard:
-    raw = qwen_client.analyze_makeup_image(image_path, _ANALYZE_PROMPT)
+def _qwen_card_from_image(req: AnalyzeRequest, image_url: str) -> MakeupCard:
+    raw = qwen_client.analyze_makeup_image(image_url, _ANALYZE_PROMPT)
     steps = [
         MakeupStep(
             stepNo=int(s.get("stepNo", i + 1)),
@@ -110,19 +112,25 @@ def _qwen_card_from_image(req: AnalyzeRequest, image_path: str) -> MakeupCard:
     )
 
 
-def _lookup_media_path(media_asset_id: str) -> str | None:
+def _public_image_url(media_asset_id: str) -> str | None:
+    base = _settings.public_base_url.rstrip("/")
+    if not base:
+        log.warning("PUBLIC_BASE_URL not configured; Qwen will fall back to mock")
+        return None
     with SessionLocal() as db:
         row = db.get(MediaAssetModel, media_asset_id)
-        return row.file_url if row else None
+        if not row:
+            return None
+    return f"{base}/api/media/{media_asset_id}/raw"
 
 
 def analyze_makeup(req: AnalyzeRequest) -> AnalyzeResponse:
     card: MakeupCard | None = None
     if req.source_type == "image" and req.media_asset_id:
-        image_path = _lookup_media_path(req.media_asset_id)
-        if image_path:
+        image_url = _public_image_url(req.media_asset_id)
+        if image_url:
             try:
-                card = _qwen_card_from_image(req, image_path)
+                card = _qwen_card_from_image(req, image_url)
             except qwen_client.QwenUnavailable as exc:
                 log.warning("Qwen unavailable, fallback to mock: %s", exc)
 
