@@ -1,115 +1,105 @@
-import { FormEvent, useState } from "react";
-import { ApiError } from "@/api/client";
-import { login, register } from "@/api/auth";
+import { FormEvent, useEffect, useState } from "react";
 import { appActions } from "@/state/appStore";
 import "./LoginPage.css";
 
-type Mode = "login" | "register";
-
-const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
+const PHONE_REGEX = /^1[3-9]\d{9}$/;
 
 export function LoginPage() {
-  const [mode, setMode] = useState<Mode>("login");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
+  const [countdown, setCountdown] = useState(0);
 
-  const usernameValid = USERNAME_RE.test(username);
-  const passwordValid = password.length >= 6 && password.length <= 64;
-  const canSubmit = usernameValid && passwordValid && !submitting;
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = window.setTimeout(() => setCountdown(countdown - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [countdown]);
 
-  const submit = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!canSubmit) {
-      if (!usernameValid) {
-        appActions.showToast("用户名需 3-20 位字母、数字或下划线", "warn");
-      } else if (!passwordValid) {
-        appActions.showToast("密码长度需 6-64 位", "warn");
-      }
+  const phoneValid = PHONE_REGEX.test(phone);
+  const canSubmit = phoneValid && code.trim().length >= 4;
+
+  const requestCode = () => {
+    if (!phoneValid) {
+      appActions.showToast("请输入正确的手机号", "warn");
       return;
     }
-    setSubmitting(true);
-    try {
-      const res = await (mode === "login"
-        ? login(username, password)
-        : register(username, password));
-      appActions.signInWithPassword(res.user, res.accessToken);
-      appActions.showToast(
-        mode === "login" ? `欢迎回来，${res.user.nickname}` : "注册成功，欢迎来到妆搭",
-        "success",
-      );
-    } catch (err) {
-      const apiErr = err as ApiError;
-      const detail =
-        (apiErr.body as { detail?: string } | null)?.detail ??
-        (mode === "login" ? "登录失败" : "注册失败");
-      appActions.showToast(detail, "error");
-    } finally {
-      setSubmitting(false);
+    setCountdown(60);
+    appActions.showToast("验证码已发送（演示）", "success");
+  };
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    if (!canSubmit) {
+      appActions.showToast("请填写手机号和验证码", "warn");
+      return;
     }
+    appActions.signIn("phone");
+    appActions.showToast("欢迎来到妆搭", "success");
+  };
+
+  const signInDouyin = () => {
+    appActions.signIn("douyin");
+    appActions.showToast("已使用抖音登录", "success");
   };
 
   const signInGuest = () => {
-    appActions.signInAsGuest();
-    appActions.showToast("已进入游客模式（数据不会保存到账号）", "info");
+    appActions.signIn("guest");
+    appActions.showToast("已进入游客模式", "info");
   };
 
   return (
     <div className="login-page">
       <header className="login-page__brand">
-        <div className="login-page__logo">妆</div>
-        <h1 className="login-page__title">妆搭 Makeup Mate</h1>
-        <p className="login-page__tagline">
-          会记住你的 AI 美妆视频陪练
-          <br />
-          把刷到的妆容，变成你的复刻教程
-        </p>
+        <div className="login-page__brand-row">
+          <div className="login-page__logo" aria-hidden>
+            <span>MM</span>
+          </div>
+          <span className="login-page__brand-name">妆搭</span>
+        </div>
+        <p className="login-page__slogan">看懂妆容，更懂你</p>
+        <p className="login-page__tagline">把喜欢的妆，变成适合你的妆。</p>
       </header>
-
-      <div className="login-page__tabs">
-        <button
-          type="button"
-          className={`login-page__tab${mode === "login" ? " login-page__tab--active" : ""}`}
-          onClick={() => setMode("login")}
-        >
-          登录
-        </button>
-        <button
-          type="button"
-          className={`login-page__tab${mode === "register" ? " login-page__tab--active" : ""}`}
-          onClick={() => setMode("register")}
-        >
-          注册
-        </button>
-      </div>
 
       <form className="login-page__form" onSubmit={submit}>
         <label className="login-page__field">
+          <span className="login-page__field-prefix">+86</span>
+          <input
+            className="login-page__input"
+            type="tel"
+            inputMode="numeric"
+            maxLength={11}
+            placeholder="请输入手机号"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+          />
+        </label>
+
+        <label className="login-page__field login-page__field--code">
           <input
             className="login-page__input"
             type="text"
-            autoComplete="username"
-            maxLength={20}
-            placeholder="用户名（3-20 位字母/数字/下划线）"
-            value={username}
-            onChange={(e) => setUsername(e.target.value.trim())}
+            inputMode="numeric"
+            maxLength={6}
+            placeholder="6 位短信验证码"
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
           />
+          <button
+            type="button"
+            className="login-page__code-btn"
+            onClick={requestCode}
+            disabled={countdown > 0}
+          >
+            {countdown > 0 ? `${countdown}s 后重发` : "获取验证码"}
+          </button>
         </label>
 
-        <label className="login-page__field">
-          <input
-            className="login-page__input"
-            type="password"
-            autoComplete={mode === "login" ? "current-password" : "new-password"}
-            maxLength={64}
-            placeholder="密码（至少 6 位）"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-
-        <button type="submit" className="login-page__cta" disabled={!canSubmit}>
-          {submitting ? "请稍候…" : mode === "login" ? "登录" : "注册并进入"}
+        <button
+          type="submit"
+          className="login-page__cta"
+          disabled={!canSubmit}
+        >
+          进入妆搭
         </button>
       </form>
 
@@ -118,6 +108,18 @@ export function LoginPage() {
       </div>
 
       <div className="login-page__alts">
+        <button type="button" className="login-page__douyin" onClick={signInDouyin}>
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M19 4.5h-3v10.1a3.1 3.1 0 1 1-3.1-3.1c.3 0 .6 0 .9.1V8.4c-.3 0-.6-.1-.9-.1A6.2 6.2 0 1 0 19 14.6V8.7c1.3.8 2.8 1.2 4.4 1.2V6.7c-1.8 0-3.4-.8-4.4-2.2z" />
+          </svg>
+          抖音一键登录
+        </button>
         <button type="button" className="login-page__guest" onClick={signInGuest}>
           暂不登录 · 游客体验
         </button>
@@ -129,7 +131,7 @@ export function LoginPage() {
         与
         <a>《隐私政策》</a>
         <br />
-        游客模式下数据不会保存到你的账号
+        妆搭默认不保存原始自拍，仅保存结构化档案
       </p>
     </div>
   );

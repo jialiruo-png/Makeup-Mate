@@ -8,9 +8,6 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { LoginPage } from "@/pages/LoginPage";
 import { useAppState, appActions } from "@/state/appStore";
 import { getHealth } from "@/api/health";
-import { UNAUTHORIZED_EVENT } from "@/api/client";
-import { fetchMe } from "@/api/auth";
-import { getToken } from "@/lib/auth";
 import "./App.css";
 
 export default function App() {
@@ -27,31 +24,6 @@ export default function App() {
       .catch(() => {
         appActions.showToast("后端未启动，请运行 uvicorn", "warn");
       });
-  }, []);
-
-  // 启动时如果 localStorage 里有 token，校验一下还能不能用
-  useEffect(() => {
-    if (!getToken()) return;
-    fetchMe()
-      .then((user) => {
-        if (user.isGuest) return;
-        // token 还有效，刷新一下 store 里的 currentUser
-        const token = getToken();
-        if (token) appActions.signInWithPassword(user, token);
-      })
-      .catch(() => {
-        // 401 会被 client 自己处理，这里不用做事
-      });
-  }, []);
-
-  // 任何 API 抛 401 时清登录态，回到登录页
-  useEffect(() => {
-    const onUnauthorized = () => {
-      appActions.signOut();
-      appActions.showToast("登录已过期，请重新登录", "warn");
-    };
-    window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
-    return () => window.removeEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
   }, []);
 
   return (
