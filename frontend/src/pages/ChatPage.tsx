@@ -2,9 +2,11 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import creatorProfiles from "@/data/creator_profiles_merged.json";
 import librarySchema from "@/data/makeup_mate_creator_library_schema.json";
 import { appActions, useAppState } from "@/state/appStore";
-import type { InspirationType, MakeupCard } from "@/types";
+import type { AnalyzePhotoResponse, InspirationType, MakeupCard } from "@/types";
 import { createSession, sendMessage as apiSendMessage } from "@/api/chat";
 import { uploadMedia } from "@/api/media";
+import { generateMyVersion as apiGenerateMyVersion } from "@/api/inspirations";
+import { analyzePhoto } from "@/api/profile";
 import { apiBase, ApiError } from "@/api/client";
 import { listHistory, deleteHistory } from "@/api/history";
 import type { HistoryItem } from "@/types";
@@ -340,29 +342,36 @@ export function ChatPage() {
     appActions.showToast("已导入聊天", "success");
   };
 
-  const generateMyVersion = (item: InspirationCard) => {
-    const card: MakeupCard = {
-      cardId: `card_from_${item.id}`,
-      sourceType: "inspiration",
-      title: `我的${item.look}`,
-      styleTags: [...item.tags, "个人改写"],
-      difficulty: item.difficulty,
-      estimatedTime: item.difficulty === "新手" ? "10分钟" : "18分钟",
-      scenes: item.type === "scene" ? [item.name] : ["通勤", "日常"],
-      productTypes: ["气垫", "遮瑕", "眼影", "眼线笔", "腮红", "口红"],
-      steps: [
-        { stepNo: 1, part: "底妆", instruction: "先完成轻薄底妆，保持妆面干净。", tips: [] },
-        { stepNo: 2, part: "眉眼", instruction: "保留原风格重点，但把线条改短、改轻。", tips: [] },
-        { stepNo: 3, part: "腮红与唇", instruction: "用低饱和颜色统一气色，避免过重。", tips: [] },
-      ],
-      riskPoints: ["眼线过长", "腮红过低", "唇色过深"],
-      aiTip: `已根据「${item.name}」生成你的版本，可以继续上传自拍做更细调整。`,
-      confidence: 0.78,
-      evidenceSummary: { hasVideoEvidence: false, supportLevel: "mock" },
-      createdAt: new Date().toISOString(),
-    };
-    appActions.setCurrentCard(card);
-    importCardToChat(item);
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+
+  const generateMyVersion = async (item: InspirationCard) => {
+    if (generatingId) return;
+    setGeneratingId(item.id);
+    try {
+      const res = await apiGenerateMyVersion(item.id, {
+        sessionId,
+        useProfile: true,
+        useShortTermContext: true,
+      });
+      appActions.setCurrentCard(res.card);
+      setTab("conversation");
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_${Date.now()}`,
+          role: "assistant",
+          text: `已根据「${item.name}」生成你的版本。${res.card.aiTip}`,
+        },
+      ]);
+      appActions.showToast("已生成你的版本", "success");
+    } catch (err) {
+      console.error(err);
+      const msg =
+        err instanceof ApiError ? `生成失败（${err.status}）` : "生成失败，请重试";
+      appActions.showToast(msg, "error");
+    } finally {
+      setGeneratingId(null);
+    }
   };
 
   const doSend = async (
@@ -605,6 +614,8 @@ export function ChatPage() {
               <InspirationCardView
                 key={item.id}
                 item={item}
+                generating={generatingId === item.id}
+                disabled={!!generatingId && generatingId !== item.id}
                 onGenerate={() => generateMyVersion(item)}
                 onImport={() => importCardToChat(item)}
               />
@@ -850,10 +861,14 @@ export function ChatPage() {
 
 function InspirationCardView({
   item,
+  generating,
+  disabled,
   onGenerate,
   onImport,
 }: {
   item: InspirationCard;
+  generating: boolean;
+  disabled: boolean;
   onGenerate: () => void;
   onImport: () => void;
 }) {
@@ -874,8 +889,16 @@ function InspirationCardView({
         <p className="insp-card__analysis">{item.analysis}</p>
         <div className="insp-card__meta">适合 {item.suitable}</div>
         <div className="insp-card__actions">
-          <button type="button" onClick={onGenerate}>生成我的版本</button>
-          <button type="button" onClick={onImport}>导入聊天</button>
+          <button
+            type="button"
+            onClick={onGenerate}
+            disabled={generating || disabled}
+          >
+            {generating ? "生成中…" : "生成我的版本"}
+          </button>
+          <button type="button" onClick={onImport} disabled={generating}>
+            导入聊天
+          </button>
         </div>
       </div>
     </article>
@@ -1028,25 +1051,244 @@ function HistoryContent() {
 }
 
 function UploadContent() {
+  const isRealUser = useAppState((s) => s.isAuthed && s.authMethod !== "guest");
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const albumRef = useRef<HTMLInputElement>(null);
+  const [stage, setStage] = useState<"idle" | "uploading" | "analyzing" | "done" | "error">(
+    "idle",
+  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [result, setResult] = useState<AnalyzePhotoResponse | null>(null);
+  const [savedToProfile, setSavedToProfile] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [currentMediaId, setCurrentMediaId] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const reset = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setStage("idle");
+    setErrorMsg(null);
+    setResult(null);
+    setSavedToProfile(false);
+    setCurrentMediaId(null);
+  };
+
+  const runAnalyze = async (file: File, saveToProfile: boolean) => {
+    if (!isRealUser) {
+      appActions.showToast("登录后才能分析自拍", "warn");
+      return;
+    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    const localUrl = URL.createObjectURL(file);
+    setPreviewUrl(localUrl);
+    setStage("uploading");
+    setErrorMsg(null);
+    setResult(null);
+    setSavedToProfile(false);
+    try {
+      const asset = await uploadMedia({
+        file,
+        purpose: "selfie",
+        retentionPolicy: saveToProfile ? "profile_summary_allowed" : "session_only",
+      });
+      setCurrentMediaId(asset.mediaAssetId);
+      setStage("analyzing");
+      const res = await analyzePhoto({
+        mediaAssetId: asset.mediaAssetId,
+        saveToProfile,
+      });
+      setResult(res);
+      setSavedToProfile(res.retention.longTermProfileSaved);
+      setStage("done");
+    } catch (err) {
+      console.error(err);
+      const msg =
+        err instanceof ApiError ? `分析失败（${err.status}）` : "分析失败，请重试";
+      setErrorMsg(msg);
+      setStage("error");
+    }
+  };
+
+  const onPick = (file: File | undefined) => {
+    if (!file) return;
+    void runAnalyze(file, false);
+  };
+
+  const saveAsProfile = async () => {
+    if (!currentMediaId || saving) return;
+    setSaving(true);
+    try {
+      const res = await analyzePhoto({
+        mediaAssetId: currentMediaId,
+        saveToProfile: true,
+      });
+      setResult(res);
+      setSavedToProfile(res.retention.longTermProfileSaved);
+      appActions.showToast(
+        res.retention.longTermProfileSaved ? "已保存到档案" : "保存失败",
+        res.retention.longTermProfileSaved ? "success" : "warn",
+      );
+    } catch (err) {
+      const msg =
+        err instanceof ApiError ? `保存失败（${err.status}）` : "保存失败";
+      appActions.showToast(msg, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!isRealUser) {
+    return (
+      <>
+        <h2>上传照片分析个人风格</h2>
+        <p className="privacy-text">
+          自拍分析要登录后才能用，游客模式下我们不会保存任何脸部数据。
+        </p>
+        <button
+          type="button"
+          className="history-clear-btn"
+          onClick={() => appActions.setActiveTab("profile")}
+        >
+          去登录
+        </button>
+      </>
+    );
+  }
+
   return (
     <>
       <h2>上传照片分析个人风格</h2>
       <div className="upload-card">
-        <b>自拍 / 自拍视频</b>
+        <b>自拍照片</b>
         <p>用于分析脸型、肤色、眼型和适合你的腮红、眼线、唇色。</p>
       </div>
-      <div className="upload-options">
-        {["拍一张", "从相册选", "上传自拍视频", "用上次档案"].map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => appActions.showToast("已生成个人风格分析", "success")}
-          >
-            {item}
+
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="user"
+        hidden
+        onChange={(e) => {
+          onPick(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={albumRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          onPick(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+
+      {stage === "idle" && (
+        <div className="upload-options">
+          <button type="button" onClick={() => cameraRef.current?.click()}>
+            拍一张
           </button>
-        ))}
-      </div>
-      <p className="privacy-text">默认不保存原始照片，只在授权后保存结构化妆容档案。</p>
+          <button type="button" onClick={() => albumRef.current?.click()}>
+            从相册选
+          </button>
+        </div>
+      )}
+
+      {previewUrl && (
+        <div className="upload-preview">
+          <img src={previewUrl} alt="自拍预览" />
+        </div>
+      )}
+
+      {(stage === "uploading" || stage === "analyzing") && (
+        <p className="privacy-text">
+          {stage === "uploading" ? "上传中…" : "分析中，大概 5–10 秒…"}
+        </p>
+      )}
+
+      {stage === "error" && (
+        <>
+          <p className="privacy-text" style={{ color: "var(--accent)" }}>
+            {errorMsg}
+          </p>
+          <button type="button" className="history-clear-btn" onClick={reset}>
+            重新选择
+          </button>
+        </>
+      )}
+
+      {stage === "done" && result && (
+        <>
+          <div className="analysis-result">
+            <div className="analysis-result__row">
+              <span>脸型</span>
+              <b>{result.beautyProfile.faceShape}</b>
+            </div>
+            <div className="analysis-result__row">
+              <span>肤色</span>
+              <b>{result.beautyProfile.skinTone}</b>
+            </div>
+            <div className="analysis-result__row">
+              <span>眼型</span>
+              <b>{result.beautyProfile.eyeType}</b>
+            </div>
+            <div className="analysis-result__row">
+              <span>气质</span>
+              <b>{result.beautyProfile.featureStyle}</b>
+            </div>
+            <div className="analysis-result__row">
+              <span>建议腮红</span>
+              <b>{result.beautyProfile.preferredBlushPosition}</b>
+            </div>
+            <div className="analysis-result__row">
+              <span>建议眼线</span>
+              <b>{result.beautyProfile.preferredEyeliner}</b>
+            </div>
+            {result.beautyProfile.preferredLipColors.length > 0 && (
+              <div className="analysis-result__row">
+                <span>适合唇色</span>
+                <b>{result.beautyProfile.preferredLipColors.join(" / ")}</b>
+              </div>
+            )}
+            {result.beautyProfile.avoidStyles.length > 0 && (
+              <div className="analysis-result__row">
+                <span>建议避开</span>
+                <b>{result.beautyProfile.avoidStyles.join(" / ")}</b>
+              </div>
+            )}
+          </div>
+
+          <div className="upload-options">
+            <button
+              type="button"
+              onClick={saveAsProfile}
+              disabled={saving || savedToProfile}
+            >
+              {savedToProfile
+                ? "已保存到档案"
+                : saving
+                  ? "保存中…"
+                  : "保存到我的档案"}
+            </button>
+            <button type="button" onClick={reset}>
+              换一张
+            </button>
+          </div>
+        </>
+      )}
+
+      <p className="privacy-text">
+        默认仅本次会话使用，不保留原图。点「保存到我的档案」才会保留脸型、肤色等结构化标签。
+      </p>
     </>
   );
 }

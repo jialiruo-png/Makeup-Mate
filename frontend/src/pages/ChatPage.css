@@ -776,3 +776,49 @@
   color: var(--text-body);
   font-size: 12px;
 }
+.upload-options button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.upload-preview {
+  margin: 10px 0 6px;
+  display: grid;
+  place-items: center;
+}
+.upload-preview img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(43, 33, 30, 0.08);
+}
+
+.analysis-result {
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.analysis-result__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.analysis-result__row span {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.analysis-result__row b {
+  color: var(--text-main);
+  font-weight: 650;
+  text-align: right;
+  word-break: break-word;
+}
