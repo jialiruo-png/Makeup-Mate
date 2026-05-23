@@ -6,10 +6,10 @@ SQLAlchemy==2.0.36
 python-multipart==0.0.12
 python-dotenv==1.0.1
 
-# 数据库驱动（部署到 RDS 时按需启用一个）
-# pymysql==1.1.1           # RDS MySQL
-# psycopg[binary]==3.2.3   # RDS PostgreSQL
-# 本地开发默认使用 SQLite，无需额外驱动。
+# 数据库驱动
+psycopg2-binary==2.9.10    # RDS PostgreSQL
+# pymysql==1.1.1           # RDS MySQL（如果切回 MySQL 再启用）
+# 本地若想用 SQLite，把 DATABASE_URL 改回 sqlite:/// 即可。
 
 # 后续接入 MediaPipe / 多模态 AI 时再装：
 # mediapipe
