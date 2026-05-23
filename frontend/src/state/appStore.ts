@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { clearToken } from "@/lib/auth";
 import type {
   ActiveTab,
   ChatSession,
@@ -64,6 +65,8 @@ export const appActions = {
   hideToast: () => store.setState({ toast: undefined }),
   signIn: (method: AuthMethod) =>
     store.setState({ isAuthed: true, authMethod: method, activeTab: "home" }),
-  signOut: () =>
-    store.setState({ isAuthed: false, authMethod: undefined, activeTab: "home" }),
+  signOut: () => {
+    clearToken();
+    store.setState({ isAuthed: false, authMethod: undefined, activeTab: "home" });
+  },
 };

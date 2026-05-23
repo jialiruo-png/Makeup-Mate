@@ -1,50 +1,59 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { appActions } from "@/state/appStore";
+import { login, register } from "@/api/auth";
+import { ApiError } from "@/api/client";
+import { setCachedUser, setToken } from "@/lib/auth";
 import "./LoginPage.css";
 
-const PHONE_REGEX = /^1[3-9]\d{9}$/;
+type Mode = "login" | "register";
+
+const USERNAME_REGEX = /^[A-Za-z0-9_]{3,32}$/;
 
 export function LoginPage() {
-  const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
-  const [countdown, setCountdown] = useState(0);
+  const [mode, setMode] = useState<Mode>("login");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = window.setTimeout(() => setCountdown(countdown - 1), 1000);
-    return () => window.clearTimeout(timer);
-  }, [countdown]);
+  const usernameValid = USERNAME_REGEX.test(username);
+  const passwordValid = password.length >= 6;
+  const canSubmit = usernameValid && passwordValid && !submitting;
 
-  const phoneValid = PHONE_REGEX.test(phone);
-  const canSubmit = phoneValid && code.trim().length >= 4;
-
-  const requestCode = () => {
-    if (!phoneValid) {
-      appActions.showToast("请输入正确的手机号", "warn");
-      return;
-    }
-    setCountdown(60);
-    appActions.showToast("验证码已发送（演示）", "success");
-  };
-
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!canSubmit) {
-      appActions.showToast("请填写手机号和验证码", "warn");
+      if (!usernameValid) {
+        appActions.showToast("用户名 3-32 位，仅限字母数字下划线", "warn");
+      } else {
+        appActions.showToast("密码至少 6 位", "warn");
+      }
       return;
     }
-    appActions.signIn("phone");
-    appActions.showToast("欢迎来到妆搭", "success");
-  };
 
-  const signInDouyin = () => {
-    appActions.signIn("douyin");
-    appActions.showToast("已使用抖音登录", "success");
+    setSubmitting(true);
+    try {
+      const fn = mode === "login" ? login : register;
+      const res = await fn(username, password);
+      setToken(res.accessToken);
+      setCachedUser(res.user);
+      appActions.signIn("phone");
+      appActions.showToast(mode === "login" ? "欢迎回来" : "注册成功，欢迎来到妆搭", "success");
+    } catch (err) {
+      const detail =
+        err instanceof ApiError
+          ? typeof err.body === "object" && err.body && "detail" in err.body
+            ? String((err.body as { detail: unknown }).detail)
+            : `请求失败（${err.status}）`
+          : "网络异常，请稍后再试";
+      appActions.showToast(detail, "error");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const signInGuest = () => {
     appActions.signIn("guest");
-    appActions.showToast("已进入游客模式", "info");
+    appActions.showToast("已进入游客模式（部分功能需要登录）", "info");
   };
 
   return (
@@ -60,38 +69,44 @@ export function LoginPage() {
         <p className="login-page__tagline">把喜欢的妆，变成适合你的妆。</p>
       </header>
 
+      <div className="login-page__tabs">
+        <button
+          type="button"
+          className={`login-page__tab ${mode === "login" ? "login-page__tab--active" : ""}`}
+          onClick={() => setMode("login")}
+        >
+          登录
+        </button>
+        <button
+          type="button"
+          className={`login-page__tab ${mode === "register" ? "login-page__tab--active" : ""}`}
+          onClick={() => setMode("register")}
+        >
+          注册
+        </button>
+      </div>
+
       <form className="login-page__form" onSubmit={submit}>
         <label className="login-page__field">
-          <span className="login-page__field-prefix">+86</span>
-          <input
-            className="login-page__input"
-            type="tel"
-            inputMode="numeric"
-            maxLength={11}
-            placeholder="请输入手机号"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-          />
-        </label>
-
-        <label className="login-page__field login-page__field--code">
           <input
             className="login-page__input"
             type="text"
-            inputMode="numeric"
-            maxLength={6}
-            placeholder="6 位短信验证码"
-            value={code}
-            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+            autoComplete="username"
+            placeholder="用户名（3-32 位，字母数字下划线）"
+            value={username}
+            onChange={(e) => setUsername(e.target.value.trim())}
           />
-          <button
-            type="button"
-            className="login-page__code-btn"
-            onClick={requestCode}
-            disabled={countdown > 0}
-          >
-            {countdown > 0 ? `${countdown}s 后重发` : "获取验证码"}
-          </button>
+        </label>
+
+        <label className="login-page__field">
+          <input
+            className="login-page__input"
+            type="password"
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            placeholder="密码（至少 6 位）"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </label>
 
         <button
@@ -99,7 +114,7 @@ export function LoginPage() {
           className="login-page__cta"
           disabled={!canSubmit}
         >
-          进入妆搭
+          {submitting ? "请稍候…" : mode === "login" ? "登录" : "注册并登录"}
         </button>
       </form>
 
@@ -108,18 +123,6 @@ export function LoginPage() {
       </div>
 
       <div className="login-page__alts">
-        <button type="button" className="login-page__douyin" onClick={signInDouyin}>
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M19 4.5h-3v10.1a3.1 3.1 0 1 1-3.1-3.1c.3 0 .6 0 .9.1V8.4c-.3 0-.6-.1-.9-.1A6.2 6.2 0 1 0 19 14.6V8.7c1.3.8 2.8 1.2 4.4 1.2V6.7c-1.8 0-3.4-.8-4.4-2.2z" />
-          </svg>
-          抖音一键登录
-        </button>
         <button type="button" className="login-page__guest" onClick={signInGuest}>
           暂不登录 · 游客体验
         </button>
