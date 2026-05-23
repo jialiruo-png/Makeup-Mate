@@ -1,10 +1,11 @@
-"""阿里云 DashScope · Qwen-VL-Max 调用封装。
+"""阿里云 DashScope · Qwen-VL-Max-Latest 调用封装。
 
-只对外暴露两个函数：
+对外暴露：
 - analyze_makeup_image(image_url, prompt) -> dict  （图 URL → 妆容卡片 JSON）
+- analyze_makeup_video(video_url, prompt) -> dict  （视频 URL → 妆容卡片 JSON，≤40s）
 - chat_text(user_message, system, history) -> str  （文本对话）
 
-注意：image_url 必须是公网 HTTP(S) URL，不要传 base64 data URL —— 部分 OpenAI 兼容
+注意：URL 必须是公网 HTTP(S) URL，不要传 base64 data URL —— 部分 OpenAI 兼容
 中转站（如 openai-next）会拦截 data URL，得让 Qwen 自己去拉。
 """
 from __future__ import annotations
@@ -34,27 +35,24 @@ def _require_key() -> str:
     return key
 
 
-def analyze_makeup_image(image_url: str, prompt: str) -> dict:
-    """让 Qwen-VL-Max 看图 + 按 prompt 输出 JSON。失败抛 QwenUnavailable。
+_VIDEO_TIMEOUT = httpx.Timeout(connect=10.0, read=180.0, write=60.0, pool=10.0)
 
-    image_url 必须是 Qwen 能直接 GET 到的公网 URL（不能是 data:）。
-    """
+
+def _post_qwen(content_block: dict, prompt: str, *, timeout: httpx.Timeout) -> dict:
+    """统一发请求 + 解析 JSON 输出。content_block 是 image_url 或 video_url 那个块。"""
     key = _require_key()
     payload = {
         "model": _settings.qwen_vl_model,
         "messages": [
             {
                 "role": "user",
-                "content": [
-                    {"type": "image_url", "image_url": {"url": image_url}},
-                    {"type": "text", "text": prompt},
-                ],
+                "content": [content_block, {"type": "text", "text": prompt}],
             }
         ],
         "response_format": {"type": "json_object"},
     }
     try:
-        with httpx.Client(base_url=_settings.dashscope_base_url, timeout=_TIMEOUT) as client:
+        with httpx.Client(base_url=_settings.dashscope_base_url, timeout=timeout) as client:
             resp = client.post(
                 "/chat/completions",
                 headers={"Authorization": f"Bearer {key}"},
@@ -75,13 +73,37 @@ def analyze_makeup_image(image_url: str, prompt: str) -> dict:
     try:
         return json.loads(text)
     except json.JSONDecodeError as exc:
-        # 偶尔模型会把 JSON 包在 ```json ... ``` 里，剥一层
         stripped = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
         try:
             return json.loads(stripped)
         except json.JSONDecodeError:
             log.warning("Qwen-VL returned non-JSON: %s", text[:300])
             raise QwenUnavailable("model did not return valid JSON") from exc
+
+
+def analyze_makeup_image(image_url: str, prompt: str) -> dict:
+    """让 Qwen-VL 看图 + 按 prompt 输出 JSON。失败抛 QwenUnavailable。
+
+    image_url 必须是 Qwen 能直接 GET 到的公网 URL（不能是 data:）。
+    """
+    return _post_qwen(
+        {"type": "image_url", "image_url": {"url": image_url}},
+        prompt,
+        timeout=_TIMEOUT,
+    )
+
+
+def analyze_makeup_video(video_url: str, prompt: str) -> dict:
+    """让 Qwen-VL 看视频 + 按 prompt 输出 JSON。视频建议 ≤40s。
+
+    video_url 必须是公网 mp4/mov 等格式。Qwen 服务端会自己抽帧理解。
+    超长视频会被截断（不会报错），confidence 会低。
+    """
+    return _post_qwen(
+        {"type": "video_url", "video_url": {"url": video_url}},
+        prompt,
+        timeout=_VIDEO_TIMEOUT,
+    )
 
 
 def chat_text(user_message: str, system: str, history: list[dict] | None = None) -> str:

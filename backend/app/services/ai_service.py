@@ -26,7 +26,7 @@ log = logging.getLogger("makeup-mate.ai")
 _settings = get_settings()
 
 
-_ANALYZE_PROMPT = """你是「妆搭 Makeup Mate」的妆容解析助手。请仔细看这张图，输出一张可以复刻的妆容卡片。
+_ANALYZE_PROMPT = """你是「妆搭 Makeup Mate」的妆容解析助手。仔细看这张图/这段视频，输出一张可以复刻的妆容卡片。
 
 严格按以下 JSON 字段输出（不要任何额外解释、不要 Markdown 代码块）：
 {
@@ -80,8 +80,11 @@ def _mock_card(req: AnalyzeRequest) -> MakeupCard:
     )
 
 
-def _qwen_card_from_image(req: AnalyzeRequest, image_url: str) -> MakeupCard:
-    raw = qwen_client.analyze_makeup_image(image_url, _ANALYZE_PROMPT)
+def _qwen_card(req: AnalyzeRequest, media_url: str, is_video: bool) -> MakeupCard:
+    if is_video:
+        raw = qwen_client.analyze_makeup_video(media_url, _ANALYZE_PROMPT)
+    else:
+        raw = qwen_client.analyze_makeup_image(media_url, _ANALYZE_PROMPT)
     steps = [
         MakeupStep(
             stepNo=int(s.get("stepNo", i + 1)),
@@ -112,7 +115,8 @@ def _qwen_card_from_image(req: AnalyzeRequest, image_url: str) -> MakeupCard:
     )
 
 
-def _public_image_url(media_asset_id: str) -> str | None:
+def _public_media(media_asset_id: str) -> tuple[str, str] | None:
+    """返回 (公网 URL, file_type)。file_type 是 'image' or 'video'。"""
     base = _settings.public_base_url.rstrip("/")
     if not base:
         log.warning("PUBLIC_BASE_URL not configured; Qwen will fall back to mock")
@@ -121,16 +125,18 @@ def _public_image_url(media_asset_id: str) -> str | None:
         row = db.get(MediaAssetModel, media_asset_id)
         if not row:
             return None
-    return f"{base}/api/media/{media_asset_id}/raw"
+        file_type = row.file_type
+    return f"{base}/api/media/{media_asset_id}/raw", file_type
 
 
 def analyze_makeup(req: AnalyzeRequest) -> AnalyzeResponse:
     card: MakeupCard | None = None
-    if req.source_type == "image" and req.media_asset_id:
-        image_url = _public_image_url(req.media_asset_id)
-        if image_url:
+    if req.source_type in ("image", "video") and req.media_asset_id:
+        info = _public_media(req.media_asset_id)
+        if info:
+            media_url, file_type = info
             try:
-                card = _qwen_card_from_image(req, image_url)
+                card = _qwen_card(req, media_url, is_video=(file_type == "video"))
             except qwen_client.QwenUnavailable as exc:
                 log.warning("Qwen unavailable, fallback to mock: %s", exc)
 

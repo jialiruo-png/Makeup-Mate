@@ -88,5 +88,9 @@ def get_raw(media_id: str, db: Session = Depends(get_db)) -> FileResponse:
     p = Path(row.file_url)
     if not p.exists():
         raise HTTPException(status_code=410, detail="media file expired or removed")
-    media_type = "image/jpeg" if row.file_type == "image" else "video/mp4"
+    ext = p.suffix.lower().lstrip(".")
+    if row.file_type == "image":
+        media_type = f"image/{'jpeg' if ext in ('jpg', 'jpeg') else ext or 'jpeg'}"
+    else:
+        media_type = f"video/{'mp4' if ext in ('mp4', 'm4v') else ext or 'mp4'}"
     return FileResponse(path=p, media_type=media_type, filename=p.name)
