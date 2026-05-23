@@ -70,3 +70,22 @@
     justify-content: center;
   }
 }
+
+/* ============== 移动端：脱掉手机外框，直接铺满整屏 ============== */
+@media (max-width: 768px) {
+  .app {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0;
+    gap: 0;
+  }
+  .app__brand {
+    display: none;
+  }
+  .app__stage {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+  }
+}

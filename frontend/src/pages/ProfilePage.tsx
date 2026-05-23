@@ -4,6 +4,20 @@ import { ApiError } from "@/api/client";
 import { clearMemory, getMe, type MeResponse } from "@/api/profile";
 import "./ProfilePage.css";
 
+// 这两块当前后端还没落库（memory_service 只返回 BeautyProfile）。
+// 先用占位保留视觉骨架，等 memory_items / history_items 真接进来再换。
+const PLACEHOLDER_MEMORIES = [
+  "不喜欢浓眼妆，倾向自然淡色晕染。",
+  "上班日希望 15 分钟内完成，跳过复杂修容。",
+  "眼线只画后半段，沿下眼睑自然延长。",
+];
+
+const PLACEHOLDER_RECENT: Array<[string, string]> = [
+  ["今天", "清冷通勤妆"],
+  ["昨天", "韩系裸妆"],
+  ["上周", "港风复古妆"],
+];
+
 export function ProfilePage() {
   const isAuthed = useAppState((s) => s.isAuthed);
 
@@ -61,23 +75,26 @@ export function ProfilePage() {
     }
   };
 
+  // ===== 三种降级状态：未登录 / 加载中 / 出错 =====
   if (!isAuthed) {
     return (
       <div className="profile-page">
-        <header className="profile-page__head">
+        <header className="profile-page__hero">
           <div className="profile-page__avatar">妆</div>
-          <div className="profile-page__head-meta">
-            <div className="profile-page__name">未登录</div>
-            <div className="profile-page__sub">登录后查看你的妆容档案</div>
+          <div className="profile-page__greeting">
+            <h2>未登录</h2>
+            <p>登录后查看你的妆容档案</p>
           </div>
         </header>
-        <button
-          type="button"
-          className="profile-page__login-cta"
-          onClick={() => appActions.setActiveTab("home")}
-        >
-          去登录
-        </button>
+        <section className="profile-section">
+          <button
+            type="button"
+            className="profile-tag"
+            onClick={() => appActions.setActiveTab("home")}
+          >
+            去登录
+          </button>
+        </section>
       </div>
     );
   }
@@ -85,11 +102,11 @@ export function ProfilePage() {
   if (loading) {
     return (
       <div className="profile-page">
-        <header className="profile-page__head">
+        <header className="profile-page__hero">
           <div className="profile-page__avatar">妆</div>
-          <div className="profile-page__head-meta">
-            <div className="profile-page__name">加载中…</div>
-            <div className="profile-page__sub">正在读取你的妆容档案</div>
+          <div className="profile-page__greeting">
+            <h2>加载中…</h2>
+            <p>正在读取你的妆容档案</p>
           </div>
         </header>
       </div>
@@ -99,114 +116,121 @@ export function ProfilePage() {
   if (error || !me) {
     return (
       <div className="profile-page">
-        <header className="profile-page__head">
+        <header className="profile-page__hero">
           <div className="profile-page__avatar">妆</div>
-          <div className="profile-page__head-meta">
-            <div className="profile-page__name">妆搭体验用户</div>
-            <div className="profile-page__sub">{error ?? "暂无档案数据"}</div>
+          <div className="profile-page__greeting">
+            <h2>妆搭体验用户</h2>
+            <p>{error ?? "暂无档案数据"}</p>
           </div>
         </header>
       </div>
     );
   }
 
+  // ===== 正常状态：用 me.beautyProfile 填充 =====
   const profile = me.beautyProfile;
-  const completenessPct = Math.round((me.profileCompleteness ?? 0) * 100);
 
-  const profileRows: [string, string][] = profile
+  // 一句话 bio：拼几个核心标签
+  const bioParts = profile
+    ? [profile.faceShape, `${profile.skinTone}肤色`, profile.eyeType, profile.featureStyle].filter(Boolean)
+    : [];
+  const bio = bioParts.length ? bioParts.join(" · ") : "档案待完善";
+
+  // 适合你：腮红位置 + 眼线 + 唇色
+  const suits = profile
     ? [
-        ["脸型", profile.faceShape],
-        ["肤色", profile.skinTone],
-        ["五官风格", profile.featureStyle],
-        ["眼型", profile.eyeType],
-        ["适合腮红", profile.preferredBlushPosition],
-        ["适合眼线", profile.preferredEyeliner],
-      ]
+        profile.preferredBlushPosition,
+        profile.preferredEyeliner,
+        ...(profile.preferredLipColors ?? []),
+      ].filter(Boolean)
     : [];
 
-  const memories = profile?.preferredLipColors ?? [];
-  const avoid = profile?.avoidStyles ?? [];
+  // 建议避开
+  const avoids = profile?.avoidStyles ?? [];
 
   return (
     <div className="profile-page">
-      <header className="profile-page__head">
+      {/* hero */}
+      <header className="profile-page__hero">
         <div className="profile-page__avatar">妆</div>
-        <div className="profile-page__head-meta">
-          <div className="profile-page__name">{me.nickname}</div>
-          <div className="profile-page__sub">
-            妆容档案完成度 <span>{completenessPct}%</span>
-          </div>
+        <div className="profile-page__greeting">
+          <h2>{me.nickname}</h2>
+          <p>
+            妆容档案完成度 {Math.round((me.profileCompleteness ?? 0) * 100)}%
+            。AI 会把卡片和灵感库方案改写得更适合你。
+          </p>
         </div>
-        <button type="button" className="profile-page__signout" onClick={onSignOut}>
-          退出
-        </button>
       </header>
 
-      <section className="profile-card profile-card--hero">
-        <div>
-          <span>我的妆容档案</span>
-          <h2>低饱和通勤 · 新手友好</h2>
-          <p>AI 会把解析卡片和灵感库方案自动改写得更适合你。</p>
+      {/* 关于你：一句话 bio */}
+      <section className="profile-section">
+        <span className="profile-section__label">关于你</span>
+        <p className="profile-bio">{bio}。</p>
+      </section>
+
+      {/* 适合你：标签云 */}
+      {suits.length > 0 && (
+        <section className="profile-section">
+          <span className="profile-section__label">适合你</span>
+          <div className="profile-tags">
+            {suits.map((t) => (
+              <span key={t} className="profile-tag">{t}</span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 建议避开 */}
+      {avoids.length > 0 && (
+        <section className="profile-section">
+          <span className="profile-section__label">建议避开</span>
+          <div className="profile-tags">
+            {avoids.map((t) => (
+              <span key={t} className="profile-tag profile-tag--ghost">{t}</span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* MM 记住的事（占位，待接 memory_items） */}
+      <section className="profile-section">
+        <span className="profile-section__label">MM 记住的事</span>
+        <div className="profile-notes">
+          {PLACEHOLDER_MEMORIES.map((m) => (
+            <p key={m}>{m}</p>
+          ))}
         </div>
       </section>
 
-      {profileRows.length > 0 && (
-        <section className="profile-card">
-          <div className="profile-card__title">
-            <h3>妆容档案</h3>
-            <span>已结构化</span>
-          </div>
-          <div className="profile-grid">
-            {profileRows.map(([key, value]) => (
-              <div key={key} className="profile-grid__row">
-                <span>{key}</span>
-                <b>{value}</b>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* 最近的复刻（占位，待接 history_items） */}
+      <section className="profile-section">
+        <span className="profile-section__label">最近的复刻</span>
+        <ul className="profile-timeline">
+          {PLACEHOLDER_RECENT.map(([time, name]) => (
+            <li key={name} className="profile-timeline__row">
+              <i className="profile-timeline__dot" />
+              <time>{time}</time>
+              <span>{name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      {memories.length > 0 && (
-        <section className="profile-card">
-          <div className="profile-card__title">
-            <h3>常用唇色</h3>
-            <span>可随时清空</span>
-          </div>
-          <div className="memory-list">
-            {memories.map((item) => (
-              <div key={item} className="memory-pill">{item}</div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {avoid.length > 0 && (
-        <section className="profile-card">
-          <div className="profile-card__title">
-            <h3>已避开</h3>
-            <span>AI 会自动绕开</span>
-          </div>
-          <div className="memory-list">
-            {avoid.map((item) => (
-              <div key={item} className="memory-pill">{item}</div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className="privacy-card">
-        <h3>隐私设置</h3>
-        <p>默认不保存原始自拍和视频，只在授权后保存脸型、肤色、偏好等结构化档案。</p>
-        <div>
-          <button type="button" disabled>
-            仅本次分析
-          </button>
+      {/* 隐私 footer */}
+      <footer className="profile-footer">
+        <p>
+          妆搭默认不保存原图，只保留脸型、肤色等结构化标签。
+          你可以随时删除档案与历史记忆。
+        </p>
+        <div className="profile-footer__actions">
           <button type="button" onClick={onClearMemory} disabled={clearing}>
             {clearing ? "清空中…" : "清空妆容记忆"}
           </button>
+          <button type="button" onClick={onSignOut}>
+            退出登录
+          </button>
         </div>
-      </section>
+      </footer>
     </div>
   );
 }

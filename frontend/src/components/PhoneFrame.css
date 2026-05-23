@@ -49,3 +49,30 @@
   border-radius: 999px;
   z-index: 6;
 }
+
+/* ============== 移动端：取消手机外壳，由真机自带 ============== */
+@media (max-width: 768px) {
+  .phone-frame {
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+  }
+  .phone-bezel {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .phone-notch,
+  .phone-home-indicator {
+    display: none;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}
