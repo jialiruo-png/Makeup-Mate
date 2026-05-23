@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>妆搭 Makeup Mate · 易拉宝 80×200cm</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
+:root {
+  --bg-main: #FBF7F2;
+  --bg-soft: #F7EFE8;
+  --accent: #7A2E2E;
+  --accent-deep: #5e2222;
+  --brand: #E8B4A0;
+  --brand-deep: #D89B8A;
+  --tag-bg: #F4E4DC;
+  --text-main: #2B211E;
+  --text-body: #5C4A43;
+  --text-muted: #9A8378;
+  --divider: rgba(122, 46, 46, 0.10);
+}
+
+html, body {
+  background: #e8d5c4;
+}
+
+.poster {
+  width: 800px;
+  height: 2000px;
+  margin: 24px auto;
+  background:
+    radial-gradient(900px 700px at 95% 4%, rgba(232, 180, 160, 0.30), transparent 55%),
+    radial-gradient(700px 500px at -5% 28%, rgba(248, 226, 218, 0.45), transparent 55%),
+    radial-gradient(800px 600px at 50% 100%, rgba(247, 239, 232, 0.5), transparent 60%),
+    var(--bg-main);
+  font-family: "PingFang SC", "Helvetica Neue", -apple-system, "Microsoft YaHei", sans-serif;
+  color: var(--text-main);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(43, 33, 30, 0.15);
+}
+
+/* ============ Block 1: 顶部品牌 ============ */
+.brand {
+  height: 150px;
+  padding: 40px 80px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+.brand-logo {
+  width: 78px;
+  height: 78px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #FFFCF9 0%, #FBEFE5 100%);
+  border: 1px solid rgba(122, 46, 46, 0.08);
+  box-shadow: 0 12px 26px rgba(122, 46, 46, 0.14);
+  display: grid;
+  place-items: center;
+}
+.brand-logo .mm {
+  font-family: "SF Pro Rounded", "Helvetica Neue", -apple-system, sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+  background: linear-gradient(180deg, #7A2E2E 0%, #E8B4A0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.brand-name h1 {
+  font-size: 50px;
+  font-weight: 700;
+  letter-spacing: 12px;
+  color: var(--text-main);
+  line-height: 1;
+}
+.brand-name .en {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 9px;
+  letter-spacing: 2.5px;
+  font-family: "Helvetica Neue", -apple-system, sans-serif;
+}
+
+/* ============ Block 2: Hero Slogan ============ */
+.hero {
+  text-align: center;
+  padding: 0 80px;
+  margin-top: 24px;
+}
+.hero-slogan {
+  font-family: "Songti SC", "STSong", "Source Han Serif SC", "Noto Serif CJK SC", serif;
+  font-size: 74px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 14px;
+  line-height: 1.35;
+}
+.hero-sub {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-body);
+  letter-spacing: 2.5px;
+  margin-top: 18px;
+  line-height: 1.6;
+}
+
+/* ============ Block 3: 定位 Pitch ============ */
+.pitch {
+  margin: 28px 80px 0;
+  padding: 6px 0 6px 26px;
+  border-left: 3px solid var(--accent);
+}
+.pitch h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.pitch p {
+  font-size: 17px;
+  color: var(--text-body);
+  line-height: 1.85;
+  letter-spacing: 0.3px;
+}
+
+/* ============ Section head ============ */
+.sec-head {
+  margin: 38px 80px 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.sec-head .no {
+  font-family: "Helvetica Neue", serif;
+  font-size: 14px;
+  color: var(--brand-deep);
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+.sec-head h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 1.5px;
+}
+.sec-head .line {
+  flex: 1;
+  height: 1px;
+  background: var(--divider);
+  align-self: center;
+  margin-left: 4px;
+}
+
+/* ============ Phone card (通用) ============ */
+.phone-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.phone-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 14px 30px rgba(43, 33, 30, 0.14);
+  display: block;
+  border: 1px solid rgba(122, 46, 46, 0.06);
+  background: #000;
+}
+.phone-card .pc-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 14px;
+  letter-spacing: 1px;
+}
+.phone-card .pc-desc {
+  font-size: 12.5px;
+  color: var(--text-body);
+  line-height: 1.65;
+  margin-top: 5px;
+  padding: 0 4px;
+}
+
+/* ============ Block 4: 4 phones row ============ */
+.flow-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 0 40px;
+}
+.flow-row .phone-card img {
+  border-radius: 12px;
+}
+
+/* ============ Block 5: 2 phones row ============ */
+.lib-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 0 90px;
+}
+.lib-row .phone-card .pc-title {
+  font-size: 18px;
+  margin-top: 16px;
+}
+.lib-row .phone-card .pc-desc {
+  font-size: 13px;
+}
+
+/* ============ Block 6: 4 Highlights ============ */
+.highlights {
+  margin: 0 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px 50px;
+}
+.hl-item .no {
+  font-family: "Helvetica Neue", serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--brand);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.hl-item h4 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.hl-item p {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.75;
+}
+
+/* ============ Block 7: Tech & Flow ============ */
+.tech {
+  margin: 0 80px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 36px;
+  padding: 8px 0;
+}
+.tech h5 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.tech-flow p {
+  font-size: 15px;
+  color: var(--text-main);
+  line-height: 2.1;
+  font-weight: 500;
+}
+.tech-flow .arrow {
+  color: var(--brand-deep);
+  margin: 0 6px;
+  font-weight: 400;
+}
+.tech-stack ul {
+  list-style: none;
+}
+.tech-stack li {
+  font-size: 14.5px;
+  color: var(--text-main);
+  line-height: 2.05;
+  display: flex;
+  gap: 14px;
+}
+.tech-stack li b {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  min-width: 38px;
+  padding-top: 1px;
+}
+
+/* ============ Footer ============ */
+.footer {
+  position: absolute;
+  left: 80px;
+  right: 80px;
+  bottom: 32px;
+  padding-top: 18px;
+  border-top: 1px solid var(--divider);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+.footer-left .name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  letter-spacing: 1.5px;
+}
+.footer-left .slo {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 12.5px;
+  color: var(--accent);
+  letter-spacing: 4px;
+}
+.qr {
+  width: 72px;
+  height: 72px;
+  border: 1.5px dashed rgba(122, 46, 46, 0.22);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+  letter-spacing: 1px;
+}
+.footer-right {
+  text-align: right;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.85;
+  letter-spacing: 0.5px;
+}
+.footer-right b {
+  color: var(--text-body);
+  font-weight: 500;
+}
+
+/* 装饰 ✨ */
+.deco {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0.55;
+  color: var(--brand-deep);
+  pointer-events: none;
+}
+.deco-1 { top: 240px; left: 56px; transform: rotate(-12deg); }
+.deco-2 { top: 320px; right: 50px; transform: rotate(8deg); }
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+  <!-- ============ Block 1: 品牌 ============ -->
+  <header class="brand">
+    <div class="brand-logo"><span class="mm">MM</span></div>
+    <div class="brand-name">
+      <h1>妆 搭</h1>
+      <div class="en">MAKEUP MATE</div>
+    </div>
+  </header>
+
+  <!-- 装饰 -->
+  <span class="deco deco-1">✦</span>
+  <span class="deco deco-2">✧</span>
+
+  <!-- ============ Block 2: Hero ============ -->
+  <section class="hero">
+    <h2 class="hero-slogan">看懂妆容，更懂你</h2>
+    <p class="hero-sub">把喜欢的妆，变成适合你的妆</p>
+  </section>
+
+  <!-- ============ Block 3: 定位 ============ -->
+  <section class="pitch">
+    <h2>会记住你的 AI 美妆复刻陪练</h2>
+    <p>每一次刷到的好看妆容，<br>都能变成你能跟着画的复刻教程。</p>
+  </section>
+
+  <!-- ============ Block 4: 核心流程 4 phones ============ -->
+  <div class="sec-head">
+    <span class="no">01</span>
+    <h3>四步陪你画完一个妆</h3>
+    <span class="line"></span>
+  </div>
+
+  <div class="flow-row">
+    <div class="phone-card">
+      <img src="picture/首页登录页.png" alt="首页">
+      <div class="pc-title">入口</div>
+      <div class="pc-desc">粘贴链接<br>或上传图片/视频</div>
+    </div>
+    <div class="phone-card">
+      <img src="picture/解析博主妆容.png" alt="解析">
+      <div class="pc-title">解析</div>
+      <div class="pc-desc">AI 抽帧识别<br>拆出步骤与产品</div>
+    </div>
+    <div class="phone-card">
+      <img src="picture/博主妆容解析结果.png" alt="结果">
+      <div class="pc-title">卡片</div>
+      <div class="pc-desc">难度 / 耗时 / 翻车点<br>一张报告全看完</div>
+    </div>
+    <div class="phone-card">
+      <img src="picture/ai对话语音视频陪练.png" alt="陪练">
+      <div class="pc-title">陪练</div>
+      <div class="pc-desc">文字/语音/视频<br>陪你一步步画完</div>
+    </div>
+  </div>
+
+  <!-- ============ Block 5: 灵感库 2 phones ============ -->
+  <div class="sec-head">
+    <span class="no">02</span>
+    <h3>没有链接也能开始 · 美妆灵感库</h3>
+    <span class="line"></span>
+  </div>
+
+  <div class="lib-row">
+    <div class="phone-card">
+      <img src="picture/美妆灵感库.png" alt="美妆灵感库">
+      <div class="pc-title">博主灵感 · 风格 · 场景 · 新手</div>
+      <div class="pc-desc">没有视频也能开始——选个达人或风格，<br>MM 帮你做"我的版本"</div>
+    </div>
+    <div class="phone-card">
+      <img src="picture/风格灵感库.png" alt="风格灵感库">
+      <div class="pc-title">数据驱动 · 不写死</div>
+      <div class="pc-desc">所有博主与风格由后台信息库统一维护<br>支持检索与多维筛选</div>
+    </div>
+  </div>
+
+  <!-- ============ Block 6: 4 Highlights ============ -->
+  <div class="sec-head">
+    <span class="no">03</span>
+    <h3>核心差异点</h3>
+    <span class="line"></span>
+  </div>
+
+  <div class="highlights">
+    <div class="hl-item">
+      <div class="no">01</div>
+      <h4>视频可执行化</h4>
+      <p>关键帧 + 字幕 + 评论<br>→ 拆出步骤 / 产品 / 时间 / 翻车点</p>
+    </div>
+    <div class="hl-item">
+      <div class="no">02</div>
+      <h4>建议个性化</h4>
+      <p>按脸型、肤色、五官把原教程<br>改写成 "我的版本"</p>
+    </div>
+    <div class="hl-item">
+      <div class="no">03</div>
+      <h4>陪伴式上妆</h4>
+      <p>文字 / 语音 / 视频 多模态<br>遇到问题随时换种说法</p>
+    </div>
+    <div class="hl-item">
+      <div class="no">04</div>
+      <h4>妆容档案长期化</h4>
+      <p>MM 记得你适合什么、不适合什么<br>哪里容易翻车</p>
+    </div>
+  </div>
+
+  <!-- ============ Block 7: 技术 & 闭环 ============ -->
+  <div class="sec-head">
+    <span class="no">04</span>
+    <h3>技术架构</h3>
+    <span class="line"></span>
+  </div>
+
+  <div class="tech">
+    <div class="tech-flow">
+      <h5>CORE LOOP · 核心闭环</h5>
+      <p>抖音视频 <span class="arrow">→</span> AI 视觉解析</p>
+      <p>妆容卡片 <span class="arrow">→</span> 导入聊天</p>
+      <p>上传自拍 <span class="arrow">→</span> 个性化改写</p>
+      <p>AI 陪你上妆 <span class="arrow">↻</span> 沉淀档案</p>
+    </div>
+    <div class="tech-stack">
+      <h5>TECH STACK · 技术栈</h5>
+      <ul>
+        <li><b>前端</b>Vite · React · TypeScript</li>
+        <li><b>后端</b>FastAPI · SQLAlchemy</li>
+        <li><b>数据</b>PostgreSQL · OSS</li>
+        <li><b>模型</b>Qwen-VL · Claude</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="name">妆搭 · Makeup Mate</div>
+      <div class="slo">看 懂 妆 容 ，更 懂 你</div>
+    </div>
+    <div class="qr">
+      扫码<br>体验<br>Demo
+    </div>
+    <div class="footer-right">
+      <b>2026 黑客松作品</b><br>
+      Team Makeup Mate<br>
+      · 路演场地 / 日期 ·
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

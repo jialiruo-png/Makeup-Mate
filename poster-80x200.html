@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Makeup Mate 妆搭 80×200cm 竖版海报</title>
+    <style>
+      @page {
+        size: 80cm 200cm;
+        margin: 0;
+      }
+
+      :root {
+        --bg: #faf6f1;
+        --paper: #fffdfa;
+        --paper-soft: #f7efe8;
+        --ink: #2f2523;
+        --body: #6f5e59;
+        --muted: #9a8780;
+        --line: rgba(90, 61, 55, 0.13);
+        --accent: #8b3034;
+        --accent-deep: #5f2024;
+        --rose: #d9a29a;
+        --gold: #b58a5f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #e9dfd7;
+        color: var(--ink);
+        font-family:
+          "PingFang SC",
+          "Hiragino Sans GB",
+          "Microsoft YaHei",
+          "Noto Sans CJK SC",
+          system-ui,
+          sans-serif;
+      }
+
+      body {
+        display: grid;
+        place-items: start center;
+        padding: 32px;
+      }
+
+      .poster {
+        position: relative;
+        width: 800px;
+        height: 2000px;
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(255, 253, 250, 0.94), rgba(250, 246, 241, 0.98)),
+          radial-gradient(circle at 18% 10%, rgba(217, 162, 154, 0.26), transparent 24%),
+          radial-gradient(circle at 88% 48%, rgba(181, 138, 95, 0.14), transparent 22%);
+        box-shadow: 0 24px 80px rgba(52, 36, 32, 0.22);
+      }
+
+      .poster::before {
+        content: "";
+        position: absolute;
+        inset: 34px;
+        border: 1px solid rgba(95, 32, 36, 0.13);
+        pointer-events: none;
+      }
+
+      .poster::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.18;
+        background-image:
+          linear-gradient(rgba(95, 32, 36, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(95, 32, 36, 0.04) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 74px 64px 58px;
+        display: grid;
+        grid-template-rows: 250px 430px 514px 420px 1fr;
+        gap: 26px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--accent);
+        font-size: 19px;
+        font-weight: 760;
+        letter-spacing: 0;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 3px;
+        border-radius: 99px;
+        background: var(--accent);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 178px;
+        gap: 32px;
+        align-items: start;
+      }
+
+      .hero h1 {
+        margin: 22px 0 0;
+        max-width: 500px;
+        color: var(--ink);
+        font-size: 62px;
+        line-height: 1.06;
+        font-weight: 880;
+        letter-spacing: 0;
+      }
+
+      .hero p {
+        margin: 20px 0 0;
+        max-width: 520px;
+        color: var(--body);
+        font-size: 21px;
+        line-height: 1.6;
+        font-weight: 430;
+      }
+
+      .brand-card {
+        min-height: 178px;
+        padding: 24px 22px;
+        border: 1px solid rgba(95, 32, 36, 0.16);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.58);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .brand-mark {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 17px;
+        background: linear-gradient(145deg, #9b3b3f, #5f2024);
+        color: #fff;
+        font-size: 20px;
+        font-weight: 850;
+      }
+
+      .brand-card strong {
+        display: block;
+        color: var(--ink);
+        font-size: 20px;
+        line-height: 1.25;
+      }
+
+      .brand-card span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .section {
+        position: relative;
+        display: grid;
+        grid-template-columns: 248px 1fr;
+        gap: 30px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+      }
+
+      .section--wide {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .section-label {
+        color: var(--accent);
+        font-size: 16px;
+        font-weight: 780;
+      }
+
+      .section h2 {
+        margin: 12px 0 0;
+        color: var(--ink);
+        font-size: 34px;
+        line-height: 1.18;
+        font-weight: 820;
+      }
+
+      .section p {
+        margin: 14px 0 0;
+        color: var(--body);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .points {
+        margin-top: 24px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .point {
+        display: grid;
+        grid-template-columns: 8px 1fr;
+        gap: 12px;
+        align-items: start;
+        color: var(--body);
+        font-size: 15px;
+        line-height: 1.48;
+      }
+
+      .point::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        margin-top: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      .phone-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+        align-items: end;
+      }
+
+      .phone-row--triple {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .phone {
+        position: relative;
+        overflow: hidden;
+        border: 8px solid #2f2523;
+        border-radius: 34px;
+        background: #fff;
+        box-shadow: 0 24px 48px rgba(67, 43, 38, 0.18);
+      }
+
+      .phone--large {
+        width: 242px;
+        height: 360px;
+      }
+
+      .phone--medium {
+        width: 188px;
+        height: 344px;
+      }
+
+      .phone--small {
+        width: 170px;
+        height: 306px;
+      }
+
+      .phone img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: top center;
+      }
+
+      .phone figcaption {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 8px 10px;
+        border-radius: 14px;
+        background: rgba(255, 253, 250, 0.92);
+        color: var(--accent-deep);
+        font-size: 12px;
+        font-weight: 720;
+        text-align: center;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .flow-item {
+        min-height: 104px;
+        padding: 16px 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(95, 32, 36, 0.1);
+        background: rgba(255, 255, 255, 0.58);
+      }
+
+      .flow-item span {
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 820;
+      }
+
+      .flow-item b {
+        display: block;
+        margin-top: 8px;
+        color: var(--ink);
+        font-size: 17px;
+        line-height: 1.25;
+      }
+
+      .flow-item small {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.38;
+      }
+
+      .library-block {
+        display: grid;
+        grid-template-columns: 1fr 1.02fr;
+        gap: 26px;
+        align-items: center;
+      }
+
+      .library-copy {
+        display: grid;
+        gap: 12px;
+      }
+
+      .library-copy .feature {
+        padding: 13px 0;
+        border-bottom: 1px solid rgba(80, 53, 49, 0.08);
+      }
+
+      .library-copy b {
+        display: block;
+        color: var(--ink);
+        font-size: 17px;
+      }
+
+      .library-copy span {
+        display: block;
+        margin-top: 6px;
+        color: var(--body);
+        font-size: 14px;
+        line-height: 1.42;
+      }
+
+      .bottom {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 32px;
+        align-items: end;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+
+      .bottom h2 {
+        margin: 0;
+        color: var(--accent-deep);
+        font-size: 44px;
+        line-height: 1.12;
+        font-weight: 860;
+      }
+
+      .bottom p {
+        margin: 18px 0 0;
+        color: var(--body);
+        font-size: 16px;
+        line-height: 1.65;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        align-content: end;
+      }
+
+      .tags span {
+        padding: 8px 11px;
+        border: 1px solid rgba(139, 48, 52, 0.15);
+        border-radius: 999px;
+        color: var(--accent);
+        background: rgba(255, 255, 255, 0.48);
+        font-size: 12px;
+        font-weight: 720;
+      }
+
+      @media print {
+        html,
+        body {
+          width: 80cm;
+          height: 200cm;
+          padding: 0;
+          background: #fff;
+        }
+
+        .poster {
+          width: 80cm;
+          height: 200cm;
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="poster">
+      <div class="content">
+        <header class="hero">
+          <div>
+            <div class="eyebrow">Makeup Mate 妆搭</div>
+            <h1>看懂美妆视频<br />生成你的专属复刻方案</h1>
+            <p>
+              粘贴抖音美妆视频链接，AI 自动解析妆容重点，拆解步骤、难度、耗时与翻车点，
+              让美妆内容真正变成可执行方案。
+            </p>
+          </div>
+          <aside class="brand-card">
+            <div class="brand-mark">妆</div>
+            <div>
+              <strong>AI 美妆复刻助手</strong>
+              <span>Video Analysis · Style Library · Personal Companion</span>
+            </div>
+          </aside>
+        </header>
+
+        <section class="section">
+          <div>
+            <div class="section-label">01 · 解析入口</div>
+            <h2>复制链接，生成妆容复刻卡片</h2>
+            <p>
+              首页只保留最清晰的主链路：复制抖音美妆视频链接，粘贴后生成结构化解析结果。
+            </p>
+            <div class="points">
+              <div class="point">聚焦抖音美妆视频解析，减少入口干扰</div>
+              <div class="point">输出妆容名称、风格标签、难度和预计耗时</div>
+              <div class="point">拆解产品类型、步骤重点和常见翻车点</div>
+            </div>
+          </div>
+          <div class="phone-row">
+            <figure class="phone phone--large">
+              <img src="picture/首页登录页.png" alt="首页登录页截图" />
+              <figcaption>首页登录与进入</figcaption>
+            </figure>
+            <figure class="phone phone--large">
+              <img src="picture/解析博主妆容.png" alt="解析博主妆容截图" />
+              <figcaption>抖音链接解析</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="section section--wide">
+          <div>
+            <div class="section-label">02 · 复刻流程</div>
+            <h2>从内容灵感到可执行方案</h2>
+            <p>
+              系统将视频里的妆容信息转译成用户能直接照做的复刻卡片，并支持继续导入聊天陪练。
+            </p>
+            <div class="flow">
+              <div class="flow-item">
+                <span>STEP 1</span>
+                <b>粘贴链接</b>
+                <small>输入抖音美妆视频来源</small>
+              </div>
+              <div class="flow-item">
+                <span>STEP 2</span>
+                <b>AI 解析</b>
+                <small>识别风格、重点与产品类型</small>
+              </div>
+              <div class="flow-item">
+                <span>STEP 3</span>
+                <b>生成卡片</b>
+                <small>拆成步骤、耗时与翻车点</small>
+              </div>
+              <div class="flow-item">
+                <span>STEP 4</span>
+                <b>导入陪练</b>
+                <small>继续获得个性化指导</small>
+              </div>
+            </div>
+          </div>
+          <div class="phone-row phone-row--triple">
+            <figure class="phone phone--medium">
+              <img src="picture/博主妆容解析结果.png" alt="博主妆容解析结果截图" />
+              <figcaption>妆容解析卡片</figcaption>
+            </figure>
+            <figure class="phone phone--medium">
+              <img src="picture/ai对话语音视频陪练.png" alt="AI 对话语音视频陪练截图" />
+              <figcaption>AI 陪练聊天</figcaption>
+            </figure>
+            <figure class="phone phone--medium">
+              <img src="picture/解析博主妆容.png" alt="解析博主妆容截图" />
+              <figcaption>一键生成复刻</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="section">
+          <div>
+            <div class="section-label">03 · 美妆灵感库</div>
+            <h2>让博主与风格成为可对话的妆容助手</h2>
+            <p>
+              当用户没有明确链接时，可以从博主、风格、场景和新手陪练开始探索。
+            </p>
+            <div class="library-copy">
+              <div class="feature">
+                <b>博主灵感</b>
+                <span>沉淀达人风格、代表妆容、适合人群与复刻难度。</span>
+              </div>
+              <div class="feature">
+                <b>风格复刻</b>
+                <span>清冷通勤、韩系裸妆、港风复古、泰妆等方向。</span>
+              </div>
+              <div class="feature">
+                <b>场景妆容</b>
+                <span>上课、通勤、约会、面试、拍照、证件照。</span>
+              </div>
+            </div>
+          </div>
+          <div class="library-block">
+            <figure class="phone phone--medium">
+              <img src="picture/美妆灵感库.png" alt="美妆灵感库截图" />
+              <figcaption>博主灵感库</figcaption>
+            </figure>
+            <figure class="phone phone--medium">
+              <img src="picture/风格灵感库.png" alt="风格灵感库截图" />
+              <figcaption>风格灵感库</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <footer class="bottom">
+          <div>
+            <h2>从“看美妆内容”<br />到“真正画出来”</h2>
+            <p>
+              Makeup Mate 妆搭把碎片化的美妆视频、达人风格和个人特征，
+              转化为清晰、可执行、可陪伴的 AI 美妆复刻体验。
+            </p>
+          </div>
+          <div class="tags">
+            <span>视频解析</span>
+            <span>风格复刻</span>
+            <span>AI 陪练</span>
+            <span>妆容档案</span>
+            <span>个性化建议</span>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>
