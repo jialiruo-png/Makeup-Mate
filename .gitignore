@@ -1,0 +1,36 @@
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+
+# ---------- 编辑器 ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---------- 前端 ----------
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.vite/
+frontend/coverage/
+
+# ---------- 后端 ----------
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.egg-info/
+backend/.pytest_cache/
+backend/.env
+backend/storage/tmp/
+backend/storage/makeup_mate.db
+backend/*.db
+backend/*.db-journal
+
+# ---------- 日志 ----------
+*.log
+logs/
+
+# ---------- 临时素材 ----------
+mediapipe-master/
