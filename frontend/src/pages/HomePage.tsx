@@ -100,14 +100,9 @@ export function HomePage() {
   return (
     <div className="home-page">
       <header className="home-page__hero">
-        <span className="home-page__eyebrow">妆搭 Makeup Mate</span>
-        <h1 className="home-page__title">
-          粘贴美妆视频链接
-          <br />
-          生成你的专属复刻卡片
-        </h1>
+        <h1 className="home-page__title">粘贴美妆视频链接，生成复刻卡片</h1>
         <p className="home-page__subtitle">
-          或上传妆容截图、本地短视频片段。首页只做解析入口，灵感探索放在聊天页。
+          支持抖音、小红书、B站链接，也可上传截图或短视频。
         </p>
       </header>
 
@@ -214,6 +209,24 @@ export function HomePage() {
           <div className="home-page__loading-step">生成解析卡片</div>
         </div>
       )}
+
+      <section className="home-page__recent" aria-label="最近生成">
+        <div className="home-page__recent-head">
+          <h3>最近生成</h3>
+          <button
+            type="button"
+            className="home-page__recent-link"
+            onClick={() => appActions.showToast("历史记录请到聊天页右上角查看", "info")}
+          >
+            查看全部
+          </button>
+        </div>
+        <div className="home-page__recent-empty">
+          <span className="home-page__recent-glyph" aria-hidden>✎</span>
+          <p>还没有生成记录</p>
+          <small>粘贴一个美妆视频，开始试试。</small>
+        </div>
+      </section>
 
       {status === "ready" && card && (
         <article className="home-page__card">

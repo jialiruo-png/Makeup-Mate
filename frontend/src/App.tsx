@@ -5,12 +5,14 @@ import { Toast } from "@/components/Toast";
 import { HomePage } from "@/pages/HomePage";
 import { ChatPage } from "@/pages/ChatPage";
 import { ProfilePage } from "@/pages/ProfilePage";
+import { LoginPage } from "@/pages/LoginPage";
 import { useAppState, appActions } from "@/state/appStore";
 import { getHealth } from "@/api/health";
 import "./App.css";
 
 export default function App() {
   const tab = useAppState((s) => s.activeTab);
+  const isAuthed = useAppState((s) => s.isAuthed);
 
   useEffect(() => {
     getHealth()
@@ -44,10 +46,16 @@ export default function App() {
 
       <main className="app__stage">
         <PhoneFrame>
-          {tab === "home" && <HomePage />}
-          {tab === "chat" && <ChatPage />}
-          {tab === "profile" && <ProfilePage />}
-          <BottomNav />
+          {isAuthed ? (
+            <>
+              {tab === "home" && <HomePage />}
+              {tab === "chat" && <ChatPage />}
+              {tab === "profile" && <ProfilePage />}
+              <BottomNav />
+            </>
+          ) : (
+            <LoginPage />
+          )}
           <Toast />
         </PhoneFrame>
       </main>

@@ -1,39 +1,32 @@
 .home-page {
   flex: 1;
   overflow-y: auto;
-  padding: 64px 22px 104px;
+  padding: 32px 22px 96px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   scrollbar-width: none;
 }
 .home-page::-webkit-scrollbar {
   display: none;
 }
 
-.home-page__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: var(--tag-bg);
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0.3px;
+.home-page__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 2px;
 }
 
 .home-page__title {
-  margin-top: 14px;
   color: var(--text-main);
-  font-size: 25px;
-  font-weight: 760;
-  line-height: 1.34;
+  font-size: 24px;
+  font-weight: 720;
+  line-height: 1.36;
+  letter-spacing: -0.2px;
 }
 
 .home-page__subtitle {
-  margin-top: 9px;
   color: var(--text-body);
   font-size: 13px;
   line-height: 1.65;
@@ -41,14 +34,14 @@
 
 .home-page__panel,
 .home-page__card {
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(122, 46, 46, 0.08);
+  background: #fff;
   border-radius: 22px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 4px 14px rgba(43, 33, 30, 0.04);
 }
 
 .home-page__panel {
-  padding: 16px;
+  padding: 14px;
 }
 
 .home-page__source-switcher {
@@ -57,21 +50,22 @@
   gap: 4px;
   padding: 4px;
   margin-bottom: 12px;
-  border-radius: 15px;
-  background: var(--bg-soft);
+  border-radius: 14px;
+  background: rgba(122, 46, 46, 0.04);
 }
 
 .home-page__source-tab {
   min-width: 0;
-  height: 36px;
+  height: 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  border-radius: 11px;
+  border-radius: 10px;
+  background: transparent;
   color: var(--text-muted);
-  font-size: 11.5px;
-  font-weight: 550;
+  font-size: 12px;
+  font-weight: 500;
   transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 .home-page__source-tab:active {
@@ -80,7 +74,8 @@
 .home-page__source-tab.is-active {
   color: var(--accent);
   background: #fff;
-  box-shadow: 0 2px 8px rgba(122, 46, 46, 0.08);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(122, 46, 46, 0.07);
 }
 
 .home-page__source-panel {
@@ -161,23 +156,26 @@
 
 .home-page__cta {
   width: 100%;
-  height: 46px;
+  height: 44px;
   margin-top: 13px;
-  border-radius: 15px;
+  border-radius: 20px;
   background: var(--accent);
   color: #fff;
   font-size: 14px;
-  font-weight: 700;
-  box-shadow: 0 12px 26px rgba(122, 46, 46, 0.24);
-  transition: transform 0.15s ease, background 0.2s ease;
+  font-weight: 650;
+  letter-spacing: 0.4px;
+  box-shadow: 0 8px 18px rgba(122, 46, 46, 0.18);
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 .home-page__cta:hover:not(:disabled) {
   transform: translateY(-1px);
   background: #642525;
+  box-shadow: 0 10px 22px rgba(122, 46, 46, 0.22);
 }
 .home-page__cta:disabled {
   cursor: progress;
   background: var(--brand-deep);
+  box-shadow: none;
 }
 
 .home-page__loading {
@@ -330,4 +328,77 @@
   border: 1px solid var(--border);
   background: #fff;
   color: var(--accent);
+}
+
+/* ============== 最近生成 ============== */
+.home-page__recent {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-page__recent-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+.home-page__recent-head h3 {
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+}
+
+.home-page__recent-link {
+  background: transparent;
+  border: none;
+  padding: 4px 2px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+.home-page__recent-link:hover {
+  color: var(--accent);
+}
+
+.home-page__recent-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 18px 24px;
+  border: 1px dashed rgba(122, 46, 46, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 247, 240, 0.55);
+  text-align: center;
+}
+
+.home-page__recent-glyph {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tag-bg);
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.home-page__recent-empty p {
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.home-page__recent-empty small {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.55;
+  max-width: 240px;
 }

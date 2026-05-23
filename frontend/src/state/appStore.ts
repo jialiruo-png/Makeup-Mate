@@ -6,17 +6,22 @@ import type {
   ToastState,
 } from "@/types";
 
+export type AuthMethod = "phone" | "wechat" | "guest";
+
 export interface AppState {
   activeTab: ActiveTab;
   currentUserId: string;
   currentCard?: MakeupCard;
   currentSession?: ChatSession;
   toast?: ToastState;
+  isAuthed: boolean;
+  authMethod?: AuthMethod;
 }
 
 const initialState: AppState = {
   activeTab: "home",
   currentUserId: "user_demo",
+  isAuthed: false,
 };
 
 type Listener = () => void;
@@ -57,4 +62,8 @@ export const appActions = {
   showToast: (message: string, tone: ToastState["tone"] = "info") =>
     store.setState({ toast: { message, tone } }),
   hideToast: () => store.setState({ toast: undefined }),
+  signIn: (method: AuthMethod) =>
+    store.setState({ isAuthed: true, authMethod: method, activeTab: "home" }),
+  signOut: () =>
+    store.setState({ isAuthed: false, authMethod: undefined, activeTab: "home" }),
 };
