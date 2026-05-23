@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { appActions } from "@/state/appStore";
 import type { MakeupCard, SourceType } from "@/types";
+import { uploadMedia } from "@/api/media";
+import { request } from "@/api/client";
 import "./HomePage.css";
 
 type SourceTab = Extract<SourceType, "link" | "image" | "video">;
@@ -12,86 +14,80 @@ const SOURCE_TABS: Array<{ key: SourceTab; label: string; icon: string }> = [
   { key: "video", label: "上传视频", icon: "▶" },
 ];
 
-const MOCK_CARD: MakeupCard = {
-  cardId: "card_demo_cold_commute",
-  sourceType: "link",
-  sourcePlatform: "douyin",
-  sourceUrl: "",
-  sourceAssetId: null,
-  title: "清冷感通勤妆",
-  styleTags: ["低饱和", "干净", "淡颜友好"],
-  difficulty: "中等",
-  estimatedTime: "18分钟",
-  scenes: ["通勤", "上课", "面试"],
-  productTypes: ["气垫", "遮瑕", "浅棕眼影", "棕色眼线笔", "杏粉腮红", "奶茶豆沙唇泥"],
-  steps: [
-    {
-      stepNo: 1,
-      part: "底妆",
-      instruction: "轻薄雾面底妆，重点均匀肤色，不追求强遮瑕。",
-      tips: ["少量多次", "避开厚重粉感"],
-    },
-    {
-      stepNo: 2,
-      part: "眼妆",
-      instruction: "浅棕色眼影铺后半段，棕色眼线只画眼尾三分之一。",
-      tips: ["眼线短一点", "卧蚕提亮要轻"],
-    },
-    {
-      stepNo: 3,
-      part: "腮红与唇",
-      instruction: "杏粉腮红扫在眼下外侧，唇色选奶茶豆沙柔雾质地。",
-      tips: ["腮红弱存在感", "唇色别太深"],
-    },
-  ],
-  riskPoints: ["眼线过长", "修容过重", "唇色过深"],
-  aiTip: "这个妆容适合日常和通勤，新手建议弱化眼线、减少修容，让整体保持干净。",
-  confidence: 0.82,
-  evidenceSummary: { hasVideoEvidence: true, supportLevel: "mock" },
-  createdAt: new Date().toISOString(),
-};
+interface PickedFile {
+  file: File;
+  mediaAssetId?: string;
+}
 
 export function HomePage() {
   const [source, setSource] = useState<SourceTab>("link");
   const [link, setLink] = useState("");
-  const [picked, setPicked] = useState<Record<"image" | "video", boolean>>({
-    image: false,
-    video: false,
-  });
+  const [picked, setPicked] = useState<Partial<Record<"image" | "video", PickedFile>>>({});
   const [status, setStatus] = useState<AnalyzeStatus>("idle");
   const [card, setCard] = useState<MakeupCard | undefined>();
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const canAnalyze = useMemo(() => {
     if (source === "link") return link.trim().length > 0;
-    return picked[source];
+    return Boolean(picked[source]);
   }, [link, picked, source]);
 
-  const pickFile = (type: "image" | "video") => {
-    setPicked((prev) => ({ ...prev, [type]: true }));
-    appActions.showToast(type === "image" ? "已选择妆容截图" : "已选择短视频片段", "success");
+  const openPicker = (type: "image" | "video") => {
+    (type === "image" ? imageInputRef : videoInputRef).current?.click();
   };
 
-  const onAnalyze = () => {
+  const onFilePicked = async (type: "image" | "video", file: File | undefined) => {
+    if (!file) return;
+    setPicked((prev) => ({ ...prev, [type]: { file } }));
+    appActions.showToast(`已选择：${file.name}`, "success");
+    try {
+      const purpose = type === "image" ? "makeup_source_image" : "makeup_source_video";
+      const asset = await uploadMedia({ file, purpose, retentionPolicy: "temporary_source" });
+      setPicked((prev) => ({ ...prev, [type]: { file, mediaAssetId: asset.mediaAssetId } }));
+      appActions.showToast("文件已上传，可以解析了", "success");
+    } catch (err) {
+      console.error(err);
+      appActions.showToast("上传失败，请重试", "warn");
+      setPicked((prev) => {
+        const next = { ...prev };
+        delete next[type];
+        return next;
+      });
+    }
+  };
+
+  const onAnalyze = async () => {
     if (!canAnalyze) {
       appActions.showToast("请先粘贴链接，或上传图片/视频", "warn");
       return;
     }
+    if (source !== "link") {
+      const ready = picked[source]?.mediaAssetId;
+      if (!ready) {
+        appActions.showToast("文件还在上传中，稍等一下", "warn");
+        return;
+      }
+    }
     setStatus("loading");
-    window.setTimeout(() => {
-      const nextCard = {
-        ...MOCK_CARD,
-        cardId: `card_${source}_${Date.now()}`,
-        sourceType: source,
-        sourceUrl: source === "link" ? link.trim() : null,
-        sourcePlatform: source === "link" ? "douyin" : undefined,
-        sourceAssetId: source === "link" ? null : `asset_${source}_demo`,
-        createdAt: new Date().toISOString(),
-      };
-      setCard(nextCard);
-      appActions.setCurrentCard(nextCard);
+    try {
+      const res = await request<{ card: MakeupCard }>("/makeup-cards/analyze", {
+        method: "POST",
+        body: {
+          sourceType: source,
+          sourceUrl: source === "link" ? link.trim() : null,
+          mediaAssetId: source === "link" ? null : picked[source]?.mediaAssetId,
+        },
+      });
+      setCard(res.card);
+      appActions.setCurrentCard(res.card);
       setStatus("ready");
       appActions.showToast("解析卡片已生成", "success");
-    }, 950);
+    } catch (err) {
+      console.error(err);
+      setStatus("idle");
+      appActions.showToast("解析失败，请重试", "warn");
+    }
   };
 
   const onImport = () => {
@@ -143,35 +139,61 @@ export function HomePage() {
         )}
 
         {source === "image" && (
-          <button
-            type="button"
-            className={`home-page__upload-zone${picked.image ? " has-file" : ""}`}
-            onClick={() => pickFile("image")}
-          >
-            <span className="home-page__upload-icon">▧</span>
-            <span className="home-page__upload-title">
-              {picked.image ? "makeup-look-2026.jpg" : "上传妆容截图 / 封面图"}
-            </span>
-            <span className="home-page__upload-sub">
-              {picked.image ? "1.2 MB · 可解析" : "适合博主妆容图、封面图、想复刻的妆容照片"}
-            </span>
-          </button>
+          <>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => onFilePicked("image", e.target.files?.[0])}
+            />
+            <button
+              type="button"
+              className={`home-page__upload-zone${picked.image ? " has-file" : ""}`}
+              onClick={() => openPicker("image")}
+            >
+              <span className="home-page__upload-icon">▧</span>
+              <span className="home-page__upload-title">
+                {picked.image?.file.name ?? "上传妆容截图 / 封面图"}
+              </span>
+              <span className="home-page__upload-sub">
+                {picked.image
+                  ? picked.image.mediaAssetId
+                    ? `${(picked.image.file.size / 1024 / 1024).toFixed(1)} MB · 已上传`
+                    : "上传中…"
+                  : "适合博主妆容图、封面图、想复刻的妆容照片"}
+              </span>
+            </button>
+          </>
         )}
 
         {source === "video" && (
-          <button
-            type="button"
-            className={`home-page__upload-zone${picked.video ? " has-file" : ""}`}
-            onClick={() => pickFile("video")}
-          >
-            <span className="home-page__upload-icon">▶</span>
-            <span className="home-page__upload-title">
-              {picked.video ? "tutorial-clip.mp4" : "上传本地短视频片段"}
-            </span>
-            <span className="home-page__upload-sub">
-              {picked.video ? "8.4 MB · 32s · 待抽帧" : "系统会抽取关键帧，识别妆容步骤和翻车点"}
-            </span>
-          </button>
+          <>
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/*"
+              hidden
+              onChange={(e) => onFilePicked("video", e.target.files?.[0])}
+            />
+            <button
+              type="button"
+              className={`home-page__upload-zone${picked.video ? " has-file" : ""}`}
+              onClick={() => openPicker("video")}
+            >
+              <span className="home-page__upload-icon">▶</span>
+              <span className="home-page__upload-title">
+                {picked.video?.file.name ?? "上传本地短视频片段"}
+              </span>
+              <span className="home-page__upload-sub">
+                {picked.video
+                  ? picked.video.mediaAssetId
+                    ? `${(picked.video.file.size / 1024 / 1024).toFixed(1)} MB · 已上传`
+                    : "上传中…"
+                  : "系统会抽取关键帧，识别妆容步骤和翻车点"}
+              </span>
+            </button>
+          </>
         )}
 
         <button
