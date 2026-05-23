@@ -10,10 +10,10 @@ const profileRows = [
 ];
 
 const memories = [
-  "喜欢清冷、韩系、通勤",
-  "上班日希望 15 分钟内完成",
-  "眼线需要新手版",
-  "没有修容盘，优先用腮红和口红替代",
+  ["偏好风格", "清冷、韩系、通勤"],
+  ["完成时长", "上班日希望 15 分钟内完成"],
+  ["眼线偏好", "眼线需要新手版"],
+  ["替代建议", "没有修容盘，优先用腮红和口红替代"],
 ];
 
 const history = [
@@ -28,20 +28,21 @@ export function ProfilePage() {
     <div className="profile-page">
       <header className="profile-page__head">
         <div className="profile-page__avatar">妆</div>
-        <div>
+        <div className="profile-page__identity">
           <div className="profile-page__name">妆搭体验用户</div>
           <div className="profile-page__sub">
             妆容档案完成度 <span>68%</span>
           </div>
+          <div className="profile-page__progress" aria-label="妆容档案完成度 68%">
+            <i />
+          </div>
         </div>
       </header>
 
-      <section className="profile-card profile-card--hero">
-        <div>
-          <span>我的妆容档案</span>
-          <h2>低饱和通勤 · 新手友好</h2>
-          <p>AI 会把解析卡片和灵感库方案自动改写得更适合你。</p>
-        </div>
+      <section className="profile-summary" aria-labelledby="profile-summary-title">
+        <div className="profile-summary__label" id="profile-summary-title">妆容总结</div>
+        <h2>低饱和通勤 · 新手友好</h2>
+        <p>AI 会优先推荐更适合你的日常妆容方案。</p>
       </section>
 
       <section className="profile-card">
@@ -64,9 +65,12 @@ export function ProfilePage() {
           <h3>AI 已记住</h3>
           <span>可随时清空</span>
         </div>
-        <div className="memory-list">
-          {memories.map((item) => (
-            <div key={item} className="memory-pill">{item}</div>
+        <div className="memory-list" role="list">
+          {memories.map(([key, value]) => (
+            <div key={key} className="memory-row" role="listitem">
+              <span>{key}</span>
+              <b>{value}</b>
+            </div>
           ))}
         </div>
       </section>
