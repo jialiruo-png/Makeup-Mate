@@ -89,11 +89,23 @@ const FILTERS: Record<LibraryEntry, string[]> = {
   beginner: ["全部", "新手", "眼线", "腮红", "底妆", "内双", "10分钟"],
 };
 
+const STYLE_COVER_PATHS: Record<string, string> = {
+  beginner_makeup: "/assets/inspiration-covers/style/beginner_makeup.png",
+  japanese_korean_makeup: "/assets/inspiration-covers/style/japanese_korean_makeup.png",
+  western_makeup: "/assets/inspiration-covers/style/western_makeup.png",
+  asian_makeup: "/assets/inspiration-covers/style/asian_makeup.png",
+  daily_makeup: "/assets/inspiration-covers/style/daily_makeup.png",
+  pure_desire_makeup: "/assets/inspiration-covers/style/pure_desire_makeup.png",
+  hongkong_retro_makeup: "/assets/inspiration-covers/style/hongkong_retro_makeup.png",
+  cos_makeup: "/assets/inspiration-covers/style/cos_makeup.png",
+};
+
 const BEGINNER_CARDS: InspirationCard[] = [
   {
     id: "beginner_eyeliner",
     type: "beginner_training",
     name: "第一次画眼线",
+    avatarUrl: "/assets/inspiration-covers/beginner/beginner_eyeliner.png",
     avatarLabel: "眼线\n陪练",
     tags: ["新手", "短眼线"],
     look: "后半段短眼线",
@@ -106,6 +118,7 @@ const BEGINNER_CARDS: InspirationCard[] = [
     id: "beginner_blush",
     type: "beginner_training",
     name: "第一次画腮红",
+    avatarUrl: "/assets/inspiration-covers/beginner/beginner_blush.png",
     avatarLabel: "腮红\n陪练",
     tags: ["新手", "上移"],
     look: "眼下外侧腮红",
@@ -118,6 +131,7 @@ const BEGINNER_CARDS: InspirationCard[] = [
     id: "beginner_10min",
     type: "beginner_training",
     name: "10 分钟新手妆",
+    avatarUrl: "/assets/inspiration-covers/beginner/beginner_10min.png",
     avatarLabel: "10分\n新手",
     tags: ["极简", "无翻车"],
     look: "保姆级 5 步妆",
@@ -156,6 +170,7 @@ function styleCards(): InspirationCard[] {
     id: category.categoryId,
     type: "style",
     name: category.categoryName,
+    avatarUrl: STYLE_COVER_PATHS[category.categoryId] || null,
     avatarLabel: category.categoryName.slice(0, 4),
     tags: category.styleTags.slice(0, 3),
     look: category.representativeLooks[0],
@@ -174,17 +189,18 @@ function styleCards(): InspirationCard[] {
 
 function sceneCards(): InspirationCard[] {
   const scenes = [
-    ["通勤", "5 步极简通勤妆", "上班族 · 赶时间", "新手", ["通勤", "极简"]],
-    ["上课", "清透学生妆", "学生党 · 淡颜", "新手", ["上课", "韩系"]],
-    ["约会", "桃花约会妆", "甜系 · 圆脸", "简单", ["约会", "甜妹"]],
-    ["面试", "稳重面试妆", "职场新人", "简单", ["面试", "干净"]],
-    ["拍照", "上镜拍照妆", "活动 · 旅拍", "中等", ["拍照", "上镜"]],
-    ["证件照", "证件照专属妆", "考试 · 证件", "简单", ["证件照", "干净"]],
+    ["通勤", "5 步极简通勤妆", "上班族 · 赶时间", "新手", ["通勤", "极简"], "/assets/inspiration-covers/scene/scene_commute.png"],
+    ["上课", "清透学生妆", "学生党 · 淡颜", "新手", ["上课", "韩系"], "/assets/inspiration-covers/scene/scene_school.png"],
+    ["约会", "桃花约会妆", "甜系 · 圆脸", "简单", ["约会", "甜妹"], "/assets/inspiration-covers/scene/scene_date.png"],
+    ["面试", "稳重面试妆", "职场新人", "简单", ["面试", "干净"], "/assets/inspiration-covers/scene/scene_interview.png"],
+    ["拍照", "上镜拍照妆", "活动 · 旅拍", "中等", ["拍照", "上镜"], "/assets/inspiration-covers/scene/scene_photo.png"],
+    ["证件照", "证件照专属妆", "考试 · 证件", "简单", ["证件照", "干净"], "/assets/inspiration-covers/scene/scene_id_photo.png"],
   ] as const;
-  return scenes.map(([name, look, suitable, difficulty, tags]) => ({
+  return scenes.map(([name, look, suitable, difficulty, tags, avatarUrl]) => ({
     id: `scene_${name}`,
     type: "scene",
     name,
+    avatarUrl,
     avatarLabel: name,
     tags: [...tags],
     look,
@@ -925,4 +941,3 @@ function UploadContent() {
     </>
   );
 }
-
