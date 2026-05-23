@@ -1,0 +1,2469 @@
+[
+  {
+    "creatorId": "douyin_creator_001",
+    "creatorName": "程十安an",
+    "displayName": "程十安an",
+    "platform": "douyin",
+    "douyinId": "1950495951",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_001.jpg",
+    "followerCount": 20380000,
+    "followerCountText": "2038万",
+    "followerCountCapturedAt": "2026-05-14",
+    "followerCountSource": "36氪报道",
+    "primaryCategoryId": "beginner_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "controversial",
+    "styleTags": [
+      "新手全脸",
+      "底妆教学",
+      "眼妆拆解",
+      "干货教程",
+      "通勤可改写"
+    ],
+    "representativeLooks": [
+      "新手全脸妆",
+      "基础眼妆",
+      "日常底妆",
+      "分肤质产品选择"
+    ],
+    "fitUsers": [
+      "化妆初学者",
+      "学生党",
+      "想补齐基础步骤的用户"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "步骤拆解清楚",
+      "强调肤质与底妆匹配",
+      "妆面偏清透自然",
+      "适合拆成跟练卡片"
+    ],
+    "riskPoints": [
+      "过度照搬色号可能不适合肤色",
+      "底妆用量过多易厚重",
+      "眼妆层次少会显没精神"
+    ],
+    "sourceLinks": [
+      "https://m.36kr.com/p/3809014232997380",
+      "https://www.douyin.com/search/%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E7%A8%8B%E5%8D%81%E5%AE%89%E4%B8%BB%E9%A1%B5"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏基础干货和清透日常的教程型风格，适合做新手全脸跟练入口。",
+    "makeupMateUseCase": "新手基础妆陪练智能体",
+    "agentPrompt": "先判断用户肤质、眼型和通勤/上课场景，再用少量步骤输出底妆、眉眼、腮红、唇妆跟练方案，并给出低成本替代品思路。",
+    "notes": "原账号曾停更且存在名称/账号归属相关公开报道，需人工复核当前运营主体。",
+    "dataConfidence": "high",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_002",
+    "creatorName": "崔佳楠",
+    "displayName": "崔佳楠",
+    "platform": "douyin",
+    "douyinId": "sayi_",
+    "profileUrl": "https://www.douyin.com/user/MS4wLjABAAAAjHU50fPFRMWOHXydNuxb4lxfiE0voaCr7uzg1GOL1qmSwC1sa5CMIWOTU1EPoEwP",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_002.jpg",
+    "followerCount": 7338000,
+    "followerCountText": "733.8万",
+    "followerCountCapturedAt": "2026-02-26",
+    "followerCountSource": "抖音搜索结果/主页摘要",
+    "primaryCategoryId": "beginner_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup",
+      "asian_makeup"
+    ],
+    "creatorType": "综合型",
+    "status": "active",
+    "styleTags": [
+      "有效化妆",
+      "精准护肤",
+      "修容",
+      "油皮友好",
+      "基础改造"
+    ],
+    "representativeLooks": [
+      "有效化妆",
+      "油皮底妆",
+      "修容教程",
+      "基础妆容纠错"
+    ],
+    "fitUsers": [
+      "油皮用户",
+      "想学有效化妆的男女性用户",
+      "需要基础纠错的人群"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "重视妆前护肤和底妆状态",
+      "常用问题导向讲解",
+      "强调有效化妆而非堆产品",
+      "适合拆成诊断式流程"
+    ],
+    "riskPoints": [
+      "护肤和彩妆边界容易混淆",
+      "修容过重会显脏",
+      "油皮方案不一定适合干皮"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/user/MS4wLjABAAAAjHU50fPFRMWOHXydNuxb4lxfiE0voaCr7uzg1GOL1qmSwC1sa5CMIWOTU1EPoEwP",
+      "https://m.baike.com/wikiid/7372547758241529891"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏问题解决和有效化妆的综合型风格，适合做底妆与修容纠错入口。",
+    "makeupMateUseCase": "有效化妆诊断智能体",
+    "agentPrompt": "先询问用户最大妆容问题，如油光、卡粉、修容显脏，再生成一套以纠错为主的基础复刻方案。",
+    "notes": "粉丝数来自公开页面摘要，仍建议接入飞瓜/蝉妈妈或人工主页截图二次核验。",
+    "dataConfidence": "high",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_003",
+    "creatorName": "毛戈平",
+    "displayName": "毛戈平",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "https://www.douyin.com/user/MS4wLjABAAAAqF2Es-jVZKrhenG9i9wOsiCKD_F7bJxG7GNEpUJgivw",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_003.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "beginner_makeup",
+    "secondaryCategoryIds": [
+      "hongkong_retro_makeup",
+      "daily_makeup",
+      "asian_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "专业化妆师",
+      "光影修容",
+      "骨相调整",
+      "底妆塑形",
+      "东方审美",
+      "东亚五官修饰",
+      "面中优化",
+      "肿眼泡适配"
+    ],
+    "representativeLooks": [
+      "光影修容",
+      "专业底妆",
+      "面部结构调整",
+      "日常气质妆",
+      "扁平五官改良妆",
+      "东方气韵古典妆"
+    ],
+    "fitUsers": [
+      "想系统学修容的人",
+      "成熟妆容用户",
+      "需要专业化底妆逻辑的人",
+      "内双扁平五官用户",
+      "东亚普通五官用户"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "强调面部结构和光影关系",
+      "底妆与修容逻辑系统",
+      "妆面完成度高",
+      "适合生成专业版复刻卡",
+      "贴合原生五官条件",
+      "弱化面部短板"
+    ],
+    "riskPoints": [
+      "新手容易下手过重",
+      "修容色不合适会显脏",
+      "步骤多不适合赶时间场景",
+      "光影修饰把控失衡",
+      "五官比例调整不协调"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/user/MS4wLjABAAAAqF2Es-jVZKrhenG9i9wOsiCKD_F7bJxG7GNEpUJgivw",
+      "https://cn.chinadaily.com.cn/a/202204/29/WS626bb88fa3101c3ee7ad34ae.html"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "专业光影修容与东亚五官适配取向，适合做底妆塑形和东方气质妆入口。",
+    "makeupMateUseCase": "亚裔五官修容与专业底妆智能体",
+    "agentPrompt": "依据用户脸型、面中、鼻梁、眼型和场景，拆解光影修容、底妆塑形和东方气质妆步骤，并给新手降难度版本。",
+    "notes": "个人主页可核验，粉丝数未在可用来源中稳定核验，待人工补充主页截图。已合并用户补充的“毛戈平形象设计”风格标签；粉丝数仍待人工核验。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_004",
+    "creatorName": "佳佳日记",
+    "displayName": "佳佳日记",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_004.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "japanese_korean_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup",
+      "beginner_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "unknown",
+    "styleTags": [
+      "韩系妆容",
+      "水光肌",
+      "女大学生",
+      "平价彩妆",
+      "沉浸式化妆"
+    ],
+    "representativeLooks": [
+      "韩系水光肌",
+      "韩系淡妆",
+      "女大学生日常妆"
+    ],
+    "fitUsers": [
+      "学生党",
+      "喜欢韩系清透妆的人",
+      "预算有限的新手"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "底妆追求通透发光",
+      "眼妆弱化攻击感",
+      "色彩多用低饱和粉棕",
+      "适合日常和上课"
+    ],
+    "riskPoints": [
+      "水光底妆易显油",
+      "粉色系不适合所有肤色",
+      "睫毛处理不好会塌"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E4%BD%B3%E4%BD%B3%E6%B2%89%E6%B5%B8%E5%BC%8F%E5%8C%96%E5%A6%86",
+      "https://www.douyin.com/search/%E9%9F%A9%E5%A6%86%E4%BD%B3%E4%BD%B3"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "韩系清透与女大学生日常取向，适合做日韩淡妆跟练入口。",
+    "makeupMateUseCase": "韩系淡妆陪练智能体",
+    "agentPrompt": "围绕水光底妆、低饱和眼影、自然卧蚕和嫩感唇色生成步骤，并根据用户肤质调整定妆强度。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页需人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_005",
+    "creatorName": "盐栗栗(假装美妆博主版)",
+    "displayName": "盐栗栗(假装美妆博主版)",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_005.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "japanese_korean_makeup",
+    "secondaryCategoryIds": [
+      "pure_desire_makeup",
+      "beginner_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "韩妆",
+      "兔系妆",
+      "开智妆",
+      "粉彩妆",
+      "淡颜友好"
+    ],
+    "representativeLooks": [
+      "兔系妆",
+      "开智妆",
+      "粉彩初春妆",
+      "无效化妆纠错"
+    ],
+    "fitUsers": [
+      "淡颜用户",
+      "新手小白",
+      "喜欢甜妹韩妆的人"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "教程标题和妆面目标明确",
+      "色彩偏粉彩和低攻击性",
+      "适合淡颜放大眼神",
+      "强调普通人变美"
+    ],
+    "riskPoints": [
+      "粉彩眼影过量会肿",
+      "卧蚕和下至容易画脏",
+      "甜妹风不适合所有职场场景"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%A0%97",
+      "https://m.douyin.com/share/video/7621870084965147593"
+    ],
+    "representativeVideoLinks": [
+      "https://m.douyin.com/share/video/7621870084965147593"
+    ],
+    "styleSummary": "偏韩系粉彩和甜妹感的教程风格，适合做淡颜新手妆入口。",
+    "makeupMateUseCase": "淡颜韩妆跟练智能体",
+    "agentPrompt": "根据用户淡颜/肿眼泡/内双情况，生成低饱和韩系眼妆、腮红和唇色方案，并提示减量点。",
+    "notes": "粉丝数未核验；来源为抖音搜索与公开视频，建议人工补主页。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_006",
+    "creatorName": "榆晚不是鱼丸",
+    "displayName": "榆晚不是鱼丸",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_006.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "japanese_korean_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "方圆脸",
+      "肿眼泡",
+      "韩系甜妆",
+      "普通人妆教",
+      "甜妹"
+    ],
+    "representativeLooks": [
+      "冬日韩系氛围甜妆",
+      "圆脸蜜瓜妆",
+      "方圆脸妆容"
+    ],
+    "fitUsers": [
+      "方圆脸用户",
+      "肿眼泡用户",
+      "喜欢韩系甜妆的新手"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "围绕方圆脸和肿眼泡适配",
+      "妆面偏甜感和日常",
+      "色彩亲和不强攻击",
+      "容易产品化为脸型适配卡"
+    ],
+    "riskPoints": [
+      "腮红位置不对会显脸宽",
+      "眼影粉色系易肿",
+      "修容过重破坏甜感"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%A6%86%E6%99%9A%E4%B8%8D%E6%98%AF%E9%B1%BC%E4%B8%B8%20%E7%BE%8E%E5%A6%86%20%E6%96%B9%E5%9C%86%E8%84%B8",
+      "https://www.douyin.com/search/%E8%82%BF%E7%9C%BC%E6%B3%A1%E6%96%B9%E5%9C%86%E8%84%B8%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "面向方圆脸与肿眼泡的韩系甜妆风格，适合做脸型适配入口。",
+    "makeupMateUseCase": "方圆脸韩妆智能体",
+    "agentPrompt": "先判断用户脸型、眼皮厚度和想要甜感强度，再给出修容、眼影、腮红的低翻车复刻步骤。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_007",
+    "creatorName": "郭二萌",
+    "displayName": "郭二萌",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_007.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "western_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "unknown",
+    "styleTags": [
+      "轻欧美",
+      "方圆脸",
+      "高级感",
+      "普通人适配",
+      "原生感"
+    ],
+    "representativeLooks": [
+      "轻欧美妆",
+      "方圆脸高级感妆",
+      "亚裔轻欧美"
+    ],
+    "fitUsers": [
+      "方圆脸用户",
+      "想尝试欧美妆但怕浓的人",
+      "普通人上镜用户"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "把欧美立体感降浓度",
+      "适配方圆脸轮廓",
+      "强调眉眼和修容比例",
+      "可日常化改写"
+    ],
+    "riskPoints": [
+      "修容色过灰会显脏",
+      "眉峰过强显凶",
+      "唇色太裸可能显气色差"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%AC%A7%E7%BE%8E%E5%A6%86",
+      "https://www.douyin.com/search/%E6%9D%8F%E7%9C%BC%E6%AC%A7%E7%BE%8E%E5%A6%86%E5%AE%B9",
+      "https://www.facebook.com/sbeautybodyline/videos/%E6%96%B9%E5%9C%86%E8%84%B8%E5%A7%90%E5%A6%B9%E5%BF%AB%E8%AF%95%E8%AF%95%E8%BD%BB%E6%AC%A7%E7%BE%8E%E5%A6%86%E6%99%AE%E9%80%9A%E4%BA%BA%E9%AB%98%E7%BA%A7%E6%84%9F%E6%8D%B7%E5%BE%84%E9%A9%AC%E4%B8%8Aget%E5%A6%86%E5%AE%B9%E5%88%86%E4%BA%AB%E8%BD%AC%E8%BD%BD%E8%87%AA-%E6%8A%96%E9%9F%B3%E9%83%AD%E4%BA%8C%E8%90%8C/282096107334478/"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "轻欧美但保留普通人日常度，适合做亚洲脸欧美妆降难度入口。",
+    "makeupMateUseCase": "轻欧美适配智能体",
+    "agentPrompt": "基于用户脸型和五官立体度，把欧美妆拆成低浓度修容、眉眼加深和唇妆平衡三步。",
+    "notes": "来源为抖音搜索结果和转载页面，粉丝数、主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_008",
+    "creatorName": "Doll",
+    "displayName": "Doll",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_008.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "western_makeup",
+    "secondaryCategoryIds": [
+      "pure_desire_makeup",
+      "asian_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "unknown",
+    "styleTags": [
+      "Doll感",
+      "美式芭比",
+      "立体五官",
+      "甜辣",
+      "上镜妆"
+    ],
+    "representativeLooks": [
+      "美式芭比甜心妆",
+      "Doll感妆容",
+      "美式妆容"
+    ],
+    "fitUsers": [
+      "拍照用户",
+      "喜欢甜辣风的人",
+      "想放大五官的新手进阶用户"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "眼妆存在感强",
+      "睫毛和卧蚕放大眼睛",
+      "腮红唇妆偏甜辣",
+      "适合拍照和短视频"
+    ],
+    "riskPoints": [
+      "假睫毛不自然会廉价",
+      "下眼睑过重会显脏",
+      "修容和高光比例难掌握"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/doll%E4%BB%BF%E5%A6%86%E8%83%BD%E5%87%BA%E9%97%A8%E5%90%97",
+      "https://www.douyin.com/search/%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%AC%A7%E7%BE%8E%E5%A6%86"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏Doll感和美式甜辣的欧美妆方向，适合做拍照上镜妆入口。",
+    "makeupMateUseCase": "甜辣Doll妆智能体",
+    "agentPrompt": "围绕大眼、睫毛、腮红和唇部饱满度生成拍照版复刻方案，并提供日常降浓度版本。",
+    "notes": "来源为抖音搜索结果，昵称较泛，需人工确认唯一账号。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_009",
+    "creatorName": "万怀野",
+    "displayName": "万怀野",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_009.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "western_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "unknown",
+    "styleTags": [
+      "欧美妆",
+      "混血感",
+      "浓颜",
+      "立体轮廓",
+      "上镜"
+    ],
+    "representativeLooks": [
+      "混血欧美妆",
+      "轻欧美妆",
+      "浓颜上镜妆"
+    ],
+    "fitUsers": [
+      "浓颜用户",
+      "希望提高五官立体度的人",
+      "拍摄场景用户"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "强调眉眼深邃度",
+      "重视鼻影和面部立体",
+      "妆面比日常妆更强存在感",
+      "适合短视频镜头"
+    ],
+    "riskPoints": [
+      "底妆不干净会放大瑕疵",
+      "鼻影过重显假",
+      "不适合极低存在感通勤场景"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%AC%A7%E7%BE%8E%E5%A6%86",
+      "https://www.douyin.com/search/%E9%95%BF%E5%8F%91%E6%AC%A7%E7%BE%8E%E9%A3%8E%E7%9A%84%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏混血感和立体轮廓的欧美妆，适合做镜头强化妆入口。",
+    "makeupMateUseCase": "混血感欧美妆智能体",
+    "agentPrompt": "根据用户五官立体度，输出眉眼加深、鼻影控制、唇色选择和镜头妆降噪建议。",
+    "notes": "来源为抖音搜索结果摘要，粉丝数和主页待人工复核。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_010",
+    "creatorName": "塞巴Sebastian",
+    "displayName": "塞巴Sebastian",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_010.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "asian_makeup",
+    "secondaryCategoryIds": [
+      "western_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "美式亚裔",
+      "男生化妆",
+      "亚裔男高",
+      "狼系亚裔",
+      "轻欧美"
+    ],
+    "representativeLooks": [
+      "美式男高亚裔妆",
+      "狼系亚裔妆",
+      "男生亚裔妆"
+    ],
+    "fitUsers": [
+      "男生化妆用户",
+      "亚裔五官用户",
+      "想尝试美式校园感的人"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "强调亚裔五官轮廓优化",
+      "男生妆面可借鉴",
+      "眼妆和修容偏干净",
+      "适合个性化改写"
+    ],
+    "riskPoints": [
+      "男生妆照搬到女生需调整柔和度",
+      "雀斑和修容易显脏",
+      "眉形过硬会显凶"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E4%BA%9A%E8%A3%94%E5%A6%86%E6%95%99%E7%A8%8B%E7%94%B7",
+      "https://www.douyin.com/search/%E7%94%B7%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%AC%A7%E7%BE%8E%E9%A3%8E%E6%A0%BC",
+      "https://www.douyin.com/search/%E7%BE%8E%E5%BC%8F%E7%94%B7%E5%AD%A9%E5%A6%86%E9%80%A0"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "美式亚裔和男高妆教风格，适合做亚裔五官适配入口。",
+    "makeupMateUseCase": "亚裔男高妆智能体",
+    "agentPrompt": "先判断用户性别表达、脸型和想要少年感/狼系强度，再生成底妆、眉眼、修容和雀斑的复刻方案。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_011",
+    "creatorName": "迪力瑞安",
+    "displayName": "迪力瑞安",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_011.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "asian_makeup",
+    "secondaryCategoryIds": [
+      "western_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "混血美高",
+      "男生化妆",
+      "液体修容",
+      "亚裔轻欧美",
+      "美式"
+    ],
+    "representativeLooks": [
+      "混血美高男妆",
+      "欧美男生妆",
+      "亚裔轻欧美妆"
+    ],
+    "fitUsers": [
+      "男生妆容用户",
+      "黄黑皮用户",
+      "想提升轮廓感的人"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "强调液体修容与腮红膏",
+      "妆面偏美式校园感",
+      "适合男生轮廓改造",
+      "镜头表现强"
+    ],
+    "riskPoints": [
+      "液体修容晕染不均会脏",
+      "腮红面积过大会突兀",
+      "底妆色差容易明显"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E7%94%B7%E7%BE%8E%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%AC%A7%E7%BE%8E%E9%A3%8E%E6%A0%BC",
+      "https://www.douyin.com/search/%E6%AC%A7%E7%BE%8E%E5%A6%86%E5%AE%B9%E5%8D%9A%E4%B8%BB%E7%94%B7"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏美高混血感和男生亚裔适配，适合做男生轻欧美入口。",
+    "makeupMateUseCase": "男生轻欧美智能体",
+    "agentPrompt": "以自然底妆、液体修容、眉眼轮廓和腮红膏为核心，生成可出门的男生妆容步骤。",
+    "notes": "来源为抖音搜索结果，粉丝数与主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_012",
+    "creatorName": "小厘的厘（内双版）",
+    "displayName": "小厘的厘（内双版）",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_012.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "asian_makeup",
+    "secondaryCategoryIds": [
+      "beginner_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "内双",
+      "肿眼泡",
+      "黄黑皮",
+      "亚裔妆",
+      "网感"
+    ],
+    "representativeLooks": [
+      "内双亚裔妆",
+      "黄黑皮亚裔妆",
+      "换头眼妆"
+    ],
+    "fitUsers": [
+      "内双用户",
+      "肿眼泡用户",
+      "黄黑皮用户",
+      "想学网感妆的人"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "聚焦内双和肿眼泡眼妆",
+      "强调亚裔眼型调整",
+      "妆面适合短视频网感",
+      "适配黄黑皮议题"
+    ],
+    "riskPoints": [
+      "眼线位置错会显眼小",
+      "下眼影过重显脏",
+      "色彩饱和度需按肤色调整"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/double%E9%92%89%E6%98%AF%E4%BA%9A%E8%A3%94%E5%A6%86%E5%90%97",
+      "https://www.douyin.com/search/%E9%BB%84%E9%BB%91%E7%9A%AE%E5%A5%B3%E7%94%9F%E9%80%82%E5%90%88%E5%8C%96%E7%9A%84%E4%BA%9A%E8%A3%94%E5%A6%86"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "内双肿眼泡友好的亚裔妆教，适合做眼型适配入口。",
+    "makeupMateUseCase": "内双亚裔妆智能体",
+    "agentPrompt": "根据用户眼皮厚度、眼距和肤色，输出眼线、卧蚕、眼影层次和修容的亚裔妆复刻卡。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_013",
+    "creatorName": "我是筒筒（爱化妆版）",
+    "displayName": "我是筒筒（爱化妆版）",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_013.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "daily_makeup",
+    "secondaryCategoryIds": [
+      "beginner_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "10分钟通勤",
+      "日常妆",
+      "新手化妆",
+      "快速提气色",
+      "低存在感"
+    ],
+    "representativeLooks": [
+      "新手10分钟通勤妆",
+      "日常耐看妆",
+      "快速出门妆"
+    ],
+    "fitUsers": [
+      "上班族",
+      "早八学生",
+      "时间少的新手"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "时间成本低",
+      "妆面目标明确",
+      "强调日常耐看",
+      "适合一键生成跟练清单"
+    ],
+    "riskPoints": [
+      "赶时间容易底妆不服帖",
+      "省略定妆会脱妆",
+      "眼妆太淡可能不上镜"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%88%91%E6%98%AF%E7%AD%92%E7%AD%92%20%E7%88%B1%E5%8C%96%E5%A6%86%E7%89%88%20%E6%8A%96%E9%9F%B3%20%E6%96%B0%E6%89%8B10%E5%88%86%E9%92%9F%E9%80%9A%E5%8B%A4%E5%A6%86",
+      "https://www.douyin.com/search/%E6%97%A5%E5%B8%B8%E5%A6%86%E5%A6%86%E6%95%99%E6%96%B9%E5%9C%86%E8%84%B8%E5%A4%A7%E9%BC%BB%E5%AD%90%E5%B0%8F%E7%9C%BC%E7%9D%9B%E5%86%85%E5%8F%8C"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏10分钟通勤和日常提气色，适合做早八快速妆入口。",
+    "makeupMateUseCase": "10分钟通勤妆智能体",
+    "agentPrompt": "按用户剩余时间生成3分钟、5分钟、10分钟版本，优先保证底妆干净、眉毛完整和唇腮提气色。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_014",
+    "creatorName": "深圳邓小眼（方圆脸+单眼皮新手跟练版）",
+    "displayName": "深圳邓小眼（方圆脸+单眼皮新手跟练版）",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_014.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "daily_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup",
+      "japanese_korean_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "方圆脸",
+      "单眼皮",
+      "肿眼泡",
+      "塌鼻梁",
+      "跟练"
+    ],
+    "representativeLooks": [
+      "冷感小猫妆",
+      "韩系女高妆",
+      "轻亚裔妆",
+      "淡颜日常妆"
+    ],
+    "fitUsers": [
+      "单眼皮用户",
+      "方圆脸用户",
+      "塌鼻梁用户",
+      "想跟练的新手"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "账号定位直接服务具体五官问题",
+      "视频常带分钟数和跟练属性",
+      "适合生成低门槛复刻卡",
+      "日常与亚裔妆可切换"
+    ],
+    "riskPoints": [
+      "眼线画粗会压眼",
+      "鼻影过重显假",
+      "冷感妆唇腮过淡会没气色"
+    ],
+    "sourceLinks": [
+      "https://jingxuan.douyin.com/m/video/7633028812733090993",
+      "https://jingxuan.douyin.com/m/video/7622255400666938810",
+      "https://www.douyin.com/search/%E6%B7%B1%E5%9C%B3%E9%82%93%E5%B0%8F%E7%9C%BC%20%E6%96%B9%E5%9C%86%E8%84%B8%20%E5%8D%95%E7%9C%BC%E7%9A%AE%20%E6%96%B0%E6%89%8B%20%E6%8A%96%E9%9F%B3"
+    ],
+    "representativeVideoLinks": [
+      "https://jingxuan.douyin.com/m/video/7633028812733090993",
+      "https://jingxuan.douyin.com/m/video/7622255400666938810"
+    ],
+    "styleSummary": "面向方圆脸单眼皮的日常跟练风格，适合做五官问题适配入口。",
+    "makeupMateUseCase": "单眼皮日常妆智能体",
+    "agentPrompt": "先询问用户脸型、眼型和通勤/拍照场景，再生成单眼皮友好的眼线、卧蚕、修容和唇腮方案。",
+    "notes": "来源为抖音精选与搜索结果，粉丝数未核验。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_015",
+    "creatorName": "Luoooooosiii",
+    "displayName": "Luoooooosiii",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_015.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "daily_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup",
+      "western_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "active",
+    "styleTags": [
+      "黄黑皮",
+      "亚裔妆",
+      "轻混血",
+      "日常上镜",
+      "瑕疵感"
+    ],
+    "representativeLooks": [
+      "黄黑皮亚裔妆",
+      "轻混血亚裔妆",
+      "日常上镜妆"
+    ],
+    "fitUsers": [
+      "黄黑皮用户",
+      "喜欢自然瑕疵感的人",
+      "想拍短视频的人"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "强调黄黑皮也可适配亚裔妆",
+      "妆面保留一定原生感",
+      "适合日常拍摄",
+      "风格比传统淡妆更有存在感"
+    ],
+    "riskPoints": [
+      "底妆色号错误会灰脸",
+      "雀斑/瑕疵感过量会显脏",
+      "混血感过强不适合严肃通勤"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/video/7551073150248504633?source=Googlebot",
+      "https://www.douyin.com/search/Luoooooosiii%20%E4%BA%9A%E8%A3%94%E5%A6%86%20%E6%8A%96%E9%9F%B3"
+    ],
+    "representativeVideoLinks": [
+      "https://www.douyin.com/video/7551073150248504633?source=Googlebot"
+    ],
+    "styleSummary": "偏黄黑皮亚裔感与日常上镜，适合做肤色适配妆入口。",
+    "makeupMateUseCase": "黄黑皮日常妆智能体",
+    "agentPrompt": "根据用户肤色深浅、瑕疵接受度和上镜需求，生成底妆色调、腮红、修容和唇色建议。",
+    "notes": "粉丝数未核验；有公开视频来源，可作为风格样本继续人工补全。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_016",
+    "creatorName": "安七七",
+    "displayName": "安七七",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "https://www.douyin.com/user/MS4wLjABAAAAZa6qZVBGLTbzAQ4UNlYJEErMZKW8RiTSO2PHMvhj__xZrlO6uzKC2P0ID8msFY2W",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_016.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "pure_desire_makeup",
+    "secondaryCategoryIds": [
+      "japanese_korean_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "active",
+    "styleTags": [
+      "纯欲风",
+      "沉浸式化妆",
+      "圆脸内双",
+      "女团妆",
+      "种草"
+    ],
+    "representativeLooks": [
+      "纯欲妆",
+      "圆脸内双女团妆",
+      "沉浸式化妆"
+    ],
+    "fitUsers": [
+      "圆脸用户",
+      "内双用户",
+      "喜欢甜感拍照妆的人"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "个人简介明确纯欲风定位",
+      "妆面偏甜感和女团感",
+      "适合圆脸内双借鉴",
+      "内容可拆成氛围感复刻"
+    ],
+    "riskPoints": [
+      "腮红过重会显醉酒",
+      "亮片过量不日常",
+      "女团妆对睫毛要求高"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/user/MS4wLjABAAAAZa6qZVBGLTbzAQ4UNlYJEErMZKW8RiTSO2PHMvhj__xZrlO6uzKC2P0ID8msFY2W"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "纯欲与女团感结合，适合做圆脸内双甜感妆入口。",
+    "makeupMateUseCase": "纯欲女团妆智能体",
+    "agentPrompt": "根据用户脸型、眼型和约会/自拍场景，生成清透底妆、微醺腮红、水润唇和女团眼妆步骤。",
+    "notes": "主页可核验，粉丝数未在可用来源中核验。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_017",
+    "creatorName": "会呆呆",
+    "displayName": "会呆呆",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_017.jpg",
+    "followerCount": 174000,
+    "followerCountText": "17.4万",
+    "followerCountCapturedAt": "2026-05-22",
+    "followerCountSource": "抖音视频页",
+    "primaryCategoryId": "pure_desire_makeup",
+    "secondaryCategoryIds": [
+      "beginner_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "Doll感",
+      "纯欲柔雾",
+      "清透甜妹",
+      "沉浸式化妆",
+      "新手教程"
+    ],
+    "representativeLooks": [
+      "Doll感纯欲妆",
+      "柔雾少女妆",
+      "清透甜妹妆"
+    ],
+    "fitUsers": [
+      "喜欢少女感的人",
+      "新手用户",
+      "自拍拍照用户"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "公开视频有明确纯欲妆教程",
+      "底妆和唇腮偏柔雾清透",
+      "步骤较短适合跟练",
+      "适合前端卡片化"
+    ],
+    "riskPoints": [
+      "柔雾底妆不定妆易脱",
+      "腮红过粉显肿",
+      "Doll感需要睫毛支撑"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/shipin/7641781285865818112",
+      "https://www.douyin.com/search/%E7%BA%AF%E6%AC%B2%E6%9F%94%E9%9B%BE%E5%B0%91%E5%A5%B3%E5%A6%86%E6%95%99%E7%A8%8B"
+    ],
+    "representativeVideoLinks": [
+      "https://www.douyin.com/shipin/7641781285865818112"
+    ],
+    "styleSummary": "清透柔雾的Doll感纯欲妆，适合做少女感自拍妆入口。",
+    "makeupMateUseCase": "柔雾纯欲妆智能体",
+    "agentPrompt": "围绕清透底妆、柔雾腮红、放大眼睛和水润唇，生成4到8分钟的跟练步骤。",
+    "notes": "粉丝数来自公开视频页；主页链接待人工补充。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_018",
+    "creatorName": "豆奶西瓜精",
+    "displayName": "豆奶西瓜精",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_018.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "pure_desire_makeup",
+    "secondaryCategoryIds": [
+      "hongkong_retro_makeup",
+      "beginner_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "鞠婧祎妆",
+      "千金氛围",
+      "纯欲",
+      "阿黛同款",
+      "卧蚕"
+    ],
+    "representativeLooks": [
+      "鞠婧祎阿黛同款千金氛围妆",
+      "小鞠纯欲妆",
+      "明星氛围仿妆"
+    ],
+    "fitUsers": [
+      "喜欢明星同款妆的人",
+      "约会拍照用户",
+      "想学卧蚕下至的人"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "围绕具体明星妆面拆解",
+      "眼妆和氛围感重点突出",
+      "适合生成仿妆复刻卡",
+      "兼具纯欲和千金感"
+    ],
+    "riskPoints": [
+      "仿妆不宜直接照搬五官",
+      "下至过重会显脏",
+      "亮片和唇色需按肤色调整"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E8%B1%86%E5%A5%B6%E8%A5%BF%E7%93%9C%E7%B2%BE%20%E9%9E%A0%E5%A9%A7%E7%A5%8E%20%E9%98%BF%E9%BB%9B%E5%90%8C%E6%AC%BE%20%E5%8D%83%E9%87%91%E6%B0%9B%E5%9B%B4%E5%A6%86%20%E6%8A%96%E9%9F%B3",
+      "https://www.douyin.com/search/%E9%9E%A0%E5%A9%A7%E7%A5%8E%E6%B0%9B%E5%9B%B4%E6%84%9F%E5%A6%86%E5%AE%B9%E6%95%99%E7%A8%8B"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏小鞠系纯欲千金氛围，适合做明星同款仿妆入口。",
+    "makeupMateUseCase": "明星氛围仿妆智能体",
+    "agentPrompt": "先把原妆拆成眼型、腮红、唇色和发光点，再根据用户五官生成不仿人的氛围复刻版。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_019",
+    "creatorName": "愉欢儿",
+    "displayName": "愉欢儿",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_019.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "hongkong_retro_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup",
+      "beginner_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "复古港风",
+      "港式远山眉",
+      "红唇",
+      "新手教程",
+      "明艳"
+    ],
+    "representativeLooks": [
+      "复古港风妆",
+      "港风眉毛",
+      "新手明艳妆"
+    ],
+    "fitUsers": [
+      "想尝试红唇港风的人",
+      "眉形需要调整的人",
+      "新手用户"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "港风元素集中在眉唇和骨相",
+      "新手教程属性明显",
+      "适合做妆容参数拆解",
+      "可转为日常轻港风"
+    ],
+    "riskPoints": [
+      "红唇边界不干净会显粗糙",
+      "眉峰过挑显凶",
+      "底妆太白破坏复古感"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%B8%AF%E9%A3%8E%E7%9C%89%E6%AF%9B",
+      "https://www.douyin.com/search/%E5%A4%8D%E5%8F%A4%E5%A6%86%E5%8D%9A%E4%B8%BB"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏复古港风和眉唇氛围，适合做轻港风新手入口。",
+    "makeupMateUseCase": "复古港风妆智能体",
+    "agentPrompt": "根据用户脸型和唇色，生成港式眉形、红唇、低饱和腮红和胶片感底妆方案。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_020",
+    "creatorName": "财小杨",
+    "displayName": "财小杨",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_020.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "hongkong_retro_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "骨相港风",
+      "浓颜",
+      "红唇",
+      "方长脸",
+      "8分钟教程"
+    ],
+    "representativeLooks": [
+      "骨相感港风浓颜妆",
+      "复古港风妆",
+      "大女人风妆容"
+    ],
+    "fitUsers": [
+      "长脸/方脸用户",
+      "喜欢浓颜气场的人",
+      "拍照出片用户"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "强调骨相感和浓颜气场",
+      "妆面适合拍照与短视频",
+      "港风元素明确",
+      "教程时间适合跟练"
+    ],
+    "riskPoints": [
+      "鼻影和颧骨修容过重会显老",
+      "红唇不适合低气色底妆",
+      "浓颜妆不适合低存在感场景"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%B8%AF%E9%A3%8E%E5%A6%86%E5%AE%B9%E6%96%B9%E9%95%BF%E8%84%B8",
+      "https://www.douyin.com/search/%E7%BA%A2%E5%94%87%E5%A6%86%E5%AE%B9%E6%B8%AF%E9%A3%8E"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "骨相感较强的港风浓颜路线，适合做大女人气场妆入口。",
+    "makeupMateUseCase": "骨相港风妆智能体",
+    "agentPrompt": "围绕眉峰、红唇、鼻影、颧骨阴影和发型氛围，生成一套浓颜港风复刻步骤。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_021",
+    "creatorName": "bobo最洋气",
+    "displayName": "bobo最洋气",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "https://www.douyin.com/user/MS4wLjABAAAAAKegniKnbrr_ERmpScFfl0oK_rA21ftng02nftH1BX4",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_021.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "hongkong_retro_makeup",
+    "secondaryCategoryIds": [
+      "cos_makeup",
+      "pure_desire_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "unknown",
+    "styleTags": [
+      "明星仿妆",
+      "复古仿妆",
+      "仪式感",
+      "真实仿妆",
+      "独立创作者"
+    ],
+    "representativeLooks": [
+      "明星仿妆",
+      "复古女明星妆",
+      "经典角色妆"
+    ],
+    "fitUsers": [
+      "想做仿妆的人",
+      "喜欢复古明星妆的人",
+      "内容创作者"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "仿妆强调神韵和结构",
+      "适合拆解经典妆容元素",
+      "妆发服整体感强",
+      "可服务港风女明星复刻"
+    ],
+    "riskPoints": [
+      "仿人过度不适合日常",
+      "假发服装依赖度高",
+      "普通用户需做日常化改写"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/user/MS4wLjABAAAAAKegniKnbrr_ERmpScFfl0oK_rA21ftng02nftH1BX4",
+      "https://space.bilibili.com/422292755/"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏高还原仿妆和复古人物感，适合做港风明星仿妆入口。",
+    "makeupMateUseCase": "港风仿妆智能体",
+    "agentPrompt": "把参考人物拆成眉眼、唇妆、轮廓、发型和镜头氛围，输出不仿人的港风复刻方案。",
+    "notes": "主页可核验，粉丝数未核验；是否适合港风需按具体视频再标注。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_022",
+    "creatorName": "雾矢银月",
+    "displayName": "雾矢银月",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_022.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "cos_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "cos妆娘",
+      "角色仿妆",
+      "舞台眼妆",
+      "二次元",
+      "妆教"
+    ],
+    "representativeLooks": [
+      "cos妆教",
+      "妆娘挑战混的人仿妆",
+      "角色眼妆"
+    ],
+    "fitUsers": [
+      "漫展用户",
+      "cos新手",
+      "需要角色眼妆的人"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "妆面服务角色还原",
+      "眼妆结构夸张",
+      "适合舞台和拍摄",
+      "可拆成眼妆重点卡"
+    ],
+    "riskPoints": [
+      "日常场景不适合高浓度",
+      "假睫毛和双眼皮贴难度高",
+      "角色色彩需要跟服装统一"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E5%8C%96%E5%A6%86%E5%8D%9A%E4%B8%BB%20Cos",
+      "https://www.douyin.com/search/cos%E4%BB%BF%E5%A6%86%E5%8D%9A%E4%B8%BB%E6%8E%A8%E8%8D%90%E7%BE%8E%E5%A6%86"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏cos角色和妆娘实战，适合做漫展妆容入口。",
+    "makeupMateUseCase": "Cos妆娘智能体",
+    "agentPrompt": "先读取用户角色、假发颜色、眼型和拍摄场景，再输出底妆、眼妆、假睫毛和角色符号复刻步骤。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_023",
+    "creatorName": "白西瓜SY",
+    "displayName": "白西瓜SY",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_023.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "cos_makeup",
+    "secondaryCategoryIds": [
+      "western_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "英雄联盟",
+      "拉克丝",
+      "角色仿妆",
+      "cosplay",
+      "妆容教程"
+    ],
+    "representativeLooks": [
+      "拉克丝cos妆",
+      "游戏角色仿妆",
+      "努力成为喜欢的角色系列"
+    ],
+    "fitUsers": [
+      "英雄联盟玩家",
+      "coser",
+      "二次元妆容新手"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "角色目标明确",
+      "妆发服整体性强",
+      "眼妆和发色配合度高",
+      "适合游戏角色复刻"
+    ],
+    "riskPoints": [
+      "角色妆离不开假发和服装",
+      "眼妆太淡会不像角色",
+      "日常化需大幅降浓度"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E7%99%BD%E8%A5%BF%E7%93%9CSY%20%E6%8B%89%E5%85%8B%E4%B8%9D%20cos%20%E5%A6%86%20%E6%8A%96%E9%9F%B3",
+      "https://www.douyin.com/search/%E6%BC%AB%E9%87%8C%E8%8E%8Ecos%E6%8B%89%E5%85%8B%E4%B8%9D"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "游戏角色cos妆方向明确，适合做角色仿妆复刻入口。",
+    "makeupMateUseCase": "游戏角色仿妆智能体",
+    "agentPrompt": "根据角色原画提取眼型、眉形、色彩和关键符号，再生成漫展版与日常版两套复刻方案。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_024",
+    "creatorName": "黑羽hono",
+    "displayName": "黑羽hono",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_024.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "cos_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "cos好物",
+      "阿米娅",
+      "哈利波特",
+      "成男眼妆",
+      "cos眼妆"
+    ],
+    "representativeLooks": [
+      "阿米娅cos妆",
+      "哈利波特cos妆教",
+      "伊黑小芭内cos眼妆"
+    ],
+    "fitUsers": [
+      "coser",
+      "妆娘",
+      "需要角色眼妆模板的人"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "覆盖多个角色妆面",
+      "有cos工具和好物分享",
+      "眼妆结构可迁移",
+      "适合沉浸式妆教"
+    ],
+    "riskPoints": [
+      "角色差异大需重新建模",
+      "眼妆结构不适合通勤",
+      "工具依赖可能较强"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E9%BB%91%E7%BE%BDhono%20cos%E4%BB%BF%E5%A6%86%20%E6%8A%96%E9%9F%B3",
+      "https://www.douyin.com/search/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E9%98%BF%E7%B1%B3%E5%A8%85cos%E4%BB%BF%E5%A6%86",
+      "https://www.douyin.com/search/%E8%B5%AB%E6%95%8Fcos%E5%A6%86%E6%95%99%E7%A8%8B"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "多角色cos眼妆和妆娘工具向，适合做角色妆模板库入口。",
+    "makeupMateUseCase": "Cos眼妆模板智能体",
+    "agentPrompt": "按角色类型输出通用cos底妆、眼型放大、假睫毛、眼线和道具工具清单，并给出新手降难度建议。",
+    "notes": "来源为抖音搜索结果，粉丝数和主页待人工复核。",
+    "dataConfidence": "medium",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_025",
+    "creatorName": "张凯毅",
+    "displayName": "张凯毅",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_025.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "beginner_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "基础底妆",
+      "新手入门",
+      "简易眼妆",
+      "平价彩妆"
+    ],
+    "representativeLooks": [
+      "零基础全脸妆",
+      "新手眼线速成妆"
+    ],
+    "fitUsers": [
+      "化妆小白",
+      "初学美妆人群"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "步骤拆解细致",
+      "手法简单易上手",
+      "多用平价彩妆产品",
+      "适配普通脸型"
+    ],
+    "riskPoints": [
+      "下笔力度把控不当",
+      "底妆均匀度难掌握"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E5%BC%A0%E5%87%AF%E6%AF%85"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏零基础美妆教学，步骤简化易懂，适合新手做日常基础妆练习。",
+    "makeupMateUseCase": "新手入门妆容学习入口，基础手法复刻参考",
+    "agentPrompt": "参照新手友好的教学逻辑，简化底妆、眉眼、唇腮步骤，优先给出容易上手的基础妆容复刻方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_026",
+    "creatorName": "方恰拉",
+    "displayName": "方恰拉",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_026.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "japanese_korean_makeup",
+    "secondaryCategoryIds": [
+      "pure_desire_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "active",
+    "styleTags": [
+      "韩系水光肌",
+      "日杂氛围感",
+      "低饱和眼影",
+      "清透裸妆"
+    ],
+    "representativeLooks": [
+      "韩式女团淡妆",
+      "日系氧气少女妆"
+    ],
+    "fitUsers": [
+      "年轻女生",
+      "喜欢清新风格人群"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "肌肤通透感突出",
+      "色彩柔和低明度",
+      "眉眼妆容淡雅",
+      "唇妆水润透亮"
+    ],
+    "riskPoints": [
+      "水光底妆易斑驳",
+      "眼影层次晕染不到位"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%96%B9%E6%81%B0%E6%8B%89"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "日韩清新妆容取向，低饱和柔和色调，适合日常拍照和清透妆复刻。",
+    "makeupMateUseCase": "日韩风格妆容复刻入口，氛围感妆容参考",
+    "agentPrompt": "贴合日韩妆容审美，选用低饱和色系，打造清透水光肤质，并生成柔和眉眼唇妆步骤。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_027",
+    "creatorName": "Dain",
+    "displayName": "Dain",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_027.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "western_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "截断眼妆",
+      "立体修容",
+      "欧美辣妹",
+      "浓颜上镜"
+    ],
+    "representativeLooks": [
+      "欧美截断大眼妆",
+      "氛围感派对辣妹妆"
+    ],
+    "fitUsers": [
+      "五官立体人群",
+      "喜爱浓妆风格用户"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "面部轮廓修饰强烈",
+      "眼妆层次浓烈",
+      "色彩对比鲜明",
+      "凸显五官立体感"
+    ],
+    "riskPoints": [
+      "修容过重显脏",
+      "截断边界线条不规整"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/Dain"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "欧美浓颜妆取向，强化轮廓与眼妆张力，适合派对、舞台和镜头场景。",
+    "makeupMateUseCase": "欧美风浓妆复刻入口，派对舞台妆容参考",
+    "agentPrompt": "强化面部立体修容，拆解截断眼妆、眉峰、唇色和高光，让用户复刻欧美气场妆。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_028",
+    "creatorName": "小来哥",
+    "displayName": "小来哥",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_028.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "daily_makeup",
+    "secondaryCategoryIds": [
+      "beginner_makeup"
+    ],
+    "creatorType": "综合型",
+    "status": "active",
+    "styleTags": [
+      "早八速妆",
+      "通勤淡妆",
+      "上课伪素颜",
+      "提气色淡妆"
+    ],
+    "representativeLooks": [
+      "五分钟通勤妆",
+      "校园日常素颜妆"
+    ],
+    "fitUsers": [
+      "学生党",
+      "上班族通勤人群"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "化妆耗时短",
+      "妆感低调自然",
+      "快速提升气色",
+      "日常场景无违和"
+    ],
+    "riskPoints": [
+      "妆容提亮过度假面",
+      "细节修饰缺失无神"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E5%B0%8F%E6%9D%A5%E5%93%A5"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "短时高效日常妆容取向，妆感清淡不张扬，适合上学上班场景。",
+    "makeupMateUseCase": "日常通勤快速妆容生成入口，短时淡妆复刻",
+    "agentPrompt": "精简化妆步骤，优先完成底妆、眉毛、唇腮三件事，生成低调提气色的日常通勤方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_029",
+    "creatorName": "草莓果酱 ox",
+    "displayName": "草莓果酱 ox",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_029.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "pure_desire_makeup",
+    "secondaryCategoryIds": [
+      "japanese_korean_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "active",
+    "styleTags": [
+      "微醺腮红",
+      "清透底妆",
+      "水润唇釉",
+      "约会氛围感"
+    ],
+    "representativeLooks": [
+      "纯欲约会甜妆",
+      "氛围感微醺少女妆"
+    ],
+    "fitUsers": [
+      "约会出行人群",
+      "甜美风格爱好者"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "腮红氛围感突出",
+      "底妆轻薄",
+      "唇妆饱满水润",
+      "眉眼温柔无辜感"
+    ],
+    "riskPoints": [
+      "腮红范围过大显肿",
+      "清透底妆遮瑕力不足"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E8%8D%89%E8%8E%93%E6%9E%9C%E9%85%B1%20ox"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "温柔纯欲氛围感路线，腮红与水润唇妆为核心，适合约会拍照。",
+    "makeupMateUseCase": "纯欲氛围感妆容复刻入口，约会妆容定制参考",
+    "agentPrompt": "侧重轻薄底妆、微醺腮红和水润唇色，根据用户脸型控制腮红范围与眼妆浓度。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_030",
+    "creatorName": "周楚楚",
+    "displayName": "周楚楚",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_030.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "hongkong_retro_makeup",
+    "secondaryCategoryIds": [
+      "western_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "复古红唇",
+      "野生挑眉",
+      "胶片质感",
+      "港风浓颜"
+    ],
+    "representativeLooks": [
+      "90 年代港风复古妆",
+      "港式明艳红唇妆"
+    ],
+    "fitUsers": [
+      "气质成熟女性",
+      "复古风格爱好者"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "眉形利落野性",
+      "红唇浓郁大气",
+      "妆面复古胶片感",
+      "五官明艳张扬"
+    ],
+    "riskPoints": [
+      "唇形勾勒不精致",
+      "眉峰角度把控出错"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E5%91%A8%E6%A5%9A%E6%A5%9A"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "经典港式复古妆容取向，红唇与野生眉辨识度高，气场明艳。",
+    "makeupMateUseCase": "港风复古妆容仿妆入口，怀旧风格妆容复刻",
+    "agentPrompt": "塑造野生眉形、复古红唇和胶片感底妆，并根据用户五官降低复古浓度。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_031",
+    "creatorName": "阿木同学",
+    "displayName": "阿木同学",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_031.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "cos_makeup",
+    "secondaryCategoryIds": [
+      "western_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "二次元仿妆",
+      "动漫角色妆",
+      "舞台大眼妆",
+      "漫展妆容"
+    ],
+    "representativeLooks": [
+      "动漫女主角色妆",
+      "二次元少年仿妆"
+    ],
+    "fitUsers": [
+      "二次元爱好者",
+      "漫展出行人群"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "眼型放大效果显著",
+      "色彩夸张贴合角色",
+      "面部线条二次元化",
+      "舞台显色度高"
+    ],
+    "riskPoints": [
+      "眼妆放大过度违和",
+      "角色配色搭配不协调"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E9%98%BF%E6%9C%A8%E5%90%8C%E5%AD%A6"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "二次元角色仿妆取向，眼部造型夸张精致，适合漫展和舞台场景。",
+    "makeupMateUseCase": "Cos 角色妆容复刻入口，二次元仿妆定制参考",
+    "agentPrompt": "依据动漫人物五官特征，放大眼部轮廓，匹配角色配色，输出漫展版与日常降浓度版。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_032",
+    "creatorName": "李佳琦 Austin",
+    "displayName": "李佳琦 Austin",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_032.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "beginner_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup",
+      "pure_desire_makeup"
+    ],
+    "creatorType": "测评型",
+    "status": "active",
+    "styleTags": [
+      "彩妆测评",
+      "基础妆容",
+      "口红试色",
+      "实用化妆技巧"
+    ],
+    "representativeLooks": [
+      "日常百搭基础妆",
+      "热门口红适配妆容"
+    ],
+    "fitUsers": [
+      "彩妆选购人群",
+      "初学化妆用户"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "产品实操演示直观",
+      "妆容搭配实用性强",
+      "手法通俗易学习",
+      "适配大众脸型肤质"
+    ],
+    "riskPoints": [
+      "照搬产品适配度不符",
+      "上色轻重难以把控"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%9D%8E%E4%BD%B3%E7%90%A6%20Austin"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "偏彩妆测评和口红试色，适合作为产品选择与日常搭配参考。",
+    "makeupMateUseCase": "彩妆搭配基础妆容学习入口，产品适配妆容复刻",
+    "agentPrompt": "根据用户肤色、预算和场景，推荐适合口红、底妆、眼影搭配，并生成基础妆容方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_033",
+    "creatorName": "一只小耳朵",
+    "displayName": "一只小耳朵",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_033.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "japanese_korean_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "韩系日常妆",
+      "日系清透感",
+      "学生淡妆",
+      "温柔眉眼"
+    ],
+    "representativeLooks": [
+      "韩系校园淡颜妆",
+      "日系慵懒氛围感妆"
+    ],
+    "fitUsers": [
+      "在校女学生",
+      "温柔气质女生"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "妆面干净简约",
+      "眉眼线条柔和",
+      "配色清新素雅",
+      "素颜自然伪妆感"
+    ],
+    "riskPoints": [
+      "眼影层次平淡无神",
+      "腮红位置显得脸宽"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E4%B8%80%E5%8F%AA%E5%B0%8F%E8%80%B3%E6%9C%B5"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "日韩系简约日常妆为主，温婉素雅，适合校园和日常出行。",
+    "makeupMateUseCase": "日韩日常淡妆复刻入口，校园风格妆容参考",
+    "agentPrompt": "采用清新素雅配色，弱化浓妆痕迹，勾勒柔和眉眼，生成日韩日常淡妆方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_034",
+    "creatorName": "龙梓嘉",
+    "displayName": "龙梓嘉",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_034.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "western_makeup",
+    "secondaryCategoryIds": [
+      "hongkong_retro_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "active",
+    "styleTags": [
+      "复古欧美妆",
+      "高级浓颜",
+      "艺术感妆容",
+      "立体修容"
+    ],
+    "representativeLooks": [
+      "复古欧式贵气妆",
+      "艺术创意浓颜妆"
+    ],
+    "fitUsers": [
+      "气质成熟人群",
+      "创意妆容爱好者"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "妆容艺术感强",
+      "轮廓塑造有张力",
+      "色调高级厚重",
+      "气场华丽大气"
+    ],
+    "riskPoints": [
+      "创意配色难以驾驭",
+      "立体修容容易显突兀"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E9%BE%99%E6%A2%93%E5%98%89"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "复古欧美与艺术浓颜方向，造型华丽有气场，适合拍摄和创意妆。",
+    "makeupMateUseCase": "艺术欧美创意妆容复刻入口，华丽造型妆容参考",
+    "agentPrompt": "打造立体深邃轮廓，搭配复古高级色调，生成华丽艺术感欧美妆容复刻方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_035",
+    "creatorName": "雨彤",
+    "displayName": "雨彤",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_035.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "asian_makeup",
+    "secondaryCategoryIds": [
+      "daily_makeup",
+      "pure_desire_makeup"
+    ],
+    "creatorType": "改造型",
+    "status": "active",
+    "styleTags": [
+      "圆脸适配妆",
+      "肿眼泡改造",
+      "淡颜提亮",
+      "中式温婉妆"
+    ],
+    "representativeLooks": [
+      "圆脸弱化轮廓妆",
+      "肿眼泡消肿日常妆"
+    ],
+    "fitUsers": [
+      "圆脸肿眼泡用户",
+      "淡颜系女生"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "针对性修饰脸型缺陷",
+      "眼部消肿提亮",
+      "妆面自然贴合肤色",
+      "提升面部精致度"
+    ],
+    "riskPoints": [
+      "轮廓修饰过度显僵硬",
+      "提亮区域范围出错"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E9%9B%A8%E5%BD%A4"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "针对东亚常见脸型和眼型做改造，弱化短板并保留原生协调感。",
+    "makeupMateUseCase": "脸型五官改造妆容定制入口，缺陷修饰复刻参考",
+    "agentPrompt": "根据用户脸型、眼型和淡颜/浓颜特征，生成修容、消肿、提亮和唇腮调整方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_036",
+    "creatorName": "一只璐",
+    "displayName": "一只璐",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_036.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "daily_makeup",
+    "secondaryCategoryIds": [
+      "pure_desire_makeup"
+    ],
+    "creatorType": "风格型",
+    "status": "active",
+    "styleTags": [
+      "面试得体妆",
+      "出行淡妆",
+      "气质提颜",
+      "自然伪素颜"
+    ],
+    "representativeLooks": [
+      "面试端庄气质妆",
+      "日常出游百搭淡妆"
+    ],
+    "fitUsers": [
+      "求职面试人群",
+      "日常出行女性"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "妆容端庄得体",
+      "提气色不显浮夸",
+      "适配社交场合",
+      "肤质质感细腻"
+    ],
+    "riskPoints": [
+      "正式妆容把控偏艳丽",
+      "五官修饰平淡无精神"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E4%B8%80%E5%8F%AA%E7%92%90"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "社交日常得体妆取向，端庄素雅，兼顾气色与分寸感。",
+    "makeupMateUseCase": "社交场合得体妆容生成入口，面试出行妆容复刻",
+    "agentPrompt": "根据面试、通勤、约会等场景，控制妆感浓度，生成端庄素雅的得体妆步骤。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_037",
+    "creatorName": "九儿",
+    "displayName": "九儿",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_037.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "pure_desire_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup"
+    ],
+    "creatorType": "改造型",
+    "status": "active",
+    "styleTags": [
+      "易碎感纯欲",
+      "淡颜氛围感",
+      "蜜桃腮红",
+      "无辜眼妆"
+    ],
+    "representativeLooks": [
+      "易碎感纯欲甜妆",
+      "蜜桃元气少女妆"
+    ],
+    "fitUsers": [
+      "淡颜女生",
+      "氛围感妆容爱好者"
+    ],
+    "difficulty": "中等",
+    "keyFeatures": [
+      "眼妆无辜灵动",
+      "蜜桃色系温柔甜美",
+      "底妆轻薄伪素颜",
+      "整体氛围感慵懒"
+    ],
+    "riskPoints": [
+      "无辜眼妆显得无神",
+      "蜜桃色堆砌显俗气"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E4%B9%9D%E5%84%BF"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "易碎感纯欲风格，蜜桃色系与无辜眼妆突出，适合淡颜氛围妆。",
+    "makeupMateUseCase": "慵懒纯欲氛围感妆容复刻入口，淡颜甜妆参考",
+    "agentPrompt": "选用蜜桃温柔色系，控制腮红和卧蚕范围，生成无辜灵动的纯欲妆容步骤。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_038",
+    "creatorName": "港风阿英",
+    "displayName": "港风阿英",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_038.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "hongkong_retro_makeup",
+    "secondaryCategoryIds": [
+      "pure_desire_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "复古港妆教学",
+      "柔焦胶片感",
+      "复古眼妆",
+      "港式韵味"
+    ],
+    "representativeLooks": [
+      "复古港风温婉妆",
+      "胶片质感港式浓妆"
+    ],
+    "fitUsers": [
+      "复古怀旧爱好者",
+      "气质御姐人群"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "色调复古怀旧",
+      "眼妆深邃有韵味",
+      "柔焦妆面质感",
+      "年代氛围感强"
+    ],
+    "riskPoints": [
+      "复古色调把控暗沉",
+      "眼妆深邃度难以拿捏"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%B8%AF%E9%A3%8E%E9%98%BF%E8%8B%B1"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "港式复古妆教学取向，强调胶片年代质感和深邃港风眼妆。",
+    "makeupMateUseCase": "经典港风教学妆容复刻入口，复古韵味妆容参考",
+    "agentPrompt": "调配复古怀旧色调，打造深邃眼妆、柔焦底妆和港式眉唇，并给日常轻港风版本。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_039",
+    "creatorName": "樱井阿泽",
+    "displayName": "樱井阿泽",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_039.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "cos_makeup",
+    "secondaryCategoryIds": [
+      "japanese_korean_makeup"
+    ],
+    "creatorType": "仿妆型",
+    "status": "active",
+    "styleTags": [
+      "日系 cos 仿妆",
+      "少年感妆容",
+      "二次元眼妆",
+      "动漫古风妆"
+    ],
+    "representativeLooks": [
+      "日系少年 cos 妆",
+      "古风动漫角色妆"
+    ],
+    "fitUsers": [
+      "男性 cos 爱好者",
+      "日系二次元粉丝"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "少年感轮廓塑造",
+      "日系动漫五官还原",
+      "线条利落干净",
+      "角色神态贴合度高"
+    ],
+    "riskPoints": [
+      "少年轮廓修饰过度女性化",
+      "角色神态妆容难还原"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E6%A8%B1%E4%BA%95%E9%98%BF%E6%B3%BD"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "日系二次元角色仿妆取向，主打少年感造型和角色神态还原。",
+    "makeupMateUseCase": "日系二次元 cos 妆容复刻入口，少年感角色妆参考",
+    "agentPrompt": "贴合日系动漫人物特征，塑造利落少年轮廓，拆解眉眼、阴影、唇色和角色符号。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_040",
+    "creatorName": "化妆师 MK",
+    "displayName": "化妆师 MK",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_040.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "beginner_makeup",
+    "secondaryCategoryIds": [
+      "asian_makeup",
+      "daily_makeup"
+    ],
+    "creatorType": "教程型",
+    "status": "active",
+    "styleTags": [
+      "零基础修容",
+      "新手眼妆技巧",
+      "脸型适配化妆",
+      "实用基础手法"
+    ],
+    "representativeLooks": [
+      "新手全能基础妆",
+      "脸型适配修容妆"
+    ],
+    "fitUsers": [
+      "化妆零基础人群",
+      "手法薄弱学习者"
+    ],
+    "difficulty": "新手",
+    "keyFeatures": [
+      "手法拆解极简",
+      "适配基础脸型",
+      "避坑知识点丰富",
+      "日常实用性强"
+    ],
+    "riskPoints": [
+      "手法练习熟练度不足",
+      "修容位置记忆混淆"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/%E5%8C%96%E5%A6%86%E5%B8%88%20MK"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "专业化妆师式零基础手法教学，重视避坑和脸型适配。",
+    "makeupMateUseCase": "专业基础化妆手法学习入口，零基础妆容练习复刻",
+    "agentPrompt": "沿用专业但简化的手法，结合用户脸型与眼型，输出稳妥基础妆和修容避坑方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  },
+  {
+    "creatorId": "douyin_creator_041",
+    "creatorName": "sunny",
+    "displayName": "sunny",
+    "platform": "douyin",
+    "douyinId": "",
+    "profileUrl": "",
+    "avatarUrl": "",
+    "avatarLocalPath": "/assets/creator-avatars/douyin_creator_041.jpg",
+    "followerCount": null,
+    "followerCountText": "",
+    "followerCountCapturedAt": "",
+    "followerCountSource": "",
+    "primaryCategoryId": "western_makeup",
+    "secondaryCategoryIds": [
+      "cos_makeup"
+    ],
+    "creatorType": "综合型",
+    "status": "active",
+    "styleTags": [
+      "美式甜辣妆",
+      "创意眼妆",
+      "高饱和彩妆",
+      "派对上镜妆"
+    ],
+    "representativeLooks": [
+      "美式甜辣日常妆",
+      "创意色彩派对妆容"
+    ],
+    "fitUsers": [
+      "个性潮流人群",
+      "派对聚会出行者"
+    ],
+    "difficulty": "进阶",
+    "keyFeatures": [
+      "色彩大胆明艳",
+      "风格张扬个性",
+      "眼妆创意多变",
+      "镜头上镜效果佳"
+    ],
+    "riskPoints": [
+      "高饱和色彩搭配杂乱",
+      "甜辣风格把控过度浮夸"
+    ],
+    "sourceLinks": [
+      "https://www.douyin.com/search/sunny"
+    ],
+    "representativeVideoLinks": [],
+    "styleSummary": "美式甜辣与创意欧美妆取向，色彩张扬，适合派对和镜头出片。",
+    "makeupMateUseCase": "美式甜辣个性妆容复刻入口，派对创意妆参考",
+    "agentPrompt": "根据用户接受度控制高饱和色彩，生成创意眼妆、修容和甜辣唇腮的派对妆方案。",
+    "notes": "来自用户补充名单，账号主页、粉丝数、头像和活跃状态均待人工复核；未核验前不要展示粉丝数据。",
+    "dataConfidence": "low",
+    "lastUpdated": "2026-05-23",
+    "disclaimer": "仅作为公开内容风格灵感整理，不代表官方合作。"
+  }
+]

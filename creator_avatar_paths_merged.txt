@@ -1,0 +1,41 @@
+程十安an -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_001.jpg
+崔佳楠 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_002.jpg
+毛戈平 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_003.jpg
+佳佳日记 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_004.jpg
+盐栗栗(假装美妆博主版) -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_005.jpg
+榆晚不是鱼丸 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_006.jpg
+郭二萌 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_007.jpg
+Doll -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_008.jpg
+万怀野 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_009.jpg
+塞巴Sebastian -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_010.jpg
+迪力瑞安 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_011.jpg
+小厘的厘（内双版） -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_012.jpg
+我是筒筒（爱化妆版） -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_013.jpg
+深圳邓小眼（方圆脸+单眼皮新手跟练版） -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_014.jpg
+Luoooooosiii -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_015.jpg
+安七七 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_016.jpg
+会呆呆 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_017.jpg
+豆奶西瓜精 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_018.jpg
+愉欢儿 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_019.jpg
+财小杨 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_020.jpg
+bobo最洋气 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_021.jpg
+雾矢银月 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_022.jpg
+白西瓜SY -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_023.jpg
+黑羽hono -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_024.jpg
+张凯毅 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_025.jpg
+方恰拉 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_026.jpg
+Dain -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_027.jpg
+小来哥 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_028.jpg
+草莓果酱 ox -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_029.jpg
+周楚楚 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_030.jpg
+阿木同学 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_031.jpg
+李佳琦 Austin -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_032.jpg
+一只小耳朵 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_033.jpg
+龙梓嘉 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_034.jpg
+雨彤 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_035.jpg
+一只璐 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_036.jpg
+九儿 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_037.jpg
+港风阿英 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_038.jpg
+樱井阿泽 -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_039.jpg
+化妆师 MK -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_040.jpg
+sunny -> /Users/damowang/Desktop/Makeup-Mate/frontend/public/assets/creator-avatars/douyin_creator_041.jpg
