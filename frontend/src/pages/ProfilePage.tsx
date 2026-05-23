@@ -2,34 +2,46 @@ import { useEffect, useState } from "react";
 import { useAppState, appActions } from "@/state/appStore";
 import { ApiError } from "@/api/client";
 import { clearMemory, getMe, type MeResponse } from "@/api/profile";
+import { listHistory } from "@/api/history";
+import type { HistoryItem } from "@/types";
 import "./ProfilePage.css";
 
-// 这两块当前后端还没落库（memory_service 只返回 BeautyProfile）。
-// 先用占位保留视觉骨架，等 memory_items / history_items 真接进来再换。
-const PLACEHOLDER_MEMORIES = [
-  "不喜欢浓眼妆，倾向自然淡色晕染。",
-  "上班日希望 15 分钟内完成，跳过复杂修容。",
-  "眼线只画后半段，沿下眼睑自然延长。",
-];
+const _STATUS_LABEL: Record<HistoryItem["status"], string> = {
+  analyzed: "已解析",
+  imported: "已导入聊天",
+  completed: "已完成",
+};
 
-const PLACEHOLDER_RECENT: Array<[string, string]> = [
-  ["今天", "清冷通勤妆"],
-  ["昨天", "韩系裸妆"],
-  ["上周", "港风复古妆"],
-];
+function _formatHistoryTime(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  if (sameDay) {
+    return `今天 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  }
+  const oneDay = 24 * 60 * 60 * 1000;
+  if (now.getTime() - d.getTime() < oneDay * 2) return "昨天";
+  return `${d.getMonth() + 1}月${d.getDate()}日`;
+}
 
 export function ProfilePage() {
-  const isAuthed = useAppState((s) => s.isAuthed);
+  // /profile/me 后端用 require_real_user，游客访问会 403。
+  // 所以这里要的是"真用户"，不是单纯 isAuthed（signIn('guest') 也会把 isAuthed 设成 true）。
+  const isRealUser = useAppState((s) => s.isAuthed && s.authMethod !== "guest");
+  const isGuest = useAppState((s) => s.isAuthed && s.authMethod === "guest");
 
   const [me, setMe] = useState<MeResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [clearing, setClearing] = useState(false);
 
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+
   useEffect(() => {
-    // 未登录直接展示登录引导，不发请求 —— /profile/me 要求 real user，游客会 403
-    if (!isAuthed) {
+    if (!isRealUser) {
       setMe(null);
+      setHistory([]);
       setError(null);
       return;
     }
@@ -37,9 +49,15 @@ export function ProfilePage() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    getMe()
-      .then((data) => {
-        if (!cancelled) setMe(data);
+
+    Promise.all([
+      getMe(),
+      listHistory().catch(() => ({ items: [] as HistoryItem[] })),
+    ])
+      .then(([meData, histData]) => {
+        if (cancelled) return;
+        setMe(meData);
+        setHistory(histData.items);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -54,7 +72,7 @@ export function ProfilePage() {
     return () => {
       cancelled = true;
     };
-  }, [isAuthed]);
+  }, [isRealUser]);
 
   const onSignOut = () => {
     appActions.signOut();
@@ -75,24 +93,32 @@ export function ProfilePage() {
     }
   };
 
-  // ===== 三种降级状态：未登录 / 加载中 / 出错 =====
-  if (!isAuthed) {
+  // ===== 三种降级状态：未登录 / 游客 / 加载中 / 出错 =====
+  if (!isRealUser) {
+    // 包含两种：从未登录 / 游客模式
+    const title = isGuest ? "游客模式" : "未登录";
+    const subtitle = isGuest
+      ? "游客无法查看妆容档案，登录后才能保存"
+      : "登录后查看你的妆容档案";
     return (
       <div className="profile-page">
         <header className="profile-page__hero">
           <div className="profile-page__avatar">妆</div>
           <div className="profile-page__greeting">
-            <h2>未登录</h2>
-            <p>登录后查看你的妆容档案</p>
+            <h2>{title}</h2>
+            <p>{subtitle}</p>
           </div>
         </header>
         <section className="profile-section">
           <button
             type="button"
             className="profile-tag"
-            onClick={() => appActions.setActiveTab("home")}
+            onClick={() => {
+              if (isGuest) appActions.signOut();
+              appActions.setActiveTab("home");
+            }}
           >
-            去登录
+            {isGuest ? "退出游客 · 去登录" : "去登录"}
           </button>
         </section>
       </div>
@@ -127,7 +153,7 @@ export function ProfilePage() {
     );
   }
 
-  // ===== 正常状态：用 me.beautyProfile 填充 =====
+  // ===== 正常状态：用 me.beautyProfile + history 填充 =====
   const profile = me.beautyProfile;
 
   // 一句话 bio：拼几个核心标签
@@ -147,6 +173,9 @@ export function ProfilePage() {
 
   // 建议避开
   const avoids = profile?.avoidStyles ?? [];
+
+  // 最近的复刻：取 history 前 6 条
+  const recent = history.slice(0, 6);
 
   return (
     <div className="profile-page">
@@ -192,28 +221,24 @@ export function ProfilePage() {
         </section>
       )}
 
-      {/* MM 记住的事（占位，待接 memory_items） */}
-      <section className="profile-section">
-        <span className="profile-section__label">MM 记住的事</span>
-        <div className="profile-notes">
-          {PLACEHOLDER_MEMORIES.map((m) => (
-            <p key={m}>{m}</p>
-          ))}
-        </div>
-      </section>
-
-      {/* 最近的复刻（占位，待接 history_items） */}
+      {/* 最近的复刻（从 /history 拉真数据） */}
       <section className="profile-section">
         <span className="profile-section__label">最近的复刻</span>
-        <ul className="profile-timeline">
-          {PLACEHOLDER_RECENT.map(([time, name]) => (
-            <li key={name} className="profile-timeline__row">
-              <i className="profile-timeline__dot" />
-              <time>{time}</time>
-              <span>{name}</span>
-            </li>
-          ))}
-        </ul>
+        {recent.length === 0 ? (
+          <p className="profile-bio" style={{ fontSize: 13, color: "var(--text-muted)" }}>
+            还没有复刻记录，去首页解析一个妆容卡片试试。
+          </p>
+        ) : (
+          <ul className="profile-timeline">
+            {recent.map((item) => (
+              <li key={item.itemId} className="profile-timeline__row">
+                <i className="profile-timeline__dot" />
+                <time>{_formatHistoryTime(item.createdAt)}</time>
+                <span>{item.title}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {/* 隐私 footer */}

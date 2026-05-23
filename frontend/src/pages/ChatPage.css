@@ -725,6 +725,27 @@
   font-size: 11px;
 }
 
+.history-clear-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(122, 46, 46, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.history-clear-btn:hover:not(:disabled) {
+  background: var(--tag-bg);
+  border-color: var(--accent);
+}
+.history-clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .upload-card {
   padding: 18px;
   margin-bottom: 12px;

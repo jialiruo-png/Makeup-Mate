@@ -5,7 +5,9 @@ import { appActions, useAppState } from "@/state/appStore";
 import type { InspirationType, MakeupCard } from "@/types";
 import { createSession, sendMessage as apiSendMessage } from "@/api/chat";
 import { uploadMedia } from "@/api/media";
-import { apiBase } from "@/api/client";
+import { apiBase, ApiError } from "@/api/client";
+import { listHistory, deleteHistory } from "@/api/history";
+import type { HistoryItem } from "@/types";
 import "./ChatPage.css";
 
 type TopTab = "library" | "conversation";
@@ -914,19 +916,113 @@ function ChatModal({ type, onClose }: { type: Exclude<ModalType, null>; onClose:
   );
 }
 
+function _formatHistoryTime(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  if (sameDay) {
+    return `今天 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  }
+  return `${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+const _STATUS_LABEL: Record<HistoryItem["status"], string> = {
+  analyzed: "已解析",
+  imported: "已导入聊天",
+  completed: "已完成",
+};
+
 function HistoryContent() {
-  const rows = ["清冷感通勤妆", "韩系裸妆", "港风复古妆"];
+  const [items, setItems] = useState<HistoryItem[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const reload = () => {
+    setError(null);
+    listHistory()
+      .then((res) => setItems(res.items))
+      .catch((err: unknown) => {
+        const msg = err instanceof ApiError ? `加载失败（${err.status}）` : "加载失败";
+        setError(msg);
+        setItems([]);
+      });
+  };
+
+  useEffect(() => {
+    reload();
+  }, []);
+
+  const removeOne = async (item: HistoryItem) => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await deleteHistory(item.itemId);
+      setItems((cur) => (cur ?? []).filter((x) => x.itemId !== item.itemId));
+      appActions.showToast("已删除", "success");
+    } catch (err) {
+      const msg = err instanceof ApiError ? `删除失败（${err.status}）` : "删除失败";
+      appActions.showToast(msg, "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const clearAll = async () => {
+    if (busy || !items || items.length === 0) return;
+    setBusy(true);
+    try {
+      const results = await Promise.allSettled(
+        items.map((it) => deleteHistory(it.itemId)),
+      );
+      const ok = results.filter((r) => r.status === "fulfilled").length;
+      const fail = results.length - ok;
+      setItems([]);
+      appActions.showToast(
+        fail ? `清空了 ${ok} 条，${fail} 条失败` : `已清空 ${ok} 条`,
+        fail ? "warn" : "success",
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <>
       <h2>历史记录</h2>
-      <div className="modal-list">
-        {rows.map((row, index) => (
-          <button type="button" key={row}>
-            <span>{row}</span>
-            <small>{index === 0 ? "今天 · 已导入聊天" : "上周 · 已解析"}</small>
+      {items === null && !error && <p className="privacy-text">加载中…</p>}
+      {error && <p className="privacy-text">{error}</p>}
+      {items && items.length === 0 && !error && (
+        <p className="privacy-text">还没有历史记录。去首页粘贴链接或上传图片，解析后会出现在这里。</p>
+      )}
+      {items && items.length > 0 && (
+        <>
+          <div className="modal-list">
+            {items.map((item) => (
+              <button
+                type="button"
+                key={item.itemId}
+                onClick={() => removeOne(item)}
+                disabled={busy}
+                title="点击删除"
+              >
+                <span>{item.title}</span>
+                <small>
+                  {_formatHistoryTime(item.createdAt)} · {_STATUS_LABEL[item.status]}
+                </small>
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="history-clear-btn"
+            onClick={clearAll}
+            disabled={busy}
+          >
+            {busy ? "清空中…" : "清空全部"}
           </button>
-        ))}
-      </div>
+        </>
+      )}
     </>
   );
 }
