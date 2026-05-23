@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     app_env: str = "local"
     log_level: str = "INFO"
 
-    database_url: str = "sqlite:///./storage/makeup_mate.db"
+    database_url: str = ""
 
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
@@ -53,4 +53,10 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    s = Settings()
+    if not s.database_url.startswith(("postgresql://", "postgresql+psycopg://", "postgresql+psycopg2://")):
+        raise RuntimeError(
+            "DATABASE_URL 必须配置为 PostgreSQL DSN（postgresql://...）。"
+            "本项目部署在 ECS+RDS，禁止使用 SQLite。"
+        )
+    return s

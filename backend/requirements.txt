@@ -14,9 +14,7 @@ bcrypt==4.0.1
 python-jose[cryptography]==3.3.0
 
 # 数据库驱动
-psycopg2-binary==2.9.10    # RDS PostgreSQL
-# pymysql==1.1.1           # RDS MySQL（如果切回 MySQL 再启用）
-# 本地若想用 SQLite，把 DATABASE_URL 改回 sqlite:/// 即可。
+psycopg2-binary==2.9.10    # RDS PostgreSQL — 唯一支持的数据库
 
 # 后续接入 MediaPipe / 多模态 AI 时再装：
 # mediapipe

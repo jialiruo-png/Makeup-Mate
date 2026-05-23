@@ -10,7 +10,6 @@ from ..models.chat import ChatMessage as ChatMessageModel
 from ..models.chat import ChatSession as ChatSessionModel
 from ..models.media_asset import MediaAsset as MediaAssetModel
 from ..models.user import User
-from ..routes.makeup_cards import _CARD_CACHE
 from ..schemas.chat import (
     ChatMessage,
     ChatSession,
@@ -19,7 +18,7 @@ from ..schemas.chat import (
     SendMessageRequest,
     SendMessageResponse,
 )
-from ..services import ai_service
+from ..services import ai_service, history_repository, makeup_card_repository
 from ..config import get_settings
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -101,7 +100,11 @@ def create_session(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ) -> ChatSession:
-    card = _CARD_CACHE.get(payload.card_id) if payload.card_id else None
+    card = (
+        makeup_card_repository.get_card(db, payload.card_id)
+        if payload.card_id
+        else None
+    )
     session_id = _make_id("chat")
 
     session_row = ChatSessionModel(
@@ -122,6 +125,17 @@ def create_session(
         role="assistant",
         content=_initial_message(card.title if card else None, None),
     )
+
+    if card:
+        history_repository.upsert_from_card(
+            db,
+            user_id=user.id,
+            card_id=card.card_id,
+            title=card.title,
+            source=card.source_type,
+            status="imported",
+            session_id=session_id,
+        )
     db.commit()
 
     return ChatSession(
@@ -209,7 +223,9 @@ def send_message(
     ]
 
     card = (
-        _CARD_CACHE.get(session_row.makeup_card_id) if session_row.makeup_card_id else None
+        makeup_card_repository.get_card(db, session_row.makeup_card_id)
+        if session_row.makeup_card_id
+        else None
     )
     reply = ai_service.reply_in_session(
         card.title if card else None,
