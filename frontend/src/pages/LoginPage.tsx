@@ -37,9 +37,9 @@ export function LoginPage() {
     appActions.showToast("欢迎来到妆搭", "success");
   };
 
-  const signInWechat = () => {
-    appActions.signIn("wechat");
-    appActions.showToast("已使用微信登录", "success");
+  const signInDouyin = () => {
+    appActions.signIn("douyin");
+    appActions.showToast("已使用抖音登录", "success");
   };
 
   const signInGuest = () => {
@@ -50,13 +50,14 @@ export function LoginPage() {
   return (
     <div className="login-page">
       <header className="login-page__brand">
-        <div className="login-page__logo">妆</div>
-        <h1 className="login-page__title">妆搭 Makeup Mate</h1>
-        <p className="login-page__tagline">
-          会记住你的 AI 美妆视频陪练
-          <br />
-          把刷到的妆容，变成你的复刻教程
-        </p>
+        <div className="login-page__brand-row">
+          <div className="login-page__logo" aria-hidden>
+            <span>MM</span>
+          </div>
+          <span className="login-page__brand-name">妆搭</span>
+        </div>
+        <p className="login-page__slogan">看懂妆容，更懂你</p>
+        <p className="login-page__tagline">把喜欢的妆，变成适合你的妆。</p>
       </header>
 
       <form className="login-page__form" onSubmit={submit}>
@@ -107,7 +108,7 @@ export function LoginPage() {
       </div>
 
       <div className="login-page__alts">
-        <button type="button" className="login-page__wechat" onClick={signInWechat}>
+        <button type="button" className="login-page__douyin" onClick={signInDouyin}>
           <svg
             width="17"
             height="17"
@@ -115,9 +116,9 @@ export function LoginPage() {
             fill="currentColor"
             aria-hidden="true"
           >
-            <path d="M8.7 4C4.7 4 1.5 6.7 1.5 10c0 1.9 1.1 3.6 2.8 4.8L3.6 17l2.5-1.3c.8.2 1.7.3 2.6.3.3 0 .5 0 .8-.1-.2-.5-.3-1-.3-1.6 0-2.9 2.8-5.3 6.3-5.3.2 0 .4 0 .6 0C15.5 6 12.4 4 8.7 4ZM6 8.6a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm5.5 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm9 7.5c0-2.7-2.7-4.9-6-4.9s-6 2.2-6 4.9 2.7 4.9 6 4.9c.7 0 1.3-.1 1.9-.2l1.9 1-.5-1.7c1.6-1 2.7-2.5 2.7-4Zm-8.2-1.4a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Zm4.4 0a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Z" />
+            <path d="M19 4.5h-3v10.1a3.1 3.1 0 1 1-3.1-3.1c.3 0 .6 0 .9.1V8.4c-.3 0-.6-.1-.9-.1A6.2 6.2 0 1 0 19 14.6V8.7c1.3.8 2.8 1.2 4.4 1.2V6.7c-1.8 0-3.4-.8-4.4-2.2z" />
           </svg>
-          微信一键登录
+          抖音一键登录
         </button>
         <button type="button" className="login-page__guest" onClick={signInGuest}>
           暂不登录 · 游客体验

@@ -6,7 +6,7 @@ import type {
   ToastState,
 } from "@/types";
 
-export type AuthMethod = "phone" | "wechat" | "guest";
+export type AuthMethod = "phone" | "wechat" | "douyin" | "guest";
 
 export interface AppState {
   activeTab: ActiveTab;
