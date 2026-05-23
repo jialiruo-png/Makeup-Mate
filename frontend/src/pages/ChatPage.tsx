@@ -422,9 +422,7 @@ function InspirationCardView({
 }) {
   return (
     <article className="insp-card">
-      <div className="insp-card__avatar">
-        {item.avatarUrl ? <img src={item.avatarUrl} alt="" /> : <span>{item.avatarLabel}</span>}
-      </div>
+      <CreatorAvatar item={item} />
       <div className="insp-card__body">
         <div className="insp-card__top">
           <h3>{item.name}</h3>
@@ -444,6 +442,19 @@ function InspirationCardView({
         </div>
       </div>
     </article>
+  );
+}
+
+function CreatorAvatar({ item }: { item: InspirationCard }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className="insp-card__avatar">
+      {item.avatarUrl && !failed ? (
+        <img src={item.avatarUrl} alt="" onError={() => setFailed(true)} />
+      ) : (
+        <span>{item.avatarLabel}</span>
+      )}
+    </div>
   );
 }
 
