@@ -158,12 +158,16 @@ _CHAT_SYSTEM = (
 )
 
 
-def reply_in_session(card_title: str | None, user_message: str) -> str:
+def reply_in_session(
+    card_title: str | None,
+    user_message: str,
+    history: list[dict] | None = None,
+) -> str:
     system = _CHAT_SYSTEM
     if card_title:
         system += f"\n当前妆容卡片标题：{card_title}。"
     try:
-        return qwen_client.chat_text(user_message, system=system)
+        return qwen_client.chat_text(user_message, system=system, history=history)
     except qwen_client.QwenUnavailable as exc:
         log.warning("Qwen chat unavailable, fallback to mock: %s", exc)
 
