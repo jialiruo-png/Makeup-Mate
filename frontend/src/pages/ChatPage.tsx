@@ -52,11 +52,34 @@ interface ChatMessage {
 
 const profiles = creatorProfiles as CreatorProfile[];
 
-const ENTRY_META: Record<LibraryEntry, { label: string; desc: string }> = {
-  creator: { label: "美妆博主库", desc: "从达人风格开始生成你的复刻方案" },
-  style: { label: "风格复刻", desc: "按妆容风格快速找到方向" },
-  scene: { label: "场景妆容", desc: "通勤、约会、面试、拍照都能拆" },
-  beginner: { label: "新手陪练", desc: "低难度、短步骤、低翻车" },
+const RECOMMENDED_QUESTIONS = [
+  "怎么画一个清冷感通勤妆？",
+  "适合内双单眼皮的眼妆怎么画？",
+  "10 分钟新手能画的妆有哪些？",
+  "圆脸怎么修容显小？",
+];
+
+const ENTRY_META: Record<LibraryEntry, { label: string; desc: string; searchPlaceholder: string }> = {
+  creator: {
+    label: "博主灵感",
+    desc: "从达人风格开始生成你的复刻方案",
+    searchPlaceholder: "搜索博主",
+  },
+  style: {
+    label: "风格复刻",
+    desc: "按妆容风格快速找到方向",
+    searchPlaceholder: "搜索风格",
+  },
+  scene: {
+    label: "场景妆容",
+    desc: "通勤、约会、面试、拍照都能拆",
+    searchPlaceholder: "搜索场景",
+  },
+  beginner: {
+    label: "新手陪练",
+    desc: "低难度、短步骤、低翻车",
+    searchPlaceholder: "搜索陪练内容",
+  },
 };
 
 const FILTERS: Record<LibraryEntry, string[]> = {
@@ -181,24 +204,27 @@ function cardsForEntry(entry: LibraryEntry): InspirationCard[] {
 
 export function ChatPage() {
   const currentCard = useAppState((s) => s.currentCard);
-  const [tab, setTab] = useState<TopTab>("library");
+  const [tab, setTab] = useState<TopTab>("conversation");
   const [entry, setEntry] = useState<LibraryEntry>("creator");
   const [filter, setFilter] = useState("全部");
+  const [searchQuery, setSearchQuery] = useState("");
   const [modal, setModal] = useState<ModalType>(null);
   const [message, setMessage] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [actionPanel, setActionPanel] = useState(false);
   const [pendingImage, setPendingImage] = useState<{
     file: File;
     previewUrl: string;
     mediaAssetId?: string;
   } | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "msg_welcome",
       role: "assistant",
-      text: "今天想复刻哪种妆？可以从美妆灵感库选，也可以导入首页的解析卡片。",
+      text: "我在这里。你可以告诉我想画什么风格，或者从首页粘贴解析后的卡片给我。",
     },
   ]);
 
@@ -261,14 +287,26 @@ export function ChatPage() {
   };
 
   const cards = useMemo(() => {
-    const items = cardsForEntry(entry);
-    if (filter === "全部") return items;
-    return items.filter((item) => item.categories.some((c) => c.includes(filter)));
-  }, [entry, filter]);
+    let items = cardsForEntry(entry);
+    if (filter !== "全部") {
+      items = items.filter((item) => item.categories.some((c) => c.includes(filter)));
+    }
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      items = items.filter(
+        (item) =>
+          item.name.toLowerCase().includes(q) ||
+          item.look.toLowerCase().includes(q) ||
+          item.analysis.toLowerCase().includes(q),
+      );
+    }
+    return items;
+  }, [entry, filter, searchQuery]);
 
   const switchEntry = (next: LibraryEntry) => {
     setEntry(next);
     setFilter("全部");
+    setSearchQuery("");
   };
 
   const importCardToChat = (item: InspirationCard) => {
@@ -309,15 +347,16 @@ export function ChatPage() {
     importCardToChat(item);
   };
 
-  const sendMessage = async (event: FormEvent) => {
-    event.preventDefault();
-    const text = message.trim();
-    if (!text && !pendingImage) return;
+  const doSend = async (
+    text: string,
+    image: typeof pendingImage,
+  ) => {
+    if (!text && !image) return;
     if (!sessionId) {
       appActions.showToast("聊天还在准备，稍等一下", "warn");
       return;
     }
-    if (pendingImage && !pendingImage.mediaAssetId) {
+    if (image && !image.mediaAssetId) {
       appActions.showToast("图片还在上传，稍等一下", "warn");
       return;
     }
@@ -330,19 +369,18 @@ export function ChatPage() {
         id: localUserId,
         role: "user",
         text,
-        imageUrl: pendingImage?.previewUrl,
+        imageUrl: image?.previewUrl,
       },
     ]);
     setMessage("");
-    const sentImage = pendingImage;
     setPendingImage(null);
 
     try {
       const res = await apiSendMessage(sessionId, {
         content: text,
-        messageType: sentImage ? "image" : "text",
+        messageType: image ? "image" : "text",
         // @ts-expect-error: 后端新加的字段，types 里我等会补
-        mediaAssetId: sentImage?.mediaAssetId ?? null,
+        mediaAssetId: image?.mediaAssetId ?? null,
       });
       setMessages((prev) =>
         prev
@@ -352,8 +390,8 @@ export function ChatPage() {
                   id: res.userMessage.messageId,
                   role: "user" as const,
                   text: res.userMessage.content,
-                  imageUrl: sentImage
-                    ? `${apiBase}/media/${sentImage.mediaAssetId}/raw`
+                  imageUrl: image
+                    ? `${apiBase}/media/${image.mediaAssetId}/raw`
                     : undefined,
                 }
               : m,
@@ -364,13 +402,36 @@ export function ChatPage() {
             text: res.assistantMessage.content,
           }),
       );
-      if (sentImage?.previewUrl) URL.revokeObjectURL(sentImage.previewUrl);
+      if (image?.previewUrl) URL.revokeObjectURL(image.previewUrl);
     } catch (err) {
       console.error(err);
       appActions.showToast("发送失败，请重试", "warn");
       setMessages((prev) => prev.filter((m) => m.id !== localUserId));
     } finally {
       setSending(false);
+    }
+  };
+
+  const sendMessage = (event: FormEvent) => {
+    event.preventDefault();
+    doSend(message.trim(), pendingImage);
+  };
+
+  const askQuestion = (q: string) => {
+    if (sending) return;
+    doSend(q, null);
+  };
+
+  const onActionPick = (kind: "camera" | "image" | "voice" | "video") => {
+    setActionPanel(false);
+    if (kind === "camera") {
+      cameraInputRef.current?.click();
+    } else if (kind === "image") {
+      imageInputRef.current?.click();
+    } else if (kind === "voice") {
+      appActions.showToast("语音通话开发中，敬请期待", "info");
+    } else if (kind === "video") {
+      appActions.showToast("视频通话开发中，敬请期待", "info");
     }
   };
 
@@ -386,15 +447,39 @@ export function ChatPage() {
           ‹
         </button>
         <div className="chat-page__title">
-          <span>妆搭 MM</span>
-          <small><i /> AI 美妆陪练在线</small>
+          <span>妆搭</span>
+          <small>看懂妆容，更懂你</small>
         </div>
         <div className="chat-page__top-actions">
-          <button type="button" className="chat-page__top-btn" onClick={() => setModal("history")}>
-            ⏱
+          <button
+            type="button"
+            className="chat-page__top-btn"
+            onClick={() => setModal("history")}
+            aria-label="历史记录"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12a9 9 0 1 0 3-6.7" />
+              <polyline points="3 4 3 10 9 10" />
+              <polyline points="12 7 12 12 15 14" />
+            </svg>
           </button>
-          <button type="button" className="chat-page__top-btn" onClick={() => setModal("upload")}>
-            ◉
+          <button
+            type="button"
+            className="chat-page__top-btn chat-page__top-btn--avatar"
+            onClick={() => setModal("upload")}
+            aria-label="上传照片"
+          >
+            <img src="/mm-avatar.jpg" alt="" />
           </button>
         </div>
       </header>
@@ -405,37 +490,67 @@ export function ChatPage() {
           className={`chat-page__tab${tab === "conversation" ? " is-active" : ""}`}
           onClick={() => setTab("conversation")}
         >
-          陪伴聊天
+          AI 陪练
         </button>
         <button
           type="button"
           className={`chat-page__tab${tab === "library" ? " is-active" : ""}`}
           onClick={() => setTab("library")}
         >
-          美妆灵感库 <b>41</b>
+          美妆灵感库
         </button>
       </div>
 
       {tab === "library" ? (
         <div className="chat-page__body">
-          <section className="library-banner">
-            <h2>从达人、风格或场景开始复刻</h2>
-            <p>每张卡片都可以生成你的版本，再导入聊天陪你一步步画。</p>
-          </section>
+          <div className="library-search">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={ENTRY_META[entry].searchPlaceholder}
+              aria-label="搜索"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="library-search__clear"
+                onClick={() => setSearchQuery("")}
+                aria-label="清空搜索"
+              >
+                ×
+              </button>
+            )}
+          </div>
 
-          <div className="library-entry-grid">
+          <nav className="library-tabs" role="tablist">
             {(Object.keys(ENTRY_META) as LibraryEntry[]).map((key) => (
               <button
                 key={key}
                 type="button"
-                className={`library-entry${entry === key ? " is-active" : ""}`}
+                role="tab"
+                aria-selected={entry === key}
+                className={`library-tab${entry === key ? " is-active" : ""}`}
                 onClick={() => switchEntry(key)}
               >
-                <span>{entryIcon(key)}</span>
-                <b>{ENTRY_META[key].label}</b>
+                {ENTRY_META[key].label}
               </button>
             ))}
-          </div>
+          </nav>
 
           <div className="library-filter-row">
             {FILTERS[entry].map((item) => (
@@ -452,7 +567,6 @@ export function ChatPage() {
 
           <div className="library-section-title">
             <span>{ENTRY_META[entry].desc}</span>
-            <span>{cards.length} 个</span>
           </div>
 
           <div className="inspiration-list">
@@ -488,24 +602,58 @@ export function ChatPage() {
                   {m.text}
                 </div>
               ))}
-              <div className="step-card">
-                <span>当前建议</span>
-                <b>Step 1 · 底妆</b>
-                <p>先完成轻薄底妆，重点是均匀肤色，不要急着叠遮瑕。</p>
-                <div>
-                  {["我完成了", "换种说法", "没有这个产品怎么办", "拍照检查"].map((q) => (
+              {currentCard ? (
+                <div className="step-card">
+                  <span>当前建议</span>
+                  <b>Step 1 · 底妆</b>
+                  <p>先完成轻薄底妆，重点是均匀肤色，不要急着叠遮瑕。</p>
+                  <div>
+                    {["我完成了", "换种说法", "没有这个产品怎么办", "拍照检查"].map((q) => (
+                      <button
+                        type="button"
+                        key={q}
+                        onClick={() => {
+                          setMessage(q);
+                        }}
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <section className="chat-page__suggestions">
+                  <div className="chat-page__suggestions-head">
+                    <i />
+                    <h3>推荐问题</h3>
+                  </div>
+                  {RECOMMENDED_QUESTIONS.map((q) => (
                     <button
-                      type="button"
                       key={q}
-                      onClick={() => {
-                        setMessage(q);
-                      }}
+                      type="button"
+                      className="chat-page__suggestion"
+                      onClick={() => askQuestion(q)}
                     >
-                      {q}
+                      <span className="chat-page__suggestion-tag">#</span>
+                      <span className="chat-page__suggestion-text">{q}</span>
+                      <svg
+                        className="chat-page__suggestion-arrow"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
                     </button>
                   ))}
-                </div>
-              </div>
+                </section>
+              )}
             </div>
           </div>
           {pendingImage && (
@@ -552,19 +700,32 @@ export function ChatPage() {
                 e.target.value = "";
               }}
             />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              hidden
+              onChange={(e) => {
+                onPickImage(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
             <button
               type="button"
-              className="chat-page__icon-btn"
-              onClick={() => imageInputRef.current?.click()}
-              aria-label="上传图片"
+              className={`chat-page__icon-btn chat-page__icon-btn--plus${actionPanel ? " is-open" : ""}`}
+              onClick={() => setActionPanel((v) => !v)}
+              aria-label="更多操作"
+              aria-expanded={actionPanel}
             >
               ＋
             </button>
             <input
               className="chat-page__input"
-              placeholder={pendingImage ? "说一句想问的（可选）..." : "问我下一步怎么画…"}
+              placeholder={pendingImage ? "说一句想问的（可选）..." : "发送消息或上传图片"}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onFocus={() => setActionPanel(false)}
             />
             <button type="button" className="chat-page__icon-btn" aria-label="语音输入">
               <svg
@@ -591,6 +752,63 @@ export function ChatPage() {
               {sending ? "..." : "发送"}
             </button>
           </form>
+
+          {actionPanel && (
+            <div className="chat-page__action-panel" role="menu">
+              <button
+                type="button"
+                className="chat-page__action"
+                onClick={() => onActionPick("camera")}
+              >
+                <span className="chat-page__action-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3 7h3l2-3h8l2 3h3v13H3z" />
+                    <circle cx="12" cy="13" r="4" />
+                  </svg>
+                </span>
+                <span className="chat-page__action-label">拍照</span>
+              </button>
+              <button
+                type="button"
+                className="chat-page__action"
+                onClick={() => onActionPick("image")}
+              >
+                <span className="chat-page__action-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <circle cx="9" cy="10" r="1.5" />
+                    <path d="M21 17l-5-5L5 21" />
+                  </svg>
+                </span>
+                <span className="chat-page__action-label">上传图片</span>
+              </button>
+              <button
+                type="button"
+                className="chat-page__action"
+                onClick={() => onActionPick("voice")}
+              >
+                <span className="chat-page__action-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5 12.8 12.8 0 0 0 2.8.7 2 2 0 0 1 1.7 2.1z" />
+                </svg>
+                </span>
+                <span className="chat-page__action-label">语音通话</span>
+              </button>
+              <button
+                type="button"
+                className="chat-page__action"
+                onClick={() => onActionPick("video")}
+              >
+                <span className="chat-page__action-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="6" width="13" height="12" rx="2" />
+                    <path d="M16 10l5-3v10l-5-3z" />
+                  </svg>
+                </span>
+                <span className="chat-page__action-label">视频通话</span>
+              </button>
+            </div>
+          )}
         </>
       )}
 
@@ -706,12 +924,5 @@ function UploadContent() {
       <p className="privacy-text">默认不保存原始照片，只在授权后保存结构化妆容档案。</p>
     </>
   );
-}
-
-function entryIcon(entry: LibraryEntry) {
-  if (entry === "creator") return "◐";
-  if (entry === "style") return "✧";
-  if (entry === "scene") return "▣";
-  return "✓";
 }
 

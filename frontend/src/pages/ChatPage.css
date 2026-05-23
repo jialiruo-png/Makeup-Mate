@@ -60,11 +60,33 @@
   background: #fff;
   color: var(--text-body);
   font-size: 16px;
-  transition: background 0.18s ease, color 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 .chat-page__top-btn:hover {
   background: var(--tag-bg);
   color: var(--accent);
+}
+
+/* 绿圈头像按钮：替代"上传照片"图标，强调 AI 在线 */
+.chat-page__top-btn--avatar {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 2px solid #B7E86B;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+}
+.chat-page__top-btn--avatar:hover {
+  background: #fff;
+  border-color: #9BD24F;
+}
+.chat-page__top-btn--avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .chat-page__tabs {
@@ -114,72 +136,100 @@
   padding-bottom: 18px;
 }
 
-.library-banner {
-  padding: 14px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: linear-gradient(135deg, #fff8f3 0%, #fce6dc 100%);
-}
-.library-banner h2 {
-  color: var(--text-main);
-  font-size: 14px;
-  font-weight: 740;
-}
-.library-banner p {
-  margin-top: 5px;
-  color: var(--text-body);
-  font-size: 11.5px;
-  line-height: 1.5;
-}
-
-.library-entry-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 11px;
-}
-
-.library-entry {
-  min-width: 0;
-  min-height: 68px;
-  padding: 8px 4px;
+/* ============== 灵感库搜索框 ============== */
+.library-search {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  margin-bottom: 14px;
+  border-radius: 999px;
   background: #fff;
-  color: var(--text-body);
-  transition: transform 0.16s ease, border-color 0.18s ease, background 0.18s ease;
+  border: 1px solid rgba(122, 46, 46, 0.08);
+  box-shadow: 0 2px 8px rgba(43, 33, 30, 0.04);
 }
-.library-entry span {
-  width: 28px;
-  height: 28px;
+.library-search svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+.library-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 13.5px;
+  font-family: inherit;
+}
+.library-search input::placeholder {
+  color: var(--text-muted);
+}
+.library-search input::-webkit-search-cancel-button {
+  display: none;
+}
+.library-search__clear {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--brand), var(--accent));
-  color: #fff;
+  border: none;
+  border-radius: 50%;
+  background: rgba(122, 46, 46, 0.08);
+  color: var(--text-muted);
   font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
 }
-.library-entry b {
-  max-width: 100%;
-  font-size: 10px;
-  font-weight: 650;
-  line-height: 1.18;
-  text-align: center;
+.library-search__clear:hover {
+  background: var(--accent);
+  color: #fff;
 }
-.library-entry:hover {
-  transform: translateY(-1px);
-  border-color: var(--brand);
+
+/* ============== 4 大入口：纯文字 + 下划线 ============== */
+.library-tabs {
+  display: flex;
+  gap: 24px;
+  padding: 4px 4px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--divider);
 }
-.library-entry.is-active {
-  border-color: var(--accent);
-  background: var(--tag-bg);
-  color: var(--accent);
+
+.library-tab {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 8px 0 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: color 0.18s ease;
+  font-family: inherit;
+}
+.library-tab:hover {
+  color: var(--text-body);
+}
+.library-tab.is-active {
+  color: var(--text-main);
+  font-weight: 700;
+}
+.library-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 2.5px;
+  border-radius: 999px;
+  background: var(--accent);
 }
 
 .library-filter-row {
@@ -211,18 +261,14 @@
 
 .library-section-title {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 4px 0 8px;
+  margin: 6px 0 10px;
+  padding: 0 2px;
+}
+.library-section-title span {
   color: var(--text-muted);
-  font-size: 11px;
-}
-.library-section-title span:first-child {
-  color: var(--text-body);
-}
-.library-section-title span:last-child {
-  color: var(--accent);
-  font-weight: 650;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .inspiration-list {
@@ -234,11 +280,11 @@
 .insp-card {
   display: flex;
   gap: 11px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 17px;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 8px 22px rgba(43, 33, 30, 0.045);
+  box-shadow: 0 6px 18px rgba(43, 33, 30, 0.04);
 }
 
 .insp-card__avatar {
@@ -436,6 +482,152 @@
   color: var(--accent);
   font-size: 10.5px;
   font-weight: 600;
+}
+
+/* ============== 推荐问题（阿福风格 # 列表） ============== */
+.chat-page__suggestions {
+  margin-top: 8px;
+  padding: 16px 14px 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(122, 46, 46, 0.08);
+  border-radius: 18px;
+}
+.chat-page__suggestions-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-left: 2px;
+}
+.chat-page__suggestions-head i {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.chat-page__suggestions-head h3 {
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+}
+
+.chat-page__suggestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid rgba(122, 46, 46, 0.05);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  text-align: left;
+}
+.chat-page__suggestion:last-child {
+  margin-bottom: 0;
+}
+.chat-page__suggestion:hover {
+  transform: translateY(-1px);
+  border-color: rgba(122, 46, 46, 0.18);
+  box-shadow: 0 6px 16px rgba(43, 33, 30, 0.05);
+}
+.chat-page__suggestion:active {
+  transform: scale(0.99);
+}
+
+.chat-page__suggestion-tag {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+.chat-page__suggestion-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.chat-page__suggestion-arrow {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+/* ============== + 按钮展开的 4 功能面板 ============== */
+.chat-page__icon-btn--plus {
+  font-size: 22px;
+  font-weight: 400;
+  transition: transform 0.2s ease, color 0.18s ease;
+}
+.chat-page__icon-btn--plus.is-open {
+  transform: rotate(45deg);
+  color: var(--accent);
+}
+
+.chat-page__action-panel {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 16px 18px 24px;
+  background: rgba(251, 247, 242, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--divider);
+  animation: action-in 0.2s ease-out;
+}
+@keyframes action-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-page__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+.chat-page__action:active {
+  transform: scale(0.96);
+}
+
+.chat-page__action-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #fff;
+  color: var(--accent);
+  box-shadow: 0 4px 12px rgba(122, 46, 46, 0.06);
+  transition: background 0.18s ease;
+}
+.chat-page__action:hover .chat-page__action-icon {
+  background: var(--tag-bg);
+}
+
+.chat-page__action-label {
+  font-size: 11.5px;
+  color: var(--text-body);
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 .chat-page__input-bar {

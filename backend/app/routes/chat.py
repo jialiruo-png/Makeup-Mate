@@ -48,7 +48,7 @@ def _initial_message(card_title: str | None, inspiration_name: str | None) -> st
             f"我已经根据「{inspiration_name}」生成了一版适合日常复刻的方案。"
             "你可以直接开始，也可以上传自拍，让我把腮红、眼线和唇色再调得更贴合你。"
         )
-    return "我在这里。你可以告诉我想画什么风格，或者从首页粘贴一个链接给我。"
+    return "我在这里。你可以告诉我想画什么风格，或者从首页粘贴解析后的卡片给我。"
 
 
 def _row_to_schema(row: ChatMessageModel) -> ChatMessage:
