@@ -102,7 +102,7 @@ export function HomePage() {
       <header className="home-page__hero">
         <h1 className="home-page__title">粘贴美妆视频链接，生成复刻卡片</h1>
         <p className="home-page__subtitle">
-          支持抖音、小红书、B站链接，也可上传截图或短视频。
+          支持抖音视频链接，也可上传截图或短视频。
         </p>
       </header>
 
@@ -125,7 +125,7 @@ export function HomePage() {
           <div className="home-page__source-panel">
             <input
               className="home-page__link"
-              placeholder="粘贴抖音 / 小红书 / B站美妆链接"
+              placeholder="粘贴抖音美妆视频链接"
               value={link}
               onChange={(e) => setLink(e.target.value)}
             />

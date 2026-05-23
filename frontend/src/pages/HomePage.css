@@ -1,7 +1,7 @@
 .home-page {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 22px 96px;
+  padding: 64px 22px 96px;
   display: flex;
   flex-direction: column;
   gap: 16px;
