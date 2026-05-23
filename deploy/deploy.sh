@@ -49,10 +49,12 @@ log "5/5 重启后端"
 systemctl enable makeup-mate-backend >/dev/null 2>&1 || true
 systemctl restart makeup-mate-backend
 
-sleep 2
-if curl -fsS http://127.0.0.1:8001/api/health >/dev/null; then
-    log "✅ 部署完成。访问 http://121.43.144.91:8080"
-else
-    log "⚠️ 后端 health 检查失败，查 /var/log/makeup-mate/backend.err.log"
-    exit 1
-fi
+for i in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 1
+    if curl -fsS http://127.0.0.1:8001/api/health >/dev/null 2>&1; then
+        log "✅ 部署完成。访问 http://121.43.144.91:8080"
+        exit 0
+    fi
+done
+log "⚠️ 后端 health 10s 内未起来，查 /var/log/makeup-mate/backend.err.log 或 journalctl -u makeup-mate-backend"
+exit 1
