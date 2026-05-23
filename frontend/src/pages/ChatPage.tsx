@@ -279,17 +279,17 @@ export function ChatPage() {
       <div className="chat-page__tabs">
         <button
           type="button"
-          className={`chat-page__tab${tab === "library" ? " is-active" : ""}`}
-          onClick={() => setTab("library")}
-        >
-          美妆灵感库 <b>41</b>
-        </button>
-        <button
-          type="button"
           className={`chat-page__tab${tab === "conversation" ? " is-active" : ""}`}
           onClick={() => setTab("conversation")}
         >
           陪伴聊天
+        </button>
+        <button
+          type="button"
+          className={`chat-page__tab${tab === "library" ? " is-active" : ""}`}
+          onClick={() => setTab("library")}
+        >
+          美妆灵感库 <b>41</b>
         </button>
       </div>
 
@@ -384,7 +384,23 @@ export function ChatPage() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
-            <button type="button" className="chat-page__icon-btn">🎙</button>
+            <button type="button" className="chat-page__icon-btn" aria-label="语音输入">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="9" y="3" width="6" height="11" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0" />
+                <line x1="12" y1="18" x2="12" y2="21" />
+                <line x1="9" y1="21" x2="15" y2="21" />
+              </svg>
+            </button>
             <button type="submit" className="chat-page__send">发送</button>
           </form>
         </>
