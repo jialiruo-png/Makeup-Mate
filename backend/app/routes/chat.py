@@ -93,6 +93,7 @@ def create_session(
         short_term_context={},
     )
     db.add(session_row)
+    db.flush()  # 让 chat_sessions 行先落地，下面 message 的 FK 才能引用到
 
     first_msg = _persist_message(
         db,
