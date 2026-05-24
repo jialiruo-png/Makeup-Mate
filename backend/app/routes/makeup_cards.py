@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from ..db import get_db
@@ -19,7 +18,6 @@ from ..services import (
     history_repository,
     makeup_card_repository,
     makeup_card_validator,
-    qwen_client,
     share_service,
 )
 
@@ -58,22 +56,8 @@ def analyze(
     response_model_by_alias=True,
 )
 def render_background(payload: CardBackgroundRequest) -> CardBackgroundResponse:
-    try:
-        image_url, prompt = card_image_service.generate_card_background(
-            payload.card,
-            payload.prompt_override,
-        )
-    except qwen_client.QwenUnavailable as exc:
-        raise HTTPException(status_code=502, detail=f"AI 背景图生成失败：{exc}") from exc
-    return CardBackgroundResponse(imageUrl=image_url, prompt=prompt)
-
-
-@router.get("/rendered/{file_name}")
-def get_rendered(file_name: str) -> FileResponse:
-    path = card_image_service.generated_image_path(file_name)
-    if not path.exists():
-        raise HTTPException(status_code=404, detail="rendered image not found")
-    return FileResponse(path=path, media_type="image/png", filename=path.name)
+    image_url, template = card_image_service.select_card_background(payload.card)
+    return CardBackgroundResponse(imageUrl=image_url, prompt=f"template:{template}")
 
 
 @router.get("/{card_id}", response_model=MakeupCard, response_model_by_alias=True)

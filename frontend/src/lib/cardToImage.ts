@@ -1,5 +1,4 @@
 import type { MakeupCard } from "@/types";
-import { request } from "@/api/client";
 
 const W = 750;
 const PAD = 36;
@@ -10,6 +9,30 @@ const TEXT_MUTED = "#9A8888";
 const TAG_BG = "rgba(122, 46, 46, 0.08)";
 const BG = "#FBF5F0";
 const DIVIDER = "rgba(122, 46, 46, 0.12)";
+const CARD_BACKGROUND_BASE = "/assets/card-backgrounds";
+
+const TEMPLATE_RULES: Array<{ file: string; keywords: string[] }> = [
+  {
+    file: "male-camera-clean.png",
+    keywords: ["男生", "男士", "男性", "清爽", "证件照", "镜头", "舞台", "修容", "眉笔"],
+  },
+  {
+    file: "retro-hk-camera.png",
+    keywords: ["港风", "复古", "红棕", "枫叶", "梅子", "聚会", "拍照", "上镜"],
+  },
+  {
+    file: "sweet-date-soft.png",
+    keywords: ["甜", "约会", "桃花", "蜜桃", "杏粉", "珊瑚", "纯欲", "豆沙"],
+  },
+  {
+    file: "cool-clean-chic.png",
+    keywords: ["清冷", "冷调", "低饱和", "淡颜", "灰棕", "冷玫瑰", "干净"],
+  },
+  {
+    file: "commute-low-saturation.png",
+    keywords: ["通勤", "面试", "职场", "低饱和", "奶茶", "日常"],
+  },
+];
 
 interface DrawCtx {
   ctx: CanvasRenderingContext2D;
@@ -117,20 +140,24 @@ function drawDivider(c: DrawCtx): void {
   c.y += 24;
 }
 
-async function fetchCardBackground(card: MakeupCard): Promise<string | null> {
-  try {
-    const res = await request<{ imageUrl: string; prompt: string }>(
-      "/makeup-cards/render-background",
-      {
-        method: "POST",
-        body: { card },
-      },
-    );
-    return res.imageUrl;
-  } catch (err) {
-    console.warn("AI card background unavailable, fallback to canvas background", err);
-    return null;
+function selectCardBackground(card: MakeupCard): string {
+  const haystack = [
+    card.title,
+    card.difficulty,
+    card.aiTip,
+    ...card.styleTags,
+    ...card.scenes,
+    ...card.productTypes,
+    ...card.riskPoints,
+    ...card.steps.flatMap((step) => [step.part, step.instruction, ...(step.tips || [])]),
+  ].join(" ");
+
+  for (const rule of TEMPLATE_RULES) {
+    if (rule.keywords.some((keyword) => haystack.includes(keyword))) {
+      return `${CARD_BACKGROUND_BASE}/${rule.file}`;
+    }
   }
+  return `${CARD_BACKGROUND_BASE}/clean-daily-unisex.png`;
 }
 
 function loadImage(url: string): Promise<HTMLImageElement> {
@@ -155,6 +182,57 @@ function drawCoverImage(
   const sx = (img.naturalWidth - sw) / 2;
   const sy = (img.naturalHeight - sh) / 2;
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+}
+
+function drawTemplateSlice(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  y: number,
+  h: number,
+  mirror: boolean,
+): void {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, y, W, h);
+  ctx.clip();
+  if (mirror) {
+    ctx.translate(W, y);
+    ctx.scale(-1, 1);
+    drawCoverImage(ctx, img, W, h);
+  } else {
+    ctx.translate(0, y);
+    drawCoverImage(ctx, img, W, h);
+  }
+  ctx.restore();
+}
+
+function paintTemplateBackground(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  h: number,
+): void {
+  ctx.fillStyle = BG;
+  ctx.fillRect(0, 0, W, h);
+
+  const sliceH = 620;
+  let y = 0;
+  let index = 0;
+  while (y < h) {
+    const currentH = Math.min(sliceH, h - y);
+    drawTemplateSlice(ctx, img, y, currentH, index % 2 === 1);
+
+    if (y > 0) {
+      const seam = ctx.createLinearGradient(0, y - 36, 0, y + 42);
+      seam.addColorStop(0, "rgba(251, 245, 240, 0)");
+      seam.addColorStop(0.5, "rgba(251, 245, 240, 0.42)");
+      seam.addColorStop(1, "rgba(251, 245, 240, 0)");
+      ctx.fillStyle = seam;
+      ctx.fillRect(0, y - 36, W, 78);
+    }
+
+    y += sliceH - 80;
+    index += 1;
+  }
 }
 
 function paintFallbackBackground(ctx: CanvasRenderingContext2D, h: number): void {
@@ -318,7 +396,7 @@ export function renderCardToCanvas(
   ctx.scale(dpr, dpr);
 
   if (background) {
-    drawCoverImage(ctx, background, W, h);
+    paintTemplateBackground(ctx, background, h);
     paintTextScrim(ctx, h);
   } else {
     paintFallbackBackground(ctx, h);
@@ -331,7 +409,7 @@ export function renderCardToCanvas(
 export function downloadCardAsImage(card: MakeupCard): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
-      const backgroundUrl = await fetchCardBackground(card);
+      const backgroundUrl = selectCardBackground(card);
       const background = backgroundUrl ? await loadImage(backgroundUrl).catch(() => null) : null;
       const canvas = renderCardToCanvas(card, background);
       canvas.toBlob((blob) => {
