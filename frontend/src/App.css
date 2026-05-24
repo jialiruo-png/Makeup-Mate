@@ -75,17 +75,17 @@
 @media (max-width: 768px) {
   .app {
     display: block;
-    height: 100%;          /* 继承 #root 的 dvh */
-    min-height: 100dvh;
+    height: 100dvh;
     padding: 0;
     gap: 0;
+    overflow: hidden;
   }
   .app__brand {
     display: none;
   }
   .app__stage {
     width: 100%;
-    height: 100%;          /* 让 phone-frame 跟着撑满 */
-    min-height: 100dvh;
+    height: 100dvh;
+    overflow: hidden;
   }
 }

@@ -10,12 +10,13 @@
 html,
 body,
 #root {
+  /* 整体锁死到当前可见视口；移动端跟随 Safari 工具栏自动调整 */
   height: 100%;
-  /* 移动端 Safari 工具栏会吃掉一截视口；dvh 跟着 toolbar 状态动态算 */
-  min-height: 100dvh;
-  /* 禁用浏览器下拉刷新 / 边界橡皮筋滚动，避免聊天与列表页误触 */
+  height: 100dvh;
+  overflow: hidden;
+  /* 禁用下拉刷新 / 边界橡皮筋 */
   overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: auto;
 }
 
 html,
@@ -32,7 +33,6 @@ body {
     radial-gradient(1200px 600px at 85% -10%, #F3D6C8 0%, transparent 60%),
     radial-gradient(900px 500px at -10% 110%, #F7EFE8 0%, transparent 65%),
     var(--bg-main);
-  overflow-x: hidden;
 }
 
 button {
