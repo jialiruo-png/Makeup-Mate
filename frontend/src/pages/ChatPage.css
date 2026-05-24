@@ -1039,15 +1039,18 @@
 /* ============== 电脑端预览：收紧推荐问题、输入栏、整体字号 ============== */
 @media (min-width: 769px) {
   .chat-page__top {
-    padding: 24px 16px 12px;
+    padding: 46px 16px 10px;
     gap: 8px;
   }
   .chat-page__title span {
-    font-size: 17px;
-    letter-spacing: 0.8px;
+    font-size: 16.5px;
+    letter-spacing: 0.6px;
+    line-height: 1.15;
   }
   .chat-page__title small {
-    font-size: 11.5px;
+    margin-top: 1px;
+    font-size: 11px;
+    letter-spacing: 0.2px;
   }
   .chat-page__top-btn {
     width: 34px;
