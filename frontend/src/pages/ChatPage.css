@@ -309,7 +309,31 @@
   display: none;
 }
 .chat-page__body--conversation {
-  padding-bottom: 18px;
+  /* 让内容（推荐问题）自动撑满剩余空间，不再短一截 */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 12px;
+}
+.chat-page__body--conversation > .chat-stream {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+/* 推荐问题区拉满剩余高度 */
+.chat-page__body--conversation .chat-page__suggestions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+}
+/* 4 个推荐问题等分撑满，但限制单个最大高度避免过空 */
+.chat-page__body--conversation .chat-page__suggestion {
+  flex: 1;
+  min-height: 68px;
+  max-height: 110px;
+  margin-bottom: 0;
 }
 
 /* ============== 灵感库搜索框 ============== */
@@ -692,12 +716,12 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 14px;
+  gap: 14px;
+  padding: 16px 18px;
   margin-bottom: 10px;
   background: #fff;
   border: 1px solid rgba(122, 46, 46, 0.05);
-  border-radius: 14px;
+  border-radius: 16px;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   text-align: left;
