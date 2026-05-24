@@ -52,7 +52,7 @@
   display: grid;
   place-items: center;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 50%;
   background: #fff;
   color: var(--text-body);
   font-size: 18px;
@@ -811,7 +811,7 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 10px 14px 20px;
   /* 真机自动让出 home indicator 区域 */
   padding-bottom: max(20px, env(safe-area-inset-bottom, 0px) + 8px);
@@ -820,34 +820,76 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
-.chat-page__icon-btn {
-  width: 42px;
-  height: 42px;
+
+/* 白色圆角胶囊：装语音波纹 + 输入框 + 麦克风 */
+.chat-page__input-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 46px;
+  padding: 0 8px;
+  background: #fff;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-soft);
-  color: var(--text-body);
-  font-size: 18px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(43, 33, 30, 0.04);
 }
+
+.chat-page__input-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.16s ease, background 0.16s ease;
+}
+.chat-page__input-icon:hover {
+  color: var(--accent);
+  background: rgba(122, 46, 46, 0.06);
+}
+
 .chat-page__input {
   flex: 1;
   min-width: 0;
-  height: 44px;
-  padding: 0 16px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  height: 100%;
+  padding: 0 4px;
+  border: none;
+  border-radius: 0;
   outline: none;
-  background: var(--bg-soft);
-  font-size: 15px;
-}
-.chat-page__send {
-  height: 44px;
-  padding: 0 18px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
+  background: transparent;
+  color: var(--text-main);
   font-size: 14.5px;
-  font-weight: 700;
+}
+.chat-page__input::placeholder {
+  color: var(--text-muted);
+}
+
+/* + 按钮在白色胶囊外面、独立圆形 */
+.chat-page__icon-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--text-body);
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.chat-page__icon-btn:hover {
+  background: var(--tag-bg);
+  color: var(--accent);
+  border-color: rgba(122, 46, 46, 0.2);
 }
 
 .chat-modal-backdrop {
@@ -1032,11 +1074,12 @@
     width: 34px;
     height: 34px;
     font-size: 16px;
-    border-radius: 10px;
+    border-radius: 50%;
   }
   .chat-page__top-btn--menu {
     width: 36px;
     height: 36px;
+    border-radius: 50%;
   }
   .chat-page__lib-btn {
     height: 30px;
@@ -1081,29 +1124,31 @@
     line-height: 1.6;
   }
 
-  /* 输入栏：缩小高度、字号，避免 placeholder 溢出 */
+  /* 输入栏：白色胶囊 + 圆形 + 按钮 */
   .chat-page__input-bar {
-    gap: 6px;
+    gap: 8px;
     padding: 8px 12px 16px;
   }
-  .chat-page__icon-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 16px;
-    border-radius: 11px;
+  .chat-page__input-wrap {
+    height: 42px;
+    padding: 0 6px;
+    gap: 4px;
   }
-  .chat-page__icon-btn--plus {
-    font-size: 19px;
+  .chat-page__input-icon {
+    width: 30px;
+    height: 30px;
   }
   .chat-page__input {
-    height: 40px;
-    padding: 0 14px;
-    font-size: 13px;
+    font-size: 13.5px;
+    padding: 0 2px;
   }
-  .chat-page__send {
+  .chat-page__icon-btn {
+    width: 40px;
     height: 40px;
-    padding: 0 14px;
-    font-size: 13px;
+    font-size: 20px;
+  }
+  .chat-page__icon-btn--plus {
+    font-size: 20px;
   }
 
   /* 操作面板图标缩小 */
