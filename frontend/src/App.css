@@ -1,10 +1,12 @@
 .app {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  gap: 64px;
-  padding: 56px 48px;
-  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+  padding: clamp(14px, 2.2vh, 28px) 48px;
+  align-items: start;
+  justify-items: center;
+  overflow: hidden;
 }
 
 .app__brand {
@@ -52,15 +54,40 @@
 
 .app__stage {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  max-height: calc(100dvh - clamp(28px, 4.4vh, 56px));
+}
+
+@media (min-width: 769px) {
+  .phone-frame {
+    transform-origin: top center;
+  }
+}
+
+@media (min-width: 769px) and (max-height: 880px) {
+  .phone-frame {
+    transform: scale(0.96);
+  }
+}
+
+@media (min-width: 769px) and (max-height: 820px) {
+  .phone-frame {
+    transform: scale(0.9);
+  }
+}
+
+@media (min-width: 769px) and (max-height: 760px) {
+  .phone-frame {
+    transform: scale(0.84);
+  }
 }
 
 @media (max-width: 1024px) {
   .app {
     grid-template-columns: 1fr;
-    padding: 32px 16px;
-    gap: 24px;
+    padding: 18px 16px;
+    gap: 14px;
   }
   .app__brand {
     justify-self: center;
