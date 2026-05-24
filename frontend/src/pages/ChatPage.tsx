@@ -307,6 +307,26 @@ export function ChatPage() {
     setPendingImage(null);
   };
 
+  // 当前展示哪一步。card 变了就回到 0。
+  const [stepIndex, setStepIndex] = useState(0);
+  useEffect(() => {
+    setStepIndex(0);
+  }, [currentCard?.cardId]);
+  const currentStep = currentCard?.steps?.[stepIndex];
+  const isLastStep =
+    currentCard && stepIndex >= (currentCard.steps?.length ?? 1) - 1;
+
+  const advanceStep = () => {
+    if (!currentCard) return;
+    const total = currentCard.steps?.length ?? 0;
+    if (stepIndex < total - 1) {
+      setStepIndex((i) => i + 1);
+      appActions.showToast(`已到 Step ${stepIndex + 2}`, "info");
+    } else {
+      appActions.showToast("所有步骤都过了一遍 🎉", "success");
+    }
+  };
+
   const cards = useMemo(() => {
     let items = cardsForEntry(entry);
     if (filter !== "全部") {
@@ -407,7 +427,6 @@ export function ChatPage() {
       const res = await apiSendMessage(sessionId, {
         content: text,
         messageType: image ? "image" : "text",
-        // @ts-expect-error: 后端新加的字段，types 里我等会补
         mediaAssetId: image?.mediaAssetId ?? null,
       });
       setMessages((prev) =>
@@ -626,26 +645,53 @@ export function ChatPage() {
                   {m.text}
                 </div>
               ))}
-              {currentCard ? (
+              {currentCard && currentStep ? (
                 <div className="step-card">
-                  <span>当前建议</span>
-                  <b>Step 1 · 底妆</b>
-                  <p>先完成轻薄底妆，重点是均匀肤色，不要急着叠遮瑕。</p>
+                  <span>
+                    当前建议 · {stepIndex + 1}/{currentCard.steps.length}
+                  </span>
+                  <b>
+                    Step {currentStep.stepNo} · {currentStep.part}
+                  </b>
+                  <p>{currentStep.instruction}</p>
+                  {currentStep.tips && currentStep.tips.length > 0 && (
+                    <p style={{ color: "var(--text-muted)", fontSize: 12.5 }}>
+                      小贴士：{currentStep.tips.join("；")}
+                    </p>
+                  )}
                   <div>
-                    {["我完成了", "换种说法", "没有这个产品怎么办", "拍照检查"].map((q) => (
-                      <button
-                        type="button"
-                        key={q}
-                        onClick={() => {
-                          setMessage(q);
-                        }}
-                      >
-                        {q}
-                      </button>
-                    ))}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const text = isLastStep ? "全部完成啦" : "我完成了";
+                        advanceStep();
+                        doSend(text, null);
+                      }}
+                    >
+                      {isLastStep ? "全部完成啦" : "我完成了"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMessage(`帮我把 ${currentStep.part} 这步换种说法`)
+                      }
+                    >
+                      换种说法
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMessage(`${currentStep.part}没这个产品怎么办`)
+                      }
+                    >
+                      没有这个产品怎么办
+                    </button>
+                    <button type="button" onClick={() => setModal("upload")}>
+                      拍照检查
+                    </button>
                   </div>
                 </div>
-              ) : (
+              ) : currentCard ? null : (
                 <section className="chat-page__suggestions">
                   <div className="chat-page__suggestions-head">
                     <i />
@@ -844,19 +890,48 @@ export function ChatPage() {
 }
 
 function ChatDrawer({ onClose }: { onClose: () => void }) {
-  const today = [
-    { id: "h1", title: "雀斑奶油妆 · 解析", time: "今天 19:42" },
-    { id: "h2", title: "清冷感通勤妆 · 对话", time: "今天 14:08" },
-  ];
-  const week = [
-    { id: "h3", title: "韩系裸妆 · 对话", time: "昨天" },
-    { id: "h4", title: "港风复古妆 · 解析", time: "前天" },
-    { id: "h5", title: "甜妹约会妆 · 对话", time: "上周三" },
-  ];
-  const earlier = [
-    { id: "h6", title: "通勤淡妆 · 已完成" },
-    { id: "h7", title: "面试稳重妆 · 已解析" },
-  ];
+  const [items, setItems] = useState<HistoryItem[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    listHistory()
+      .then((res) => setItems(res.items))
+      .catch((err: unknown) => {
+        const msg = err instanceof ApiError ? `加载失败（${err.status}）` : "加载失败";
+        setError(msg);
+        setItems([]);
+      });
+  }, []);
+
+  // 把历史按 createdAt 分到「今天 / 最近一周 / 更早」三组
+  const buckets = useMemo(() => {
+    const today: HistoryItem[] = [];
+    const week: HistoryItem[] = [];
+    const earlier: HistoryItem[] = [];
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    for (const it of items ?? []) {
+      const d = new Date(it.createdAt);
+      if (Number.isNaN(d.getTime())) {
+        earlier.push(it);
+        continue;
+      }
+      if (d >= startOfToday) today.push(it);
+      else if (now.getTime() - d.getTime() < 7 * 86400000) week.push(it);
+      else earlier.push(it);
+    }
+    return { today, week, earlier };
+  }, [items]);
+
+  const formatTime = (iso: string) => {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    const now = new Date();
+    if (d.toDateString() === now.toDateString()) {
+      return `今天 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    }
+    return `${d.getMonth() + 1}月${d.getDate()}日`;
+  };
 
   return (
     <div className="chat-drawer-backdrop" onClick={onClose}>
@@ -893,40 +968,63 @@ function ChatDrawer({ onClose }: { onClose: () => void }) {
           </button>
         </nav>
 
-        <section className="chat-drawer__group">
-          <h4>今天</h4>
-          <ul>
-            {today.map((h) => (
-              <li key={h.id} onClick={onClose}>
-                <span className="t">{h.title}</span>
-                <span className="d">{h.time}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {items === null && !error && (
+          <p style={{ padding: "12px 16px", color: "var(--text-muted)", fontSize: 12.5 }}>
+            加载中…
+          </p>
+        )}
+        {error && (
+          <p style={{ padding: "12px 16px", color: "var(--accent)", fontSize: 12.5 }}>
+            {error}
+          </p>
+        )}
+        {items && items.length === 0 && !error && (
+          <p style={{ padding: "12px 16px", color: "var(--text-muted)", fontSize: 12.5 }}>
+            还没有历史记录。去首页粘贴链接或上传图片，解析后会出现在这里。
+          </p>
+        )}
 
-        <section className="chat-drawer__group">
-          <h4>最近一周</h4>
-          <ul>
-            {week.map((h) => (
-              <li key={h.id} onClick={onClose}>
-                <span className="t">{h.title}</span>
-                <span className="d">{h.time}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {buckets.today.length > 0 && (
+          <section className="chat-drawer__group">
+            <h4>今天</h4>
+            <ul>
+              {buckets.today.map((h) => (
+                <li key={h.itemId} onClick={onClose}>
+                  <span className="t">{h.title}</span>
+                  <span className="d">{formatTime(h.createdAt)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-        <section className="chat-drawer__group">
-          <h4>更早</h4>
-          <ul>
-            {earlier.map((h) => (
-              <li key={h.id} onClick={onClose}>
-                <span className="t">{h.title}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {buckets.week.length > 0 && (
+          <section className="chat-drawer__group">
+            <h4>最近一周</h4>
+            <ul>
+              {buckets.week.map((h) => (
+                <li key={h.itemId} onClick={onClose}>
+                  <span className="t">{h.title}</span>
+                  <span className="d">{formatTime(h.createdAt)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {buckets.earlier.length > 0 && (
+          <section className="chat-drawer__group">
+            <h4>更早</h4>
+            <ul>
+              {buckets.earlier.map((h) => (
+                <li key={h.itemId} onClick={onClose}>
+                  <span className="t">{h.title}</span>
+                  <span className="d">{formatTime(h.createdAt)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <footer className="chat-drawer__foot">
           <div className="chat-drawer__user">

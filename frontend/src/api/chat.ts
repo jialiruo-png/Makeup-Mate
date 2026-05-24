@@ -24,6 +24,7 @@ export interface SendMessageRequest {
   content: string;
   messageType?: MessageType;
   quickAction?: string | null;
+  mediaAssetId?: string | null;
 }
 
 export interface SendMessageResponse {

@@ -3,6 +3,7 @@ import { appActions } from "@/state/appStore";
 import type { MakeupCard, SourceType } from "@/types";
 import { uploadMedia } from "@/api/media";
 import { request } from "@/api/client";
+import { downloadCardAsImage } from "@/lib/cardToImage";
 import "./HomePage.css";
 
 type SourceTab = Extract<SourceType, "link" | "image" | "video">;
@@ -95,6 +96,21 @@ export function HomePage() {
     appActions.setCurrentCard(card);
     appActions.setActiveTab("chat");
     appActions.showToast("已导入聊天", "success");
+  };
+
+  const [saving, setSaving] = useState(false);
+  const onSaveAsImage = async () => {
+    if (!card || saving) return;
+    setSaving(true);
+    try {
+      await downloadCardAsImage(card);
+      appActions.showToast("已保存到本地", "success");
+    } catch (err) {
+      console.error(err);
+      appActions.showToast("保存失败，请重试", "warn");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -276,9 +292,10 @@ export function HomePage() {
             <button
               type="button"
               className="home-page__btn home-page__btn--ghost"
-              onClick={() => appActions.showToast("分享卡片已生成", "success")}
+              onClick={onSaveAsImage}
+              disabled={saving}
             >
-              分享卡片
+              {saving ? "生成中…" : "保存为图片"}
             </button>
             <button type="button" className="home-page__btn" onClick={onImport}>
               导入聊天
