@@ -309,31 +309,7 @@
   display: none;
 }
 .chat-page__body--conversation {
-  /* 让内容（推荐问题）自动撑满剩余空间，不再短一截 */
-  display: flex;
-  flex-direction: column;
   padding-bottom: 12px;
-}
-.chat-page__body--conversation > .chat-stream {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-/* 推荐问题区拉满剩余高度 */
-.chat-page__body--conversation .chat-page__suggestions {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 18px 16px;
-}
-/* 4 个推荐问题等分撑满，但限制单个最大高度避免过空 */
-.chat-page__body--conversation .chat-page__suggestion {
-  flex: 1;
-  min-height: 68px;
-  max-height: 110px;
-  margin-bottom: 0;
 }
 
 /* ============== 灵感库搜索框 ============== */
@@ -1068,17 +1044,14 @@
     font-size: 12.5px;
   }
 
-  /* 推荐问题：缩小内边距、字号、单条高度，并加大与输入栏的距离 */
+  /* 推荐问题：缩小内边距、字号 */
   .chat-page__body--conversation {
-    padding-bottom: 18px;
+    padding-bottom: 14px;
   }
-  .chat-page__body--conversation .chat-page__suggestions {
+  .chat-page__suggestions {
     padding: 12px 12px 14px;
-    gap: 8px;
   }
-  .chat-page__body--conversation .chat-page__suggestion {
-    min-height: 48px;
-    max-height: 60px;
+  .chat-page__suggestion {
     padding: 10px 13px;
     margin-bottom: 8px;
     gap: 11px;
