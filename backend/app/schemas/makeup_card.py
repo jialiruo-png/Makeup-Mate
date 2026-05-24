@@ -71,6 +71,16 @@ class AnalyzeResponse(CamelModel):
     video_evidence: VideoEvidence = Field(alias="videoEvidence")
 
 
+class CardBackgroundRequest(CamelModel):
+    card: MakeupCard
+    prompt_override: str | None = Field(default=None, alias="promptOverride")
+
+
+class CardBackgroundResponse(CamelModel):
+    image_url: str = Field(alias="imageUrl")
+    prompt: str
+
+
 class ShareResponse(CamelModel):
     share_url: str = Field(alias="shareUrl")
     share_text: str = Field(alias="shareText")
