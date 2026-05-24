@@ -1,4 +1,5 @@
 import type { MakeupCard } from "@/types";
+import { request } from "@/api/client";
 
 const W = 750;
 const PAD = 36;
@@ -114,6 +115,66 @@ function drawDivider(c: DrawCtx): void {
   c.ctx.lineTo(W - PAD, c.y);
   c.ctx.stroke();
   c.y += 24;
+}
+
+async function fetchCardBackground(card: MakeupCard): Promise<string | null> {
+  try {
+    const res = await request<{ imageUrl: string; prompt: string }>(
+      "/makeup-cards/render-background",
+      {
+        method: "POST",
+        body: { card },
+      },
+    );
+    return res.imageUrl;
+  } catch (err) {
+    console.warn("AI card background unavailable, fallback to canvas background", err);
+    return null;
+  }
+}
+
+function loadImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("背景图加载失败"));
+    img.src = url;
+  });
+}
+
+function drawCoverImage(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  w: number,
+  h: number,
+): void {
+  const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+  const sw = w / scale;
+  const sh = h / scale;
+  const sx = (img.naturalWidth - sw) / 2;
+  const sy = (img.naturalHeight - sh) / 2;
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+}
+
+function paintFallbackBackground(ctx: CanvasRenderingContext2D, h: number): void {
+  ctx.fillStyle = BG;
+  ctx.fillRect(0, 0, W, h);
+
+  // 右上角装饰圆
+  ctx.fillStyle = "rgba(122, 46, 46, 0.06)";
+  ctx.beginPath();
+  ctx.arc(W - 40, 40, 80, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function paintTextScrim(ctx: CanvasRenderingContext2D, h: number): void {
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, "rgba(255, 251, 247, 0.90)");
+  grad.addColorStop(0.36, "rgba(255, 251, 247, 0.78)");
+  grad.addColorStop(1, "rgba(255, 251, 247, 0.92)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, h);
 }
 
 function drawLabel(c: DrawCtx, text: string): void {
@@ -242,7 +303,10 @@ function paint(c: DrawCtx, card: MakeupCard, measureOnly: boolean): void {
   );
 }
 
-export function renderCardToCanvas(card: MakeupCard): HTMLCanvasElement {
+export function renderCardToCanvas(
+  card: MakeupCard,
+  background?: HTMLImageElement | null,
+): HTMLCanvasElement {
   const h = measureCard(card);
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const canvas = document.createElement("canvas");
@@ -253,24 +317,23 @@ export function renderCardToCanvas(card: MakeupCard): HTMLCanvasElement {
   const ctx = canvas.getContext("2d")!;
   ctx.scale(dpr, dpr);
 
-  // 背景
-  ctx.fillStyle = BG;
-  ctx.fillRect(0, 0, W, h);
-
-  // 右上角装饰圆
-  ctx.fillStyle = "rgba(122, 46, 46, 0.06)";
-  ctx.beginPath();
-  ctx.arc(W - 40, 40, 80, 0, Math.PI * 2);
-  ctx.fill();
+  if (background) {
+    drawCoverImage(ctx, background, W, h);
+    paintTextScrim(ctx, h);
+  } else {
+    paintFallbackBackground(ctx, h);
+  }
 
   paint({ ctx, y: 0 }, card, false);
   return canvas;
 }
 
 export function downloadCardAsImage(card: MakeupCard): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      const canvas = renderCardToCanvas(card);
+      const backgroundUrl = await fetchCardBackground(card);
+      const background = backgroundUrl ? await loadImage(backgroundUrl).catch(() => null) : null;
+      const canvas = renderCardToCanvas(card, background);
       canvas.toBlob((blob) => {
         if (!blob) {
           reject(new Error("生成图片失败"));
