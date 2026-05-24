@@ -11,6 +11,7 @@ from uuid import uuid4
 from ..config import get_settings
 from ..db import SessionLocal
 from ..models.media_asset import MediaAsset as MediaAssetModel
+from ..schemas.beauty_profile import BeautyProfile
 from ..schemas.makeup_card import (
     AnalyzeRequest,
     AnalyzeResponse,
@@ -152,10 +153,41 @@ def analyze_makeup(req: AnalyzeRequest) -> AnalyzeResponse:
     return AnalyzeResponse(card=card, videoEvidence=evidence)
 
 
-_CHAT_SYSTEM = (
-    "你是「妆搭 Makeup Mate」的妆容陪练助手。你会陪用户一步步复刻当前的妆容卡片，"
-    "回复要短、可执行、口语化，必要时给 1 条具体小建议。中文回答，不要寒暄。"
-)
+_CHAT_SYSTEM = """你是「妆搭 Makeup Mate」的妆容陪练助手。你会陪用户一步步复刻当前的妆容卡片。
+
+【表达风格】
+- 中文回答。短、口语化、可执行，不要寒暄、不要说 "好的好的"。
+- 单次回复控制在 80 字内，必要时给 1 条具体小建议或 1 个翻车提醒。
+- 不要列长清单，更像朋友在旁边搭把手，而不是产品说明书。
+
+【硬性禁忌】（违反任意一条都算严重错误）
+- 禁止评价容貌：不出现 "好看 / 漂亮 / 美 / 丑 / 缺陷 / 不足 / 瑕疵 / 五官不协调" 等词。
+- 禁止医疗 / 美容诊断：不判断痘痘成因、不诊断皮肤病、不推荐医美和成分类药品。
+- 禁止人脸识别 / 比对 / 身份判断：不猜年龄、不猜地域、不和其他人对比。
+- 禁止强行带货：不主动推具体品牌单品，除非用户问 "有什么类似平替"。
+- 表达必须正向：不用 "你 XX 不好" "你不适合"；说 "在你的偏好上，更适合 ……"。
+
+【行为原则】
+- 用户说 "完成了 / 好了 / 下一步"，确认当前步骤后推进到下一步。
+- 用户发图，重点看图给具体反馈（位置、深浅、晕染方向），而不是再讲一遍卡片步骤。
+- 不知道就直接说 "看不太清，可以靠近一点拍" 或 "这一步我没把握，建议保守画"。
+"""
+
+
+def _format_beauty_profile(profile: BeautyProfile | None) -> str:
+    if not profile:
+        return ""
+    lip = "、".join(profile.preferred_lip_colors) or "无明确偏好"
+    avoid = "、".join(profile.avoid_styles) or "无"
+    return (
+        "\n【用户偏好档案】（你的所有建议都要踩着这份档案给）\n"
+        f"- 脸型：{profile.face_shape}；肤调：{profile.skin_tone}；眼型：{profile.eye_type}\n"
+        f"- 五官风格：{profile.feature_style}\n"
+        f"- 推荐腮红位置：{profile.preferred_blush_position}\n"
+        f"- 推荐眼线画法：{profile.preferred_eyeliner}\n"
+        f"- 偏好唇色方向：{lip}\n"
+        f"- 建议避开：{avoid}\n"
+    )
 
 
 def reply_in_session(
@@ -163,12 +195,14 @@ def reply_in_session(
     user_message: str,
     history: list[dict] | None = None,
     image_url: str | None = None,
+    beauty_profile: BeautyProfile | None = None,
 ) -> str:
     system = _CHAT_SYSTEM
+    system += _format_beauty_profile(beauty_profile)
     if card_title:
-        system += f"\n当前妆容卡片标题：{card_title}。"
+        system += f"\n【当前妆容卡片】{card_title}\n"
     if image_url:
-        system += "\n用户刚刚发来一张图（自拍 / 妆容进度图），请重点看图给具体建议。"
+        system += "\n用户刚刚发来一张图（自拍 / 妆容进度图），请重点看图给具体反馈，不要再复述卡片步骤。\n"
     try:
         return qwen_client.chat_text(
             user_message, system=system, history=history, image_url=image_url

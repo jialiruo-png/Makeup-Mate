@@ -18,7 +18,12 @@ from ..schemas.chat import (
     SendMessageRequest,
     SendMessageResponse,
 )
-from ..services import ai_service, history_repository, makeup_card_repository
+from ..services import (
+    ai_service,
+    history_repository,
+    makeup_card_repository,
+    memory_service,
+)
 from ..config import get_settings
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -227,11 +232,15 @@ def send_message(
         if session_row.makeup_card_id
         else None
     )
+
+    # 注入用户偏好档案，让 AI 的建议踩着 BeautyProfile 给
+    me = memory_service.get_me(user.id)
     reply = ai_service.reply_in_session(
         card.title if card else None,
         payload.content,
         history=history,
         image_url=image_url,
+        beauty_profile=me.beauty_profile,
     )
 
     assistant_row = _persist_message(
