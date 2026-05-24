@@ -9,9 +9,9 @@ type SourceTab = Extract<SourceType, "link" | "image" | "video">;
 type AnalyzeStatus = "idle" | "loading" | "ready";
 
 const SOURCE_TABS: Array<{ key: SourceTab; label: string; icon: string }> = [
-  { key: "link", label: "粘贴链接", icon: "↗" },
   { key: "image", label: "上传图片", icon: "▧" },
   { key: "video", label: "上传视频", icon: "▶" },
+  { key: "link", label: "粘贴链接", icon: "↗" },
 ];
 
 interface PickedFile {
@@ -20,7 +20,7 @@ interface PickedFile {
 }
 
 export function HomePage() {
-  const [source, setSource] = useState<SourceTab>("link");
+  const [source, setSource] = useState<SourceTab>("image");
   const [link, setLink] = useState("");
   const [picked, setPicked] = useState<Partial<Record<"image" | "video", PickedFile>>>({});
   const [status, setStatus] = useState<AnalyzeStatus>("idle");
@@ -59,7 +59,7 @@ export function HomePage() {
 
   const onAnalyze = async () => {
     if (!canAnalyze) {
-      appActions.showToast("请先粘贴链接，或上传图片/视频", "warn");
+      appActions.showToast("请先上传图片/视频，或粘贴链接", "warn");
       return;
     }
     if (source !== "link") {
@@ -100,9 +100,9 @@ export function HomePage() {
   return (
     <div className="home-page">
       <header className="home-page__hero">
-        <h1 className="home-page__title">粘贴美妆视频链接，生成复刻卡片</h1>
+        <h1 className="home-page__title">上传美妆图片或视频，生成复刻卡片</h1>
         <p className="home-page__subtitle">
-          支持抖音视频链接，也可上传截图或短视频。
+          支持本地图片、短视频，也可粘贴抖音链接。
         </p>
       </header>
 
@@ -129,7 +129,7 @@ export function HomePage() {
               value={link}
               onChange={(e) => setLink(e.target.value)}
             />
-            <p className="home-page__hint">第一版重点支持抖音链接，也可用截图和短视频演示。</p>
+            <p className="home-page__hint">粘贴抖音视频链接，AI 会自动抽帧解析。</p>
           </div>
         )}
 
@@ -224,7 +224,7 @@ export function HomePage() {
         <div className="home-page__recent-empty">
           <span className="home-page__recent-glyph" aria-hidden>✎</span>
           <p>还没有生成记录</p>
-          <small>粘贴一个美妆视频，开始试试。</small>
+          <small>上传一张妆容图，开始试试。</small>
         </div>
       </section>
 
