@@ -423,3 +423,90 @@
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* ============== 电脑端预览：让出模拟灵动岛、整体收紧 ============== */
+@media (min-width: 769px) {
+  .profile-page {
+    padding: 50px 22px 96px;
+    gap: 18px;
+  }
+  .profile-hero {
+    padding-bottom: 16px;
+  }
+  .profile-hero__title {
+    font-size: 17px;
+  }
+  .profile-hero__action {
+    padding: 6px 13px;
+    font-size: 12px;
+  }
+  .profile-hero__avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 19px;
+    border-radius: 14px;
+  }
+  .profile-hero__name {
+    font-size: 17px;
+  }
+  .profile-hero__level {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+  .profile-hero__sub {
+    font-size: 12px;
+  }
+  .qs-card {
+    padding: 11px 12px;
+    gap: 4px;
+  }
+  .qs-label {
+    font-size: 11px;
+  }
+  .qs-value {
+    font-size: 15px;
+  }
+  .analysis-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .analysis-item h4 {
+    font-size: 13.5px;
+  }
+  .analysis-item p {
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+  .analysis-list {
+    gap: 13px;
+  }
+  .color-tag {
+    height: 38px;
+    font-size: 13px;
+  }
+  .profile-cta {
+    height: 46px;
+    font-size: 14.5px;
+    letter-spacing: 1.2px;
+  }
+  .profile-section__label {
+    font-size: 12px;
+  }
+  .profile-tag {
+    padding: 6px 12px;
+    font-size: 12.5px;
+  }
+  .profile-notes p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .profile-timeline__row {
+    font-size: 13px;
+  }
+  .profile-stats {
+    font-size: 12px;
+  }
+  .profile-footer p {
+    font-size: 11px;
+  }
+}
