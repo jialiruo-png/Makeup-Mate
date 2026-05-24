@@ -261,14 +261,16 @@
 
 /* ============== CTA ============== */
 .profile-cta {
+  align-self: center;
   margin: 8px 0;
-  height: 52px;
-  border-radius: 999px;
+  height: 48px;
+  padding: 0 36px;
+  border-radius: 14px;
   background: var(--accent);
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -485,9 +487,11 @@
     font-size: 13px;
   }
   .profile-cta {
-    height: 46px;
-    font-size: 14.5px;
-    letter-spacing: 1.2px;
+    height: 44px;
+    padding: 0 32px;
+    font-size: 14px;
+    letter-spacing: 1.6px;
+    border-radius: 12px;
   }
   .profile-section__label {
     font-size: 12px;

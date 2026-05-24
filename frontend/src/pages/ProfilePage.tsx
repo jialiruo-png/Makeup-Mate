@@ -391,7 +391,7 @@ export function ProfilePage() {
       )}
 
       <button type="button" className="profile-cta" onClick={onGoChatLibrary}>
-        试试一键生成「我的版本」
+        一键分析
       </button>
 
       <footer className="profile-footer">
