@@ -5,49 +5,283 @@
   padding-top: max(64px, env(safe-area-inset-top, 0px) + 24px);
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   scrollbar-width: none;
 }
 .profile-page::-webkit-scrollbar {
   display: none;
 }
 
-/* ============== Hero ============== */
-.profile-page__hero {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding-bottom: 22px;
+/* ============== Workbench 风格头部 ============== */
+.profile-hero {
+  padding-bottom: 18px;
   border-bottom: 1px solid rgba(122, 46, 46, 0.06);
 }
 
-.profile-page__avatar {
+.profile-hero__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-hero__title {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.4px;
+}
+
+.profile-hero__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid rgba(122, 46, 46, 0.16);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 11.5px;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease;
+  font-family: inherit;
+}
+.profile-hero__action:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.profile-hero__action span {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.profile-hero__user {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.profile-hero__avatar {
   flex-shrink: 0;
-  width: 54px;
-  height: 54px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   background: linear-gradient(135deg, #F3D6C8 0%, #D89B8A 100%);
   color: #fff;
   font-size: 22px;
   font-weight: 500;
+  display: grid;
+  place-items: center;
   border: 2px solid #fff;
-  box-shadow: 0 4px 14px rgba(122, 46, 46, 0.10);
+  box-shadow: 0 6px 18px rgba(122, 46, 46, 0.12);
 }
 
-.profile-page__greeting h2 {
-  color: var(--text-main);
-  font-size: 19px;
+.profile-hero__meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-hero__name {
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+.profile-hero__level {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--tag-bg);
+  color: var(--accent);
+  letter-spacing: 0.5px;
 }
 
-.profile-page__greeting p {
-  margin-top: 4px;
+.profile-hero__sub {
+  margin-top: 5px;
+  font-size: 11.5px;
   color: var(--text-muted);
+}
+
+.profile-hero__progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+.profile-hero__pv {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+.profile-progress-bar {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(122, 46, 46, 0.08);
+  margin-top: 5px;
+  overflow: hidden;
+}
+.profile-progress-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+}
+
+/* ============== 3 stat 卡 ============== */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.qs-card {
+  background: rgba(122, 46, 46, 0.04);
+  border: 1px solid rgba(122, 46, 46, 0.06);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.qs-label {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.qs-value {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============== 时间线分析 ============== */
+.analysis {
+  position: relative;
+  padding-left: 22px;
+}
+.analysis::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 18px;
+  bottom: 24px;
+  width: 1.5px;
+  background: var(--accent);
+  opacity: 0.18;
+}
+
+.analysis-section {
+  position: relative;
+  margin-bottom: 24px;
+}
+.analysis-section:last-child {
+  margin-bottom: 0;
+}
+
+.analysis-section::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  background: var(--bg-main);
+}
+
+.analysis-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 14px;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.analysis-emoji {
+  font-size: 14px;
+}
+
+.analysis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.analysis-item h4 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 5px;
+  letter-spacing: 0.3px;
+}
+
+.analysis-item p {
   font-size: 12.5px;
-  line-height: 1.55;
+  color: var(--text-body);
+  line-height: 1.8;
+}
+
+/* ============== 色彩标签（实色色块） ============== */
+.color-tags {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.color-tag {
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 -8px 16px rgba(0, 0, 0, 0.06);
+}
+.color-tag:nth-child(odd):last-child {
+  grid-column: 1 / -1;
+}
+
+/* ============== CTA ============== */
+.profile-cta {
+  margin: 8px 0;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+  box-shadow: 0 8px 20px rgba(122, 46, 46, 0.18);
+}
+.profile-cta:hover {
+  background: #642525;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(122, 46, 46, 0.22);
+}
+.profile-cta:active {
+  transform: scale(0.99);
 }
 
 /* ============== 通用 section ============== */
@@ -65,16 +299,7 @@
   text-transform: uppercase;
 }
 
-/* ============== 一句话 bio ============== */
-.profile-bio {
-  color: var(--text-main);
-  font-size: 16.5px;
-  font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.2px;
-}
-
-/* ============== 标签云 ============== */
+/* ============== 浅豆沙标签 / 虚线避开标签 ============== */
 .profile-tags {
   display: flex;
   flex-wrap: wrap;
@@ -97,7 +322,7 @@
   font-weight: 400;
 }
 
-/* ============== MM 记住的事（左侧细竖线 + 段落） ============== */
+/* ============== MM 记住的事 ============== */
 .profile-notes {
   position: relative;
   padding-left: 14px;
@@ -120,7 +345,7 @@
   padding: 4px 0;
 }
 
-/* ============== 时间线 ============== */
+/* ============== 最近的复刻 timeline ============== */
 .profile-timeline {
   display: flex;
   flex-direction: column;
@@ -152,7 +377,7 @@
   font-weight: 500;
 }
 
-/* ============== 统计：一行话 ============== */
+/* ============== 统计 ============== */
 .profile-stats {
   color: var(--text-muted);
   font-size: 12.5px;

@@ -1,259 +1,213 @@
-import { useEffect, useState } from "react";
-import { useAppState, appActions } from "@/state/appStore";
-import { ApiError } from "@/api/client";
-import { clearMemory, getMe, type MeResponse } from "@/api/profile";
-import { listHistory } from "@/api/history";
-import type { HistoryItem } from "@/types";
 import "./ProfilePage.css";
 
-const _STATUS_LABEL: Record<HistoryItem["status"], string> = {
-  analyzed: "已解析",
-  imported: "已导入聊天",
-  completed: "已完成",
-};
+const PROFILE_QUICK = [
+  { label: "脸型", value: "方圆脸" },
+  { label: "五官", value: "淡颜偏自然" },
+  { label: "色调", value: "自然偏暖" },
+];
 
-function _formatHistoryTime(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  const now = new Date();
-  const sameDay = d.toDateString() === now.toDateString();
-  if (sameDay) {
-    return `今天 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  }
-  const oneDay = 24 * 60 * 60 * 1000;
-  if (now.getTime() - d.getTime() < oneDay * 2) return "昨天";
-  return `${d.getMonth() + 1}月${d.getDate()}日`;
+const FACE_CODE = [
+  {
+    title: "脸型判断",
+    desc: "方圆脸，下颌饱满圆润，颧骨柔和，下颌线较短，整体轮廓偏温柔。",
+  },
+  {
+    title: "五官风格",
+    desc: "淡颜偏自然，五官分布舒展，眉眼柔和不锐利，气质适合干净通透的妆面。",
+  },
+  {
+    title: "眼型分析",
+    desc: "内双眼，建议眼妆走「后半段短眼线 + 浅棕铺色」路线，避免过长上挑线条。",
+  },
+  {
+    title: "修饰重点",
+    desc: "腮红上移到眼下外侧，视觉拉长面中；下颌线弱化处理，避免向外做欧美式修容。",
+  },
+  {
+    title: "肤色特征",
+    desc: "自然偏暖肤色，搭配奶茶豆沙等柔雾色系最贴肤，回避过深红棕与冷调粉雕。",
+  },
+];
+
+interface ColorItem {
+  name: string;
+  hex: string;
 }
 
+const COLOR_PALETTE: { title: string; items: ColorItem[] }[] = [
+  {
+    title: "适合唇色",
+    items: [
+      { name: "奶茶色", hex: "#C9A07A" },
+      { name: "豆沙色", hex: "#B0716B" },
+      { name: "低饱和红棕", hex: "#8E5546" },
+    ],
+  },
+  {
+    title: "适合腮红",
+    items: [
+      { name: "杏粉", hex: "#E5B5A4" },
+      { name: "豆沙粉", hex: "#D49387" },
+    ],
+  },
+  {
+    title: "适合眼影",
+    items: [
+      { name: "浅棕", hex: "#C9A88E" },
+      { name: "大地色", hex: "#A98363" },
+    ],
+  },
+];
+
+const AVOIDS = ["重修容", "欧美挑眉", "过长上挑眼线"];
+
+const MEMORIES = [
+  "不喜欢浓眼妆，倾向自然淡色晕染。",
+  "上班日希望 15 分钟内完成，跳过复杂修容。",
+  "眼线只画后半段，沿下眼睑自然延长。",
+  "没有修容盘，优先用腮红和口红替代。",
+];
+
+const RECENT: Array<[string, string]> = [
+  ["今天", "清冷通勤妆"],
+  ["昨天", "韩系裸妆"],
+  ["上周", "港风复古妆"],
+];
+
 export function ProfilePage() {
-  // /profile/me 后端用 require_real_user，游客访问会 403。
-  // 所以这里要的是"真用户"，不是单纯 isAuthed（signIn('guest') 也会把 isAuthed 设成 true）。
-  const isRealUser = useAppState((s) => s.isAuthed && s.authMethod !== "guest");
-  const isGuest = useAppState((s) => s.isAuthed && s.authMethod === "guest");
-
-  const [me, setMe] = useState<MeResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [clearing, setClearing] = useState(false);
-
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-
-  useEffect(() => {
-    if (!isRealUser) {
-      setMe(null);
-      setHistory([]);
-      setError(null);
-      return;
-    }
-
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    Promise.all([
-      getMe(),
-      listHistory().catch(() => ({ items: [] as HistoryItem[] })),
-    ])
-      .then(([meData, histData]) => {
-        if (cancelled) return;
-        setMe(meData);
-        setHistory(histData.items);
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        const msg =
-          err instanceof ApiError ? `加载失败（${err.status}）` : "加载失败";
-        setError(msg);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isRealUser]);
-
-  const onSignOut = () => {
-    appActions.signOut();
-    appActions.showToast("已退出登录", "info");
-  };
-
-  const onClearMemory = async () => {
-    if (clearing) return;
-    setClearing(true);
-    try {
-      await clearMemory();
-      appActions.showToast("已清空妆容记忆", "success");
-    } catch (err) {
-      const msg = err instanceof ApiError ? `清空失败（${err.status}）` : "清空失败";
-      appActions.showToast(msg, "error");
-    } finally {
-      setClearing(false);
-    }
-  };
-
-  // ===== 三种降级状态：未登录 / 游客 / 加载中 / 出错 =====
-  if (!isRealUser) {
-    // 包含两种：从未登录 / 游客模式
-    const title = isGuest ? "游客模式" : "未登录";
-    const subtitle = isGuest
-      ? "游客无法查看妆容档案，登录后才能保存"
-      : "登录后查看你的妆容档案";
-    return (
-      <div className="profile-page">
-        <header className="profile-page__hero">
-          <div className="profile-page__avatar">妆</div>
-          <div className="profile-page__greeting">
-            <h2>{title}</h2>
-            <p>{subtitle}</p>
-          </div>
-        </header>
-        <section className="profile-section">
-          <button
-            type="button"
-            className="profile-tag"
-            onClick={() => {
-              if (isGuest) appActions.signOut();
-              appActions.setActiveTab("home");
-            }}
-          >
-            {isGuest ? "退出游客 · 去登录" : "去登录"}
-          </button>
-        </section>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="profile-page">
-        <header className="profile-page__hero">
-          <div className="profile-page__avatar">妆</div>
-          <div className="profile-page__greeting">
-            <h2>加载中…</h2>
-            <p>正在读取你的妆容档案</p>
-          </div>
-        </header>
-      </div>
-    );
-  }
-
-  if (error || !me) {
-    return (
-      <div className="profile-page">
-        <header className="profile-page__hero">
-          <div className="profile-page__avatar">妆</div>
-          <div className="profile-page__greeting">
-            <h2>妆搭体验用户</h2>
-            <p>{error ?? "暂无档案数据"}</p>
-          </div>
-        </header>
-      </div>
-    );
-  }
-
-  // ===== 正常状态：用 me.beautyProfile + history 填充 =====
-  const profile = me.beautyProfile;
-
-  // 一句话 bio：拼几个核心标签
-  const bioParts = profile
-    ? [profile.faceShape, `${profile.skinTone}肤色`, profile.eyeType, profile.featureStyle].filter(Boolean)
-    : [];
-  const bio = bioParts.length ? bioParts.join(" · ") : "档案待完善";
-
-  // 适合你：腮红位置 + 眼线 + 唇色
-  const suits = profile
-    ? [
-        profile.preferredBlushPosition,
-        profile.preferredEyeliner,
-        ...(profile.preferredLipColors ?? []),
-      ].filter(Boolean)
-    : [];
-
-  // 建议避开
-  const avoids = profile?.avoidStyles ?? [];
-
-  // 最近的复刻：取 history 前 6 条
-  const recent = history.slice(0, 6);
-
   return (
     <div className="profile-page">
-      {/* hero */}
-      <header className="profile-page__hero">
-        <div className="profile-page__avatar">妆</div>
-        <div className="profile-page__greeting">
-          <h2>{me.nickname}</h2>
-          <p>
-            妆容档案完成度 {Math.round((me.profileCompleteness ?? 0) * 100)}%
-            。AI 会把卡片和灵感库方案改写得更适合你。
-          </p>
+      {/* ===== Workbench 风格头部 ===== */}
+      <header className="profile-hero">
+        <div className="profile-hero__top">
+          <h1 className="profile-hero__title">我的妆容档案</h1>
+          <button type="button" className="profile-hero__action">
+            <span aria-hidden>↻</span>重新分析
+          </button>
+        </div>
+        <div className="profile-hero__user">
+          <div className="profile-hero__avatar">妆</div>
+          <div className="profile-hero__meta">
+            <div className="profile-hero__name">
+              小妆<span className="profile-hero__level">新手 · L2</span>
+            </div>
+            <div className="profile-hero__sub">加入第 24 天 · 已复刻 12 次妆容</div>
+            <div className="profile-hero__progress">
+              <span>妆容档案完成度</span>
+              <span className="profile-hero__pv">78%</span>
+            </div>
+            <div className="profile-progress-bar">
+              <i style={{ width: "78%" }} />
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* 关于你：一句话 bio */}
+      {/* ===== 3 个 stat 卡 ===== */}
+      <div className="quick-stats">
+        {PROFILE_QUICK.map((s) => (
+          <div key={s.label} className="qs-card">
+            <span className="qs-label">{s.label}</span>
+            <span className="qs-value">{s.value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ===== 时间线分析：面容密码 + 色彩标签 ===== */}
+      <div className="analysis">
+        <section className="analysis-section">
+          <h3 className="analysis-title">
+            <span className="analysis-emoji">👤</span>面容密码
+          </h3>
+          <div className="analysis-list">
+            {FACE_CODE.map((item) => (
+              <div key={item.title} className="analysis-item">
+                <h4>{item.title}</h4>
+                <p>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="analysis-section">
+          <h3 className="analysis-title">
+            <span className="analysis-emoji">🎨</span>色彩标签
+          </h3>
+          <div className="analysis-list">
+            {COLOR_PALETTE.map((group) => (
+              <div key={group.title} className="analysis-item">
+                <h4>{group.title}</h4>
+                <div className="color-tags">
+                  {group.items.map((c) => (
+                    <div
+                      key={c.name}
+                      className="color-tag"
+                      style={{ background: c.hex }}
+                    >
+                      {c.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* ===== 建议避开 ===== */}
       <section className="profile-section">
-        <span className="profile-section__label">关于你</span>
-        <p className="profile-bio">{bio}。</p>
+        <span className="profile-section__label">建议避开</span>
+        <div className="profile-tags">
+          {AVOIDS.map((t) => (
+            <span key={t} className="profile-tag profile-tag--ghost">{t}</span>
+          ))}
+        </div>
       </section>
 
-      {/* 适合你：标签云 */}
-      {suits.length > 0 && (
-        <section className="profile-section">
-          <span className="profile-section__label">适合你</span>
-          <div className="profile-tags">
-            {suits.map((t) => (
-              <span key={t} className="profile-tag">{t}</span>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* ===== MM 记住的事 ===== */}
+      <section className="profile-section">
+        <span className="profile-section__label">MM 记住的事</span>
+        <div className="profile-notes">
+          {MEMORIES.map((m) => (
+            <p key={m}>{m}</p>
+          ))}
+        </div>
+      </section>
 
-      {/* 建议避开 */}
-      {avoids.length > 0 && (
-        <section className="profile-section">
-          <span className="profile-section__label">建议避开</span>
-          <div className="profile-tags">
-            {avoids.map((t) => (
-              <span key={t} className="profile-tag profile-tag--ghost">{t}</span>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 最近的复刻（从 /history 拉真数据） */}
+      {/* ===== 最近的复刻 ===== */}
       <section className="profile-section">
         <span className="profile-section__label">最近的复刻</span>
-        {recent.length === 0 ? (
-          <p className="profile-bio" style={{ fontSize: 13, color: "var(--text-muted)" }}>
-            还没有复刻记录，去首页解析一个妆容卡片试试。
-          </p>
-        ) : (
-          <ul className="profile-timeline">
-            {recent.map((item) => (
-              <li key={item.itemId} className="profile-timeline__row">
-                <i className="profile-timeline__dot" />
-                <time>{_formatHistoryTime(item.createdAt)}</time>
-                <span>{item.title}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="profile-timeline">
+          {RECENT.map(([time, name]) => (
+            <li key={name} className="profile-timeline__row">
+              <i className="profile-timeline__dot" />
+              <time>{time}</time>
+              <span>{name}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {/* 隐私 footer */}
+      {/* ===== 统计 ===== */}
+      <p className="profile-stats">
+        已复刻 <b>12</b> 次妆容，覆盖 <b>3</b> 类风格，最近一次在 <b>5 月 22 日</b>。
+      </p>
+
+      {/* ===== CTA ===== */}
+      <button type="button" className="profile-cta">
+        试试一键生成「我的版本」
+      </button>
+
+      {/* ===== 隐私 footer ===== */}
       <footer className="profile-footer">
         <p>
           妆搭默认不保存原图，只保留脸型、肤色等结构化标签。
           你可以随时删除档案与历史记忆。
         </p>
         <div className="profile-footer__actions">
-          <button type="button" onClick={onClearMemory} disabled={clearing}>
-            {clearing ? "清空中…" : "清空妆容记忆"}
-          </button>
-          <button type="button" onClick={onSignOut}>
-            退出登录
-          </button>
+          <button type="button">仅本次分析</button>
+          <button type="button">删除分析记录</button>
+          <button type="button">清空妆容记忆</button>
         </div>
       </footer>
     </div>

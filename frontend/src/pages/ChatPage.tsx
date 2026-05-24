@@ -229,6 +229,7 @@ export function ChatPage() {
   const [filter, setFilter] = useState("全部");
   const [searchQuery, setSearchQuery] = useState("");
   const [modal, setModal] = useState<ModalType>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -467,11 +468,23 @@ export function ChatPage() {
       <header className="chat-page__top">
         <button
           type="button"
-          className="chat-page__top-btn"
-          onClick={() => appActions.setActiveTab("home")}
-          aria-label="返回首页"
+          className="chat-page__top-btn chat-page__top-btn--menu"
+          onClick={() => setDrawerOpen(true)}
+          aria-label="历史记录"
         >
-          ‹
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <line x1="4" y1="9" x2="20" y2="9" />
+            <line x1="4" y1="15" x2="14" y2="15" />
+          </svg>
         </button>
         <div className="chat-page__title">
           <span>妆搭</span>
@@ -480,25 +493,11 @@ export function ChatPage() {
         <div className="chat-page__top-actions">
           <button
             type="button"
-            className="chat-page__top-btn"
-            onClick={() => setModal("history")}
-            aria-label="历史记录"
+            className={`chat-page__lib-btn${tab === "library" ? " is-active" : ""}`}
+            onClick={() => setTab(tab === "library" ? "conversation" : "library")}
+            aria-pressed={tab === "library"}
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M3 12a9 9 0 1 0 3-6.7" />
-              <polyline points="3 4 3 10 9 10" />
-              <polyline points="12 7 12 12 15 14" />
-            </svg>
+            灵感库
           </button>
           <button
             type="button"
@@ -523,23 +522,6 @@ export function ChatPage() {
           </button>
         </div>
       </header>
-
-      <div className="chat-page__tabs">
-        <button
-          type="button"
-          className={`chat-page__tab${tab === "conversation" ? " is-active" : ""}`}
-          onClick={() => setTab("conversation")}
-        >
-          AI 陪练
-        </button>
-        <button
-          type="button"
-          className={`chat-page__tab${tab === "library" ? " is-active" : ""}`}
-          onClick={() => setTab("library")}
-        >
-          美妆灵感库
-        </button>
-      </div>
 
       {tab === "library" ? (
         <div className="chat-page__body">
@@ -855,6 +837,107 @@ export function ChatPage() {
       )}
 
       {modal && <ChatModal type={modal} onClose={() => setModal(null)} />}
+
+      {drawerOpen && <ChatDrawer onClose={() => setDrawerOpen(false)} />}
+    </div>
+  );
+}
+
+function ChatDrawer({ onClose }: { onClose: () => void }) {
+  const today = [
+    { id: "h1", title: "雀斑奶油妆 · 解析", time: "今天 19:42" },
+    { id: "h2", title: "清冷感通勤妆 · 对话", time: "今天 14:08" },
+  ];
+  const week = [
+    { id: "h3", title: "韩系裸妆 · 对话", time: "昨天" },
+    { id: "h4", title: "港风复古妆 · 解析", time: "前天" },
+    { id: "h5", title: "甜妹约会妆 · 对话", time: "上周三" },
+  ];
+  const earlier = [
+    { id: "h6", title: "通勤淡妆 · 已完成" },
+    { id: "h7", title: "面试稳重妆 · 已解析" },
+  ];
+
+  return (
+    <div className="chat-drawer-backdrop" onClick={onClose}>
+      <aside className="chat-drawer" onClick={(e) => e.stopPropagation()}>
+        <header className="chat-drawer__head">
+          <h3>妆搭</h3>
+          <button
+            type="button"
+            className="chat-drawer__close"
+            onClick={onClose}
+            aria-label="关闭"
+          >
+            ✕
+          </button>
+        </header>
+
+        <button
+          type="button"
+          className="chat-drawer__new"
+          onClick={() => {
+            onClose();
+            appActions.showToast("新建对话功能开发中", "info");
+          }}
+        >
+          <span aria-hidden>＋</span>新建对话
+        </button>
+
+        <nav className="chat-drawer__nav">
+          <button type="button" onClick={() => { onClose(); appActions.setActiveTab("profile"); }}>
+            <span aria-hidden>📁</span>妆容档案<span className="arr">›</span>
+          </button>
+          <button type="button" onClick={() => { onClose(); appActions.showToast("设置开发中", "info"); }}>
+            <span aria-hidden>⚙</span>设置<span className="arr">›</span>
+          </button>
+        </nav>
+
+        <section className="chat-drawer__group">
+          <h4>今天</h4>
+          <ul>
+            {today.map((h) => (
+              <li key={h.id} onClick={onClose}>
+                <span className="t">{h.title}</span>
+                <span className="d">{h.time}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="chat-drawer__group">
+          <h4>最近一周</h4>
+          <ul>
+            {week.map((h) => (
+              <li key={h.id} onClick={onClose}>
+                <span className="t">{h.title}</span>
+                <span className="d">{h.time}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="chat-drawer__group">
+          <h4>更早</h4>
+          <ul>
+            {earlier.map((h) => (
+              <li key={h.id} onClick={onClose}>
+                <span className="t">{h.title}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <footer className="chat-drawer__foot">
+          <div className="chat-drawer__user">
+            <div className="chat-drawer__avatar">妆</div>
+            <div className="chat-drawer__id">
+              <div className="n">小妆</div>
+              <div className="s">新手 · L2</div>
+            </div>
+          </div>
+        </footer>
+      </aside>
     </div>
   );
 }
